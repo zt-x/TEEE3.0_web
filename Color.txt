@@ -1,8 +1,0 @@
-COLOR:
-
-浅浅色: #ffe9b3
-浅色：#b97a57
-中：#a36645
-深色：#875438
-
-white_background:#eeeeee background: #f6f7f8
