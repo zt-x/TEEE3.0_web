@@ -2,14 +2,32 @@
   <div>
     <v-navigation-drawer
       app
-	  :mini-variant="!mini"
+      :mini-variant="!mini"
       :expand-on-hover="!mini"
       v-model="drawerDisplay"
+      :temporary="temp"
     >
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title class="text-h5 font-weight-black">
-            Shock
+            <v-icon>mdi-account</v-icon>
+            <v-btn icon> </v-btn>
+
+            <v-btn text>
+              <div class="d-flex align-center">
+                <v-avatar size="32">
+                  <img
+                    src="https://cdn.pixabay.com/photo/2020/11/08/10/25/dog-5723334_1280.jpg"
+                    alt="avatar"
+                  />
+                </v-avatar>
+                <div class="ml-1 subtitle-2">Admin</div>
+              </div>
+            </v-btn>
+
+            <v-btn icon>
+              <!-- <v-icon> mdi-apps-box </v-icon> -->
+            </v-btn>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -86,21 +104,23 @@
     </v-app-bar> -->
 
     <v-main>
-		<div style="height:30px"></div>
+      <div style="height: 30px"></div>
       <router-view />
-
+      <v-btn
+        v-show="$vuetify.breakpoint.mdAndDown"
+        color="pink"
+        dark
+        fixed
+        top
+        left
+        fab
+        @click.stop="drawerDisplay = !drawerDisplay"
+      >
+        <v-icon>mdi-more</v-icon>
+      </v-btn>
       <v-footer>
         {{ new Date().getFullYear() }}
-        <span class="ml-2">
-          <strong
-            ><a
-              href="https://heroui.net"
-              target="_blank"
-              rel="noopener noreferrer"
-              >HeroUI</a
-            ></strong
-          >
-        </span>
+        <span class="ml-2"> FOOTER </span>
       </v-footer>
     </v-main>
   </div>
@@ -108,7 +128,8 @@
 
 <script>
 export default {
-	data: () => ({
+  data: () => ({
+    temp: false,
     drawerDisplay: null,
     drawer: [
       { title: "Back to front", icon: "mdi-arrow-left", to: "/" },
@@ -134,14 +155,14 @@ export default {
         to: "/dashboard/pages/examples/sign-in",
       },
     ],
-	}),
-	computed: {
-		mini() {
-			return this.$vuetify.breakpoint.lgAndDown;
-	}
+  }),
+  computed: {
+    mini() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
   },
   mounted() {
-    this.drawerDisplay = this.$vuetify.breakpoint.lgAndDown ? false : true;
+    this.drawerDisplay = this.$vuetify.breakpoint.smAndDown ? false : true;
   },
 };
 </script>

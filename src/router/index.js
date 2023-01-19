@@ -1,37 +1,33 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/dashboard/pages",
+    path: "/login",
+    component: () => import("../views/login.vue"),
+  },
+  {
+    path: "/main",
     component: () => import("../components/root/dashboard"),
-    children: [	
+    children: [
       {
-        path: "/dashboard/pages/dashboards/dashboard",
-        name: "dashboard-pages-dashboards-dashboard",
-        component: () =>
-          import("../views/dashboard/pages/dashboards/Dashboard.vue"),
+        path: "/dashboards/home",
+        name: "dashboards-home",
+        component: () => import("../views/dashboards/home.vue"),
       },
       {
-        path: "/dashboard/pages/examples/profile",
-        name: "dashboard-pages-examples-profile",
-        component: () =>
-          import("../views/dashboard/pages/examples/Profile.vue"),
-      },
-      {
-        path: "/dashboard/pages/examples/sign-in",
-        name: "dashboard-pages-examples-sign-in",
-        component: () =>
-          import("../views/dashboard/pages/examples/Sign-in.vue"),
+        path: "/examples/profile",
+        name: "examples-profile",
+        component: () => import("../views/examples/Profile.vue"),
       },
     ],
-  }
-]
+  },
+];
 
 const router = new VueRouter({
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
