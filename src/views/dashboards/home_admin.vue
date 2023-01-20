@@ -1,5 +1,7 @@
 <template>
   <div class="px-4">
+    <div>adm</div>
+
     <v-sheet color="transparent">
       <v-row>
         <v-col cols="12" md="6" lg="3" v-for="(item, i) in stats" :key="i">
@@ -40,13 +42,9 @@
           <v-card class="pa-10" outlined>
             <div class="d-flex align-center justify-space-between">
               <div>
-                <div class="subtitle-2">
-                  OVERVIEW
-                </div>
+                <div class="subtitle-2">OVERVIEW</div>
 
-                <div class="text-h6">
-                  Sales value
-                </div>
+                <div class="text-h6">Sales value</div>
               </div>
 
               <div>
@@ -70,13 +68,9 @@
         <v-col cols="12" lg="6" xl="5">
           <v-card class="pa-10 fill-height" outlined>
             <div>
-              <div class="subtitle-2">
-                PERFORMANCE
-              </div>
+              <div class="subtitle-2">PERFORMANCE</div>
 
-              <div class="text-h6">
-                Total orders
-              </div>
+              <div class="text-h6">Total orders</div>
             </div>
 
             <apexchart
@@ -96,29 +90,19 @@
         <v-col cols="12" lg="6" xl="7">
           <v-card outlined class="pa-10">
             <div class="d-flex align-center justify-space-between">
-              <div class="text-h6">
-                Page visits
-              </div>
+              <div class="text-h6">Page visits</div>
 
               <v-btn small color="primary">See All</v-btn>
             </div>
 
             <v-simple-table class="mt-4">
               <template v-slot:default>
-                <thead class="primary ">
+                <thead class="primary">
                   <tr>
-                    <th class="text-left white--text">
-                      PAGE NAME
-                    </th>
-                    <th class="text-left white--text">
-                      VISITORS
-                    </th>
-                    <th class="text-left white--text">
-                      UNIQUE USERS
-                    </th>
-                    <th class="text-left white--text">
-                      BOUNCE RATE
-                    </th>
+                    <th class="text-left white--text">PAGE NAME</th>
+                    <th class="text-left white--text">VISITORS</th>
+                    <th class="text-left white--text">UNIQUE USERS</th>
+                    <th class="text-left white--text">BOUNCE RATE</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -142,9 +126,7 @@
         <v-col cols="12" lg="6" xl="5">
           <v-card outlined class="pa-10">
             <div class="d-flex align-center justify-space-between">
-              <div class="text-h6">
-                Social traffic
-              </div>
+              <div class="text-h6">Social traffic</div>
 
               <v-btn small color="primary">See All</v-btn>
             </div>
@@ -153,12 +135,8 @@
               <template v-slot:default>
                 <thead>
                   <tr>
-                    <th class="text-left">
-                      REFERRAL
-                    </th>
-                    <th class="text-left">
-                      VISITORS
-                    </th>
+                    <th class="text-left">REFERRAL</th>
+                    <th class="text-left">VISITORS</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -4,13 +4,13 @@
 // Result getUserInfo(Long uid);
 // Result delUser(Long uid);
 
-import _axios from "../utils/interceptors";
+import _axios from "../utils/_axios";
 
 export function fun_login(uid, pwd) {
   return _axios.post("/api/accounts/login", { uid: uid, pwd: pwd });
 }
 export function fun_register(uid, pwd, uname, role) {
-  return _axios.post("/api/accounts/login", {
+  return _axios.post("/api/accounts/register", {
     uid: uid,
     pwd: pwd,
     uname: uname,
@@ -20,9 +20,13 @@ export function fun_register(uid, pwd, uname, role) {
 export function fun_updateUserInfo(uid, pwd) {
   return _axios.post("/api/accounts/login", { uid: uid, pwd: pwd });
 }
-export function fun_getUserInfo(uid, pwd) {
-  return _axios.post("/api/accounts/login", { uid: uid, pwd: pwd });
+export function fun_getUserInfo(uid) {
+  return _axios.get("/api/accounts", { params: { uid: uid } });
 }
-export function fun_delUser(uid, pwd) {
-  return _axios.post("/api/accounts/login", { uid: uid, pwd: pwd });
+export function fun_delUser(uid) {
+  return _axios.delete("/api/accounts", { uid: uid });
+}
+
+export function fun_getRoutes() {
+  return _axios.get("/api/accounts/routes");
 }

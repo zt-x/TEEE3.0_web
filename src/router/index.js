@@ -1,33 +1,37 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
 Vue.use(VueRouter);
 
-const routes = [
+export const routes = [
   {
-    path: "/login",
-    component: () => import("../views/login.vue"),
+    path: "/",
+    name: "dashboard",
+    component: () => import("@/components/root/dashboard.vue"),
   },
   {
-    path: "/main",
-    component: () => import("../components/root/dashboard"),
-    children: [
-      {
-        path: "/dashboards/home",
-        name: "dashboards-home",
-        component: () => import("../views/dashboards/home.vue"),
-      },
-      {
-        path: "/examples/profile",
-        name: "examples-profile",
-        component: () => import("../views/examples/Profile.vue"),
-      },
-    ],
+    path: "/login",
+    component: () => import("@/views/login.vue"),
   },
 ];
 
 const router = new VueRouter({
   routes,
 });
+function setRouter(routers) {
+  for (const { name, path, component, icon } of routers) {
+    if (path != null) {
+      router.addRoute("dashboard", {
+        path: path,
+        name: name,
+        component: () => import(`@/views/dashboards/${component}`),
+      });
+    }
+  }
+}
+const serverRoutes = sessionStorage.getItem("serverRoutes");
+if (serverRoutes) {
+  const arr = JSON.parse(serverRoutes);
+  setRouter(arr);
+}
 
 export default router;

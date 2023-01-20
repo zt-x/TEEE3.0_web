@@ -7,33 +7,30 @@
       v-model="drawerDisplay"
       :temporary="temp"
     >
+      <!-- 个人信息 -->
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title class="text-h5 font-weight-black">
-            <v-icon>mdi-account</v-icon>
+            <v-icon v-show="!mini">mdi-account</v-icon>
             <v-btn icon> </v-btn>
 
             <v-btn text>
               <div class="d-flex align-center">
                 <v-avatar size="32">
-                  <img
-                    src="https://cdn.pixabay.com/photo/2020/11/08/10/25/dog-5723334_1280.jpg"
-                    alt="avatar"
-                  />
+                  <v-img :src="user.avatar" alt="avatar" />
                 </v-avatar>
-                <div class="ml-1 subtitle-2">Admin</div>
+                <div class="ml-2 subtitle-2">{{ user.uname }}</div>
               </div>
             </v-btn>
 
-            <v-btn icon>
-              <!-- <v-icon> mdi-apps-box </v-icon> -->
-            </v-btn>
+            <v-btn icon> </v-btn>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
 
+      <!-- 导航菜单 -->
       <v-list nav>
         <v-list-item
           v-for="item in drawer"
@@ -118,15 +115,14 @@
       >
         <v-icon>mdi-more</v-icon>
       </v-btn>
-      <v-footer>
-        {{ new Date().getFullYear() }}
-        <span class="ml-2"> FOOTER </span>
-      </v-footer>
     </v-main>
   </div>
 </template>
 
 <script>
+import { resetRouter, setRouter } from "@/router/setRouter.js";
+import { fun_getRoutes } from "@/api/account.js";
+
 export default {
   data: () => ({
     temp: false,
@@ -155,11 +151,60 @@ export default {
         to: "/dashboard/pages/examples/sign-in",
       },
     ],
+    user: {
+      uname: "",
+      avatar: "",
+      role: -1,
+    },
   }),
   computed: {
     mini() {
       return this.$vuetify.breakpoint.smAndDown;
     },
+  },
+  created() {
+    let _this = this;
+    // 加载路由
+    //配置路由
+    resetRouter();
+
+    // 初始化用户信息
+    fun_getRoutes()
+      .then((data) => {
+        if (data.code > 0) {
+          let routers = eval("(" + data.data.routers + ")");
+          sessionStorage.setItem("serverRoutes", JSON.stringify(routers));
+          setRouter(routers);
+          _this.drawer.length = 0;
+          routers.forEach((element) => {
+            if (element.show == 1) {
+              _this.drawer.push({
+                title: element.name,
+                icon: element.icon,
+                to: element.path,
+              });
+            }
+          });
+          _this.user.uname = data.data.uname;
+          _this.user.role = data.data.role;
+          _this.user.avatar = data.data.avatar;
+          this.$router.replace({ path: "/home" });
+        } else {
+          _this.$toasted.show(data.msg, {
+            theme: "outline",
+            position: "top-center",
+            duration: 1500,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.$toasted.show(err, {
+          theme: "outline",
+          position: "top-center",
+          duration: 1500,
+        });
+      });
   },
   mounted() {
     this.drawerDisplay = this.$vuetify.breakpoint.smAndDown ? false : true;
