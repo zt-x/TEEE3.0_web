@@ -129,6 +129,7 @@ export default {
             let ret = JSON.parse(data.data);
             console.log(ret);
             window.localStorage.setItem("token", ret.token);
+            window.localStorage.setItem("role", ret.role);
             this.$router.replace({ path: "/" });
           } else {
             this.$toasted.show(data.msg, {

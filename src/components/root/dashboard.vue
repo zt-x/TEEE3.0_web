@@ -14,7 +14,7 @@
             <v-icon v-show="!mini">mdi-account</v-icon>
             <v-btn icon> </v-btn>
 
-            <v-btn text>
+            <v-btn text @click="logout()">
               <div class="d-flex align-center">
                 <v-avatar size="32">
                   <v-img :src="user.avatar" alt="avatar" />
@@ -103,18 +103,21 @@
     <v-main>
       <div style="height: 30px"></div>
       <router-view />
-      <v-btn
-        v-show="$vuetify.breakpoint.mdAndDown"
-        color="pink"
-        dark
-        fixed
-        top
-        left
-        fab
-        @click.stop="drawerDisplay = !drawerDisplay"
-      >
-        <v-icon>mdi-more</v-icon>
-      </v-btn>
+      <v-fab-transition>
+        <v-btn
+          x-small
+          v-show="$vuetify.breakpoint.mdAndDown"
+          color="brown"
+          dark
+          fixed
+          top
+          left
+          fab
+          @click.stop="drawerDisplay = !drawerDisplay"
+        >
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+      </v-fab-transition>
     </v-main>
   </div>
 </template>
@@ -208,6 +211,14 @@ export default {
   },
   mounted() {
     this.drawerDisplay = this.$vuetify.breakpoint.smAndDown ? false : true;
+  },
+  methods: {
+    logout() {
+      // TODO
+      window.localStorage.setItem("token", "");
+      window.localStorage.setItem("role", "");
+      this.$router.replace({ path: "/login" });
+    },
   },
 };
 </script>

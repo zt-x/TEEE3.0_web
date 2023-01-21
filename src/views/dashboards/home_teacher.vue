@@ -1,6 +1,5 @@
 <template>
   <div class="px-4">
-    <div>teacher</div>
     <v-sheet color="transparent">
       <v-row>
         <v-col cols="12" md="6" lg="3" v-for="(item, i) in stats" :key="i">

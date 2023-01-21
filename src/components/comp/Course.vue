@@ -1,31 +1,56 @@
 <template>
   <v-card
-    class="mx-auto"
     max-width="400"
     min-width="100"
     max-height="400px"
     :hover="hover"
     ripple
   >
-    <v-img
-      color="brown"
-      class="white--text align-end"
-      height="100px"
-      :src="Course.IMG"
-    >
-      <v-card-title v-text="Course.Name"></v-card-title>
-    </v-img>
+    <v-card-title class="d-flex justify-space-between align-center">
+      {{ Course.cname }}
+      <div class="subtitle-2 d-flex align-center">
+        <v-icon
+          large
+          :color="
+            Course.status == 0
+              ? 'warn'
+              : Course.status == 1
+              ? 'success'
+              : 'grey'
+          "
+          >mdi-circle-small</v-icon
+        >
+        <div>
+          <span class="subtitle-2 text--secondary">
+            {{
+              Course.status == 0
+                ? "未开始"
+                : Course.status == 1
+                ? "进行中"
+                : "已结束"
+            }}
+          </span>
+        </div>
+      </div>
+      <div></div>
+      <div>
+        <!-- <v-icon color="brown" x-large>mdi-star</v-icon> -->
+        <v-avatar>
+          <v-img :src="Course.banner"></v-img>
+        </v-avatar>
+      </div>
+    </v-card-title>
 
-    <v-card-subtitle class="pb-0" v-text="Course.TeacherName"></v-card-subtitle>
+    <v-card-subtitle class="pb-0" v-text="Course.tname"></v-card-subtitle>
 
     <v-card-text style="font-size: small">
-      <div class="text--secondary">{{ Course.College }}</div>
+      <div class="text--secondary">{{ Course.college }}</div>
 
-      <div>{{ Course.Time }}</div>
+      <div>{{ Course.time }}</div>
     </v-card-text>
 
     <v-card-actions>
-      <v-btn color="orange" text @click="InterCourse(Course.id)">
+      <v-btn color="orange" text @click="InterCourse(Course.cid)">
         进入课程
       </v-btn>
 
