@@ -14,6 +14,7 @@ export const routes = [
   },
   {
     path: "/doWork",
+    name: "doWork",
     component: () => import("@/views/doWork.vue"),
   },
 ];

@@ -5,9 +5,9 @@
 <script>
 import * as echarts from "echarts";
 var myChart;
-window.onresize = function () {
-  myChart.resize();
-};
+// window.onresize = function () {
+//   myChart.resize();
+// };
 
 export default {
   props: ["data"],
@@ -19,9 +19,9 @@ export default {
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
       myChart = echarts.init(document.getElementById("charts"));
-      window.onresize = function () {
-        myChart.resize();
-      };
+      //   window.onresize = function () {
+      //     myChart.resize();
+      //   };
       var options = {
         title: {
           text: "最近一次考试及格情况",

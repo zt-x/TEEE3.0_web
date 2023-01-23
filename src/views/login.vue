@@ -127,7 +127,7 @@ export default {
         .then((data) => {
           if (data.code > 0) {
             let ret = JSON.parse(data.data);
-           window.localStorage.setItem("token", ret.token);
+            window.localStorage.setItem("token", ret.token);
             window.localStorage.setItem("role", ret.role);
             this.$router.replace({ path: "/" });
           } else {
@@ -135,17 +135,16 @@ export default {
               type: "error",
               theme: "outline",
               position: "top-center",
-              duration: 1500,
+              duration: 2000,
             });
           }
           this.loading_btn = false;
         })
         .catch((err) => {
-
           this.$toasted.show(err.msg, {
             theme: "outline",
             position: "top-center",
-            duration: 1500,
+            duration: 2000,
           });
           this.loading_btn = false;
         });

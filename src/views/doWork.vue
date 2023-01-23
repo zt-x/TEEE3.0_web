@@ -1,10 +1,6 @@
 <template>
-  <v-card style="min-width: 1520px; background: #b97a57; min-height: 1080px">
-    <v-dialog
-      width="400px"
-      v-if="dialog_upload_info"
-      v-model="dialog_upload_info"
-    >
+  <div style="background: #b97a57; min-height: 1080px">
+    <v-dialog width="400px" v-if="dialog_upload_info" v-model="dialog_upload_info">
       <v-card :loading="!finishUploadingFile">
         <v-card-title v-if="!finishUploadingFile">正在上传 ...</v-card-title>
         <v-card-title v-if="finishUploadingFile">上传完成!</v-card-title>
@@ -45,13 +41,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar"
-      top
-      :color="snackbar_color"
-      dense
-      timeout="2000"
-    >
+    <v-snackbar v-model="snackbar" top :color="snackbar_color" dense timeout="2000">
       {{ snackbar_msg }}
     </v-snackbar>
     <div style="position: fixed; left: 20px; bottom: 20px">
@@ -63,240 +53,228 @@
       ></v-img>
     </div>
     <!-- <v-card fixed dark fab left bottom color="pink"></v-card> -->
-    <v-app-bar color="white" app>
-      <v-card-title class="text-center">
-        <v-chip
-          @click="goBack()"
-          small
-          class="ma-2"
-          color="#555555"
-          text-color="white"
-          ><v-icon small left>fa fa-reply</v-icon>返回</v-chip
-        >
-        <div style="margin-left: 850px">{{ wname }}</div>
+    <v-app-bar color="white" app class="d-flex aligin-center justify-content-center">
+      <v-chip @click="goBack()" small class="ma-2" color="#555555" text-color="white"
+        ><v-icon small left>mdi-arrow-left</v-icon>返回</v-chip
+      >
+      <v-card-title>
+        <div>{{ wname }}</div>
       </v-card-title>
+      <v-spacer></v-spacer>
+      <span v-show="!$vuetify.breakpoint.lgAndUp">剩余答题时间:{{ restTimeText }}</span>
     </v-app-bar>
-
-    <v-card-text>
-      <v-container fluid>
-        <v-row>
-          <!-- 答题卡 -->
-          <v-col cols="3">
-            <v-card style="min-width: 250px">
-              <v-card-title>答题卡</v-card-title>
-              <v-divider></v-divider>
-              <div style="background: #eeeeee" class="py-5">
-                <v-container fluid>
-                  <v-row>
-                    <v-col cols="12">
-                      <div style="height: 5px"></div>
-                      <div class="mx-auto text-center">
-                        <QueNum
-                          v-for="(item, i) in qs"
-                          :key="i"
-                          :qn="i + 1"
-                          :isWrite="!isWrite(i)"
-                          @toQue="toQue"
-                        />
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </div>
-            </v-card>
-            <v-card style="min-width: 250px" class="mt-5">
-              <v-card-title>
-                <v-icon class="mr-2">fa fa-clock</v-icon>
-                剩余答题时间</v-card-title
-              >
-              <v-divider></v-divider>
-              <div class="text-center py-8" style="background: #eeeeee">
-                <span style="font-size: 25px; color: #b97a57">{{
-                  restTimeText
-                }}</span>
-              </div>
-            </v-card>
-          </v-col>
-          <!-- 答题区 -->
-          <v-col cols="9">
-            <v-card class="ml-5" min-width="500px">
-              <v-card-title>题目</v-card-title>
-              <v-divider></v-divider>
-              <div style="background: #eeeeee" class="py-5">
-                <v-card class="mx-auto my-5" style="width: 95%">
-                  <v-tabs
-                    v-model="tab"
-                    background-color="transparent"
-                    hide-slider
-                    color="brown"
-                    height="0px"
-                  >
-                    <v-tab v-for="(item, i) in qs" :key="i"> </v-tab>
-                  </v-tabs>
-                  <v-tabs-items v-model="tab">
-                    <v-tab-item v-for="(item, i) in qs" :key="i">
-                      <v-card flat>
-                        <v-card-text style="font-size: 20px">
-                          <span style="font-weight: bold"
-                            >{{ i + 1 }}、 ({{ item.qscore }}分)</span
-                          >
-                          <span v-if="item.qtype != 30012" class="pl-5">{{
-                            item.qtext
-                          }}</span>
-                          <div
-                            v-if="item.qtype == 30012"
-                            class="pl-5 pt-5"
-                            v-html="item.qtext"
-                            style="max-height: 500px; overflow: auto"
-                          ></div>
-                          <!-- 简答题附件 -->
-                          <div class="pl-5 pt-5" v-if="item.qtype == 30012">
-                            <span style="font-size: 15px">附件下载</span>
-                            <v-card-text>
-                              <v-chip
-                                class="mx-2 my-1"
-                                v-for="file in item.qfiles"
-                                :key="file"
-                                @click="downloadFile(file)"
-                                >{{ getFileName(file.toString()) }}</v-chip
-                              >
-                            </v-card-text>
-                          </div>
-                        </v-card-text>
-                        <!-- 写答案区 -->
-
-                        <!-- 选择题 -->
-                        <div class="pl-8 pt-5" v-if="item.qtype == 30010">
-                          <div
-                            class="mb-5"
-                            v-for="(ans, index) in item.qans"
-                            :key="index"
-                          >
-                            <div>
-                              <v-btn
-                                style="
-                                  min-width: 44px;
-                                  height: 44px;
-                                  width: 44px;
-                                "
-                                class="mr-5"
-                                color="blue"
-                                dark
-                                v-if="flushButton"
-                                :outlined="!isChose(i, index)"
-                                @click="chose(i, index)"
-                                >{{ map(index) }}</v-btn
-                              >
-                              <span>{{ ans }} </span>
-                            </div>
-                          </div>
+    <v-main>
+      <v-card-text>
+        <v-container fluid>
+          <v-row>
+            <!-- 答题卡 -->
+            <v-col cols="12" lg="3">
+              <v-card>
+                <v-card-title>答题卡</v-card-title>
+                <v-divider></v-divider>
+                <div style="background: #f8f9fe" class="py-5">
+                  <v-container fluid>
+                    <v-row>
+                      <v-col cols="12">
+                        <div style="height: 5px"></div>
+                        <div class="mx-auto text-center">
+                          <QueNum
+                            v-for="(item, i) in qs"
+                            :key="i"
+                            :qn="i + 1"
+                            :isWrite="!isWrite(i)"
+                            @toQue="toQue"
+                          />
                         </div>
-                        <!-- 填空题 -->
-                        <div class="pl-8 pt-5" v-else-if="item.qtype == 30011">
-                          <div>
-                            <span>我的答案是: </span>
-                            <div style="width: 300px">
-                              <v-text-field v-model="myAnss[i]"></v-text-field>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- 简答题 -->
-                        <div class="px-8 py-5" v-else-if="item.qtype == 30012">
-                          <div>
-                            <ckeditor
-                              v-model="myAnss[i]"
-                              :key="i"
-                              :config="editorConfigs[i]"
-                              editor-url="/ckeditor/ckeditor.js"
-                            ></ckeditor>
-                          </div>
-                          <div class="mt-2">
-                            <v-file-input
-                              dense
-                              v-model="files[i]"
-                              color="deep-purple accent-4"
-                              multiple
-                              placeholder="点击选择添加附件"
-                              prepend-icon="mdi-paperclip"
-                              outlined
-                              @change="sout(files)"
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </div>
+              </v-card>
+              <v-card class="mt-5" v-show="$vuetify.breakpoint.lgAndUp">
+                <v-card-title>
+                  <v-icon class="mr-2">fa fa-clock</v-icon>
+                  剩余答题时间</v-card-title
+                >
+                <v-divider></v-divider>
+                <div class="text-center py-8" style="background: #f8f9fe">
+                  <span style="font-size: 25px; color: #b97a57">{{ restTimeText }}</span>
+                </div>
+              </v-card>
+            </v-col>
+            <!-- 答题区 -->
+            <v-col cols="12" lg="9">
+              <v-card>
+                <v-card-title>题目</v-card-title>
+                <v-divider></v-divider>
+                <div style="background: #f8f9fe" class="py-5">
+                  <v-card class="mx-auto my-5" style="width: 95%">
+                    <v-tabs
+                      v-model="tab"
+                      background-color="transparent"
+                      hide-slider
+                      color="brown"
+                      height="0px"
+                    >
+                      <v-tab v-for="(item, i) in qs" :key="i"> </v-tab>
+                    </v-tabs>
+                    <v-tabs-items v-model="tab">
+                      <v-tab-item v-for="(item, i) in qs" :key="i">
+                        <v-card flat>
+                          <v-card-text style="font-size: 20px">
+                            <span style="font-weight: bold"
+                              >{{ i + 1 }}、 ({{ item.qscore }}分)</span
                             >
-                              <template v-slot:selection="{ index, text }">
+                            <span v-if="item.qtype != 30012" class="pl-5">{{
+                              item.qtext
+                            }}</span>
+                            <div
+                              v-if="item.qtype == 30012"
+                              class="pl-5 pt-5"
+                              v-html="item.qtext"
+                              style="max-height: 500px; overflow: auto"
+                            ></div>
+                            <!-- 简答题附件 -->
+                            <div class="pl-5 pt-5" v-if="item.qtype == 30012">
+                              <span style="font-size: 15px">附件下载</span>
+                              <v-card-text>
                                 <v-chip
-                                  close
-                                  v-if="index < 3"
-                                  color="deep-purple accent-4"
+                                  class="mx-2 my-1"
+                                  v-for="file in item.qfiles"
+                                  :key="file"
+                                  @click="downloadFile(file)"
+                                  >{{ getFileName(file.toString()) }}</v-chip
+                                >
+                              </v-card-text>
+                            </div>
+                          </v-card-text>
+                          <!-- 写答案区 -->
+
+                          <!-- 选择题 -->
+                          <div class="pl-8 pt-5" v-if="item.qtype == 30010">
+                            <div
+                              class="mb-5"
+                              v-for="(ans, index) in item.qans"
+                              :key="index"
+                            >
+                              <div>
+                                <v-btn
+                                  style="min-width: 44px; height: 44px; width: 44px"
+                                  class="mr-5"
+                                  color="blue"
                                   dark
-                                  label
-                                  small
-                                  @click:close="files[i].splice(index, 1)"
+                                  v-if="flushButton"
+                                  :outlined="!isChose(i, index)"
+                                  @click="chose(i, index)"
+                                  >{{ map(index) }}</v-btn
                                 >
-                                  {{ text }}
-                                </v-chip>
-
-                                <span
-                                  v-else-if="index === 3"
-                                  class="
-                                    overline
-                                    grey--text
-                                    text--darken-3
-                                    mx-2
-                                  "
-                                >
-                                  +{{ files.length - 3 }} File(s)
-                                </span>
-                              </template>
-                            </v-file-input>
+                                <span>{{ ans }} </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </v-card>
-                    </v-tab-item>
-                  </v-tabs-items>
-                </v-card>
-              </div>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  class="mr-1"
-                  v-if="p_que > 0"
-                  dark
-                  outlined
-                  color="blue"
-                  @click="p_que--"
-                  >上一题</v-btn
-                >
-                <v-btn
-                  class="mr-1"
-                  v-if="p_que < qs.length - 1"
-                  dark
-                  outlined
-                  color="blue"
-                  @click="p_que++"
-                  >下一题</v-btn
-                >
-                <!-- TODO -->
+                          <!-- 填空题 -->
+                          <div class="pl-8 pt-5" v-else-if="item.qtype == 30011">
+                            <div>
+                              <span>我的答案是: </span>
+                              <div style="width: 300px">
+                                <v-text-field v-model="myAnss[i]"></v-text-field>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- 简答题 -->
+                          <div class="px-8 py-5" v-else-if="item.qtype == 30012">
+                            <div>
+                              <ckeditor
+                                v-model="myAnss[i]"
+                                :key="i"
+                                :config="editorConfigs[i]"
+                                editor-url="/ckeditor/ckeditor.js"
+                              ></ckeditor>
+                            </div>
+                            <div class="mt-2">
+                              <v-file-input
+                                dense
+                                v-model="files[i]"
+                                color="deep-purple accent-4"
+                                multiple
+                                placeholder="点击选择添加附件"
+                                prepend-icon="mdi-paperclip"
+                                outlined
+                                @change="sout(files)"
+                              >
+                                <template v-slot:selection="{ index, text }">
+                                  <v-chip
+                                    close
+                                    v-if="index < 3"
+                                    color="deep-purple accent-4"
+                                    dark
+                                    label
+                                    small
+                                    @click:close="files[i].splice(index, 1)"
+                                  >
+                                    {{ text }}
+                                  </v-chip>
 
-                <v-btn class="mr-1" outlined dark color="blue"> 暂存 </v-btn>
-                <v-btn class="mr-7" dark color="blue" @click="submit()"
-                  >提交</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-text>
+                                  <span
+                                    v-else-if="index === 3"
+                                    class="overline grey--text text--darken-3 mx-2"
+                                  >
+                                    +{{ files.length - 3 }} File(s)
+                                  </span>
+                                </template>
+                              </v-file-input>
+                            </div>
+                          </div>
+                        </v-card>
+                      </v-tab-item>
+                    </v-tabs-items>
+                  </v-card>
+                </div>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    class="mr-1"
+                    v-if="p_que > 0"
+                    dark
+                    outlined
+                    color="blue"
+                    @click="p_que--"
+                    >上一题</v-btn
+                  >
+                  <v-btn
+                    class="mr-1"
+                    v-if="p_que < qs.length - 1"
+                    dark
+                    outlined
+                    color="blue"
+                    @click="p_que++"
+                    >下一题</v-btn
+                  >
+                  <!-- TODO -->
+
+                  <v-btn class="mr-1" outlined dark color="blue"> 暂存 </v-btn>
+                  <v-btn class="mr-7" dark color="blue" @click="submit()">提交</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+    </v-main>
+
     <v-overlay v-if="!finishSubmit">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
       <div class="mx-auto">提交中 ...</div>
     </v-overlay>
-  </v-card>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import QueNum from "@/components/WorkPanel/QueNum.vue";
 import CKEditor from "ckeditor4-vue";
+import { fun_getWorkContent, fun_getWorkTimer, fun_submit } from "@/api/work";
+import { limit } from "@/plugins/myfun";
 const _axios = axios.create();
 let token = window.localStorage.getItem("token");
 var restTimerID;
@@ -352,7 +330,7 @@ export default {
       p_que: 0,
       qs: [],
       myAnss: [],
-      TestArr: [{ value: "666" }, { value: "" }, { value: "" }, { value: "" }],
+      TestArr: [{ value: "777" }, { value: "" }, { value: "" }, { value: "" }],
       flushButton: true,
       snackbar: false,
       snackbar_color: "success",
@@ -363,6 +341,9 @@ export default {
       testIndex: 0,
       editorConfigs: [],
       finishSubmit: true,
+
+      // 其他
+      warn_count: 1,
     };
   },
   destroyed() {
@@ -416,29 +397,15 @@ export default {
       .catch((err) => {});
   },
   methods: {
-    stopF5Refresh() {
-      document.onkeydown = function (e) {
-        var evt = window.event || e;
-        var code = evt.keyCode || evt.which;
-        //屏蔽F1---F12
-        if (code > 111 && code < 124) {
-          if (evt.preventDefault) {
-            evt.preventDefault();
-          } else {
-            evt.keyCode = 0;
-            evt.returnValue = false;
-          }
-        }
-      };
-      //禁止鼠标右键菜单
-      document.oncontextmenu = function () {
-        return false;
-      };
-      //阻止后退的所有动作，包括 键盘、鼠标手势等产生的后退动作。
-      history.pushState(null, null, window.location.href);
-      window.addEventListener("popstate", function () {
-        history.pushState(null, null, window.location.href);
+    _alert(msg) {
+      this.$toasted.show(msg, {
+        theme: "outline",
+        position: "top-center",
+        duration: 2000,
       });
+    },
+    stopF5Refresh() {
+      limit(document);
     },
     beforeunloadHandler(e) {
       sessionStorage.setItem("wid", this.wid);
@@ -472,6 +439,8 @@ export default {
           }
         })
         .catch((err) => {
+          alert(err);
+          _this._alert(err);
           clearInterval(restTimerID);
           clearInterval(restTimerCheckID);
           _this.goBack();
@@ -484,27 +453,10 @@ export default {
       }, 1000 * 60 * 5000);
     },
     async checkTime() {
-      token = window.localStorage.getItem("token");
       let _this = this;
-      // init axios
-      _axios.interceptors.request.use(function (config) {
-        config.headers = {
-          Authorization: token,
-        };
-        return config;
-      });
-      const form = new FormData();
-      form.append("wid", this.wid);
-      await _axios
-        .post("/api/Work/getWorkTimer", form)
+      await fun_getWorkTimer(this.wid)
         .then((res) => {
-          let code = res.data.code;
-          if (Number(code) == 1) {
-            alert(res.data.msg);
-            _this.goBack();
-            return Promise.reject(new Error("err"));
-          }
-          let data = res.data.data;
+          let data = res.data;
           if (isNaN(data)) {
             _this.restTime = -10;
           } else {
@@ -512,7 +464,7 @@ export default {
           }
         })
         .catch((err) => {
-          return Promise.reject(new Error("err"));
+          return Promise.reject(new Error(err));
         });
     },
     getRestTimeText(value) {
@@ -547,7 +499,7 @@ export default {
       return str2.substr(str2.indexOf("_") + 1);
     },
     downloadFile(file) {
-      this.snackbar_msg = "拉取下载链接😀 ... ";
+      this.snackbar_msg = "🥵 正在努力拉取下载链接 ... ";
       this.snackbar = true;
       let form = new FormData();
       form.append("fileName", file);
@@ -575,21 +527,10 @@ export default {
         .catch((err) => {});
     },
     async getWork() {
-      token = window.localStorage.getItem("token");
       let _this = this;
-      // init axios
-      _axios.interceptors.request.use(function (config) {
-        config.headers = {
-          Authorization: token,
-        };
-        return config;
-      });
-      const form = new FormData();
-      form.append("wid", this.wid);
-      _axios
-        .post("/api/Work/getWork", form)
+      fun_getWorkContent(this.wid)
         .then((res) => {
-          let questions = res.data.data;
+          let questions = res.data;
           _this.qs = eval(questions);
           if (_this.qs == null) {
           }
@@ -601,8 +542,8 @@ export default {
           }
         })
         .catch((err) => {
-          console.error("Err /api/Work/getWork：" + err);
-          alert("该作业有误！请联系教师确认作业内容");
+          _this._alert("该作业有误！请联系教师确认作业内容");
+          _this._alert(err);
           _this.goBack();
           return Promise.reject(new Error("err"));
         });
@@ -651,13 +592,9 @@ export default {
       clearInterval(restTimerCheckID);
       let _cid = this.cid;
       //   alert(_cid);
-      this.$router.replace({
-        name: "home",
-        params: {
-          targetName: "CourseContent",
-          pars: { pname: "cid", pvalue: _cid },
-        },
-      });
+
+      this.$router.push({ name: "CourseContent", params: { cid: _cid } });
+
       //   this.$router.back();
     },
     chose(i, index) {
@@ -749,11 +686,11 @@ export default {
       await axios
         .post("/api/upload/file", param, config)
         .then((res) => {
-          if (res.data.code == 1) {
+          if (res.code == 1) {
             // 上传失败
-            ret = eval('["[失败]' + res.data.msg + '"]');
+            ret = eval('["[失败]' + res.msg + '"]');
           } else {
-            ret = eval(res.data.data);
+            ret = eval(res.data);
           }
         })
         .catch((err) => {
@@ -803,16 +740,11 @@ export default {
       }
       str2 = str2.slice(0, -2);
       str2 += "]";
-      const form = new FormData();
-      form.append("wid", this.wid);
-      form.append("ans", str);
-      form.append("files", str2);
-      _axios
-        .post("/api/submit/submitWork", form)
+      fun_submit(this.wid, str, str2)
         .then((res) => {
           _this.finishSubmit = true;
           _this.$dialog({
-            content: res.data.msg,
+            content: res.msg,
             btns: [
               {
                 label: "确定",

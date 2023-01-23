@@ -54,7 +54,7 @@ export default {
           this.$toasted.show(res.msg, {
             theme: "outline",
             position: "top-center",
-            duration: 1500,
+            duration: 2000,
           });
         })
         .catch((err) => {
@@ -62,7 +62,7 @@ export default {
           this.$toasted.error(err, {
             theme: "outline",
             position: "top-center",
-            duration: 1500,
+            duration: 2000,
           });
         });
     },

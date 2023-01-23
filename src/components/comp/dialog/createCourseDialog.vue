@@ -182,14 +182,14 @@ export default {
             this.$toasted.success(res.msg, {
               theme: "outline",
               position: "top-center",
-              duration: 1500,
+              duration: 2000,
             });
             this.$emit("update:showDialog", false);
           } else {
             this.$toasted.error(res.msg, {
               theme: "outline",
               position: "top-center",
-              duration: 1500,
+              duration: 2000,
             });
           }
         })
@@ -197,7 +197,7 @@ export default {
           this.$toasted.error(err, {
             theme: "outline",
             position: "top-center",
-            duration: 1500,
+            duration: 2000,
           });
         });
     },

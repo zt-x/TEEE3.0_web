@@ -14,54 +14,53 @@
           </v-chip>
           {{ work.wname }}
           <v-spacer></v-spacer>
-		<div v-show="$vuetify.breakpoint.lgAndUp">
-          <v-chip
-            v-if="finishGetStatus"
-            small
-            :color="scoreColor(work.id)"
-            text-color="white"
-            class="mr-2"
-          >
-            {{ getScore(work.id) }}
-          </v-chip>
-          <v-chip
-            v-if="!finishGetStatus"
-            small
-            color="grey lighten-1"
-            text-color="white"
-            class="mr-2"
-          >
-            <v-progress-circular
-              :size="15"
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
-          </v-chip>
-          <span style="color: #eeeeee">|</span>
-          <v-chip
-            v-if="finishGetStatus"
-            small
-            class="ma-2"
-            :color="statusColor(work.id)"
-            text-color="white"
-          >
-            {{ status(work.id) }}
-          </v-chip>
-          <v-chip
-            v-if="!finishGetStatus"
-            small
-            color="grey lighten-1"
-            text-color="white"
-            class="mr-2"
-          >
-            <v-progress-circular
-              :size="15"
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
-          </v-chip>
-		</div>
-
+          <div v-show="$vuetify.breakpoint.lgAndUp">
+            <v-chip
+              v-if="finishGetStatus"
+              small
+              :color="scoreColor(work.id)"
+              text-color="white"
+              class="mr-2"
+            >
+              {{ getScore(work.id) }}
+            </v-chip>
+            <v-chip
+              v-if="!finishGetStatus"
+              small
+              color="grey lighten-1"
+              text-color="white"
+              class="mr-2"
+            >
+              <v-progress-circular
+                :size="15"
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </v-chip>
+            <span style="color: #eeeeee">|</span>
+            <v-chip
+              v-if="finishGetStatus"
+              small
+              class="ma-2"
+              :color="statusColor(work.id)"
+              text-color="white"
+            >
+              {{ status(work.id) }}
+            </v-chip>
+            <v-chip
+              v-if="!finishGetStatus"
+              small
+              color="grey lighten-1"
+              text-color="white"
+              class="mr-2"
+            >
+              <v-progress-circular
+                :size="15"
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </v-chip>
+          </div>
         </v-card-title>
         <v-card-subtitle
           >截止时间 |
@@ -103,6 +102,7 @@
 <script>
 import axios from "axios";
 import stuAnsStu from "./stuAnsStu.vue";
+import { fun_getWorkStatus } from "@/api/work";
 const _axios = axios.create();
 let token = window.localStorage.getItem("token");
 export default {
@@ -114,7 +114,7 @@ export default {
       this.$toasted.show(msg, {
         theme: "outline",
         position: "top-center",
-        duration: 1500,
+        duration: 2000,
       });
     },
     close(val) {
@@ -128,19 +128,8 @@ export default {
         return;
       } else {
         if (this.status(work.id) == "未提交") {
-          alert("未提交");
           if (work.status == -1) {
-            this.$dialog({
-              title: "时间已到",
-              content: "已超过设定时间，无法作答",
-              btns: [
-                {
-                  label: "好叭",
-                  color: "red",
-                  ghost: true,
-                },
-              ],
-            });
+            this._alert("😣这个作业已经超过提交时间啦！");
             return;
           }
           this.$router.push({
@@ -155,8 +144,7 @@ export default {
           this.loadingText = "获取答题卡中 ... ";
           const form = new FormData();
           form.append("wid", work.id);
-          _axios
-            .post("/api/Work/getWork", form)
+          fun_getWorkContent(work.id)
             .then((res) => {
               let questions = res.data.data;
               _this.qs = eval(questions);
@@ -261,10 +249,9 @@ export default {
       // [{wid:, status: ,score:}]
       //
       let _this = this;
-      const form = new FormData();
-      form.append("cid", _this.cid);
-      _axios.post("/api/Work/getWorkFinishStatus", form).then((res) => {
-        let arr = eval(res.data.data);
+      fun_getWorkStatus(this.cid).then((res) => {
+        console.log(res.data);
+        let arr = eval(res.data);
         arr.forEach((val, i) => {
           _this.finish_status[i] = val;
         });
@@ -289,15 +276,7 @@ export default {
     };
   },
   mounted() {
-    token = window.localStorage.getItem("token");
-    let _this = this;
-    // init axios
-    _axios.interceptors.request.use(function (config) {
-      config.headers = {
-        Authorization: token,
-      };
-      return config;
-    });
+    // unlimit();
     this.getWorkStatus();
   },
   created() {},

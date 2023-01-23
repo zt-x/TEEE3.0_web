@@ -125,6 +125,7 @@
 <script>
 import { resetRouter, setRouter } from "@/router/setRouter.js";
 import { fun_getRoutes } from "@/api/account.js";
+import { unlimit } from "@/plugins/myfun";
 
 export default {
   data: () => ({
@@ -196,7 +197,7 @@ export default {
           _this.$toasted.show(data.msg, {
             theme: "outline",
             position: "top-center",
-            duration: 1500,
+            duration: 2000,
           });
         }
       })
@@ -205,12 +206,13 @@ export default {
         this.$toasted.show(err, {
           theme: "outline",
           position: "top-center",
-          duration: 1500,
+          duration: 2000,
         });
       });
   },
   mounted() {
     this.drawerDisplay = this.$vuetify.breakpoint.smAndDown ? false : true;
+    unlimit(window, document);
   },
   methods: {
     logout() {

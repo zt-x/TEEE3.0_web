@@ -4,10 +4,10 @@
 
 <script>
 import * as echarts from "echarts";
-var myChart;
-window.onresize = function () {
-  myChart.resize();
-};
+// var myChart;
+// window.onresize = function () {
+//   myChart.resize();
+// };
 
 export default {
   props: ["data"],
@@ -48,9 +48,9 @@ export default {
     initChart() {
       let _this = this;
       myChart = echarts.init(document.getElementById("charts_work"));
-      window.onresize = function () {
-        myChart.resize();
-      };
+      //   window.onresize = function () {
+      //     myChart.resize();
+      //   };
       var options = {
         title: {
           text: "作业平均分数",

@@ -242,7 +242,7 @@ export default {
             this.$toasted.show(res.msg, {
               theme: "outline",
               position: "top-center",
-              duration: 1500,
+              duration: 2000,
             });
           }
           _this.prepareing_overlay = false;
@@ -251,7 +251,7 @@ export default {
           this.$toasted.error(err, {
             theme: "outline",
             position: "top-center",
-            duration: 1500,
+            duration: 2000,
           });
         });
     },

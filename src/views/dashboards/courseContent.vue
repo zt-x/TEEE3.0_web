@@ -294,6 +294,7 @@
             ),
           }"
         >
+          <!-- 课程信息 -->
           <div class="text-h3 text--secondary">_</div>
           <v-card :loading="!finishGetCourseInfo" class="mt-5">
             <v-card-title>{{ CourseInfo.cname }}</v-card-title>
@@ -304,7 +305,7 @@
             <v-divider class="mb-5"></v-divider>
             <v-container v-if="finishGetCourseInfo">
               <v-row>
-                <v-col cols="5">
+                <v-col cols="12" lg="5">
                   <v-card class="pl-5 pt-6" style="height: 200px" outlined>
                     <span>任课教师：{{ CourseInfo.tname }}</span>
                     <v-divider></v-divider>
@@ -330,12 +331,7 @@
                     <v-divider></v-divider>
                   </v-card>
                 </v-col>
-                <v-col cols="7">
-                  <Chart_sex
-                    v-if="gotExams"
-                    :data="CourseStatsitics.examsCount"
-                  />
-                </v-col>
+                <v-col cols="12" lg="7"> 这里是一个图表 </v-col>
               </v-row>
             </v-container>
           </v-card>
@@ -345,10 +341,8 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <Chart_workScroe
-                    v-if="gotWorkScore"
-                    :data="CourseStatsitics.worksCount"
-                  />
+                  <!--  -->
+                  这是一个图表，用来展示作业完成情况
                 </v-col>
               </v-row>
             </v-container>
@@ -428,7 +422,7 @@ export default {
       this.$toasted.show(msg, {
         theme: "outline",
         position: "top-center",
-        duration: 1500,
+        duration: 2000,
       });
     },
     searchUser() {
@@ -451,11 +445,8 @@ export default {
       _this.finishGetCourseInfo = false;
       fun_getInfo(this.cid)
         .then((res) => {
-          console.log(res.data);
-
           _this.CourseInfo = JSON.parse(res.data);
           //   _this.CourseInfo = eval(res.data);
-          console.log(_this.CourseInfo);
           _this.finishGetCourseInfo = true;
         })
         .catch((err) => {

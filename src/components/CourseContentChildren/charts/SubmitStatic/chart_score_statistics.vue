@@ -5,9 +5,9 @@
 <script>
 import * as echarts from "echarts";
 var myChart;
-window.onresize = function () {
-  myChart.resize();
-};
+// window.onresize = function () {
+//   myChart.resize();
+// };
 
 export default {
   props: ["statistic"],
@@ -17,9 +17,9 @@ export default {
   },
   methods: {
     initChart() {
-      window.onresize = function () {
-        myChart.resize();
-      };
+      //   window.onresize = function () {
+      //     myChart.resize();
+      //   };
       var options = {
         title: {
           text: "已批改的作业统计",
