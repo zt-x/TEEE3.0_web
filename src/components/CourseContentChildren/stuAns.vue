@@ -4,15 +4,12 @@
       >{{ SUBMIT.username }} {{ SUBMIT.score.toFixed(1) }}
       <v-spacer></v-spacer>
       <v-chip small @click="close()">
-        <v-icon small>fas fa-close</v-icon>
+        <v-icon small>mdi-close</v-icon>
       </v-chip>
     </v-card-title>
     <v-card-subtitle>
-      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记, 未批改的题目以<v-icon
-        color="warning"
-        small
-        >mdi-border-color</v-icon
-      >
+      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记,
+      未批改的题目以<v-icon color="warning" small>mdi-border-color</v-icon>
       标记。 下列各题得分均为题目的原始分数，总分为经过百分比计算后的得分
     </v-card-subtitle>
     <v-container>
@@ -36,7 +33,9 @@
             :style="{ color: item == readover_new[i] ? 'black' : '#2196f3' }"
           >
             <div style="width: 25px">
-              <v-icon color="green" v-if="readover_new[i] != -1" small>mdi-check</v-icon>
+              <v-icon color="green" v-if="readover_new[i] != -1" small
+                >mdi-check</v-icon
+              >
               <v-icon color="warning" v-if="readover_new[i] == -1" small
                 >mdi-border-color</v-icon
               >
@@ -97,7 +96,11 @@
     </v-dialog>
     <v-overlay v-if="overlay">
       <v-chip>
-        <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
+        <v-progress-circular
+          indeterminate
+          size="16"
+          class="mr-3"
+        ></v-progress-circular>
         <v-spacer></v-spacer>
         <span>{{ overlay_msg }}</span>
       </v-chip>
@@ -304,7 +307,10 @@ export default {
       this.showChangeScore = true;
     },
     saveScore(data) {
-      if (data.score >= 0 && Number(data.score) <= Number(this.qscores[data.i])) {
+      if (
+        data.score >= 0 &&
+        Number(data.score) <= Number(this.qscores[data.i])
+      ) {
         this.readover_new[data.i] = data.score;
         this.showChangeScore = false;
       } else {

@@ -4,104 +4,108 @@
       <v-card style="min-width: 100%" hover ripple="" @click="doWork(work)">
         <v-card-title>
           <v-chip
-            :color="work.status == -1 ? 'error' : 'success'"
+            :color="work.status == -1 ? 'grey' : 'success'"
             label
             small
             class="mr-2"
+            dark
           >
             {{ work.status == -1 ? "已截止" : "进行中" }}
           </v-chip>
-          {{ work.workName }}
+          {{ work.wname }}
           <v-spacer></v-spacer>
-          <v-tooltip top v-if="work.subNum - work.rDone > 0">
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip
-                v-on="on"
-                v-bind="attrs"
-                small
-                class="ma-2"
-                color="warning"
-                text-color="white"
-              >
-                <v-icon x-small>fa fa-bell</v-icon>
-              </v-chip>
-            </template>
-            <span>有未批改的作业</span>
-          </v-tooltip>
+          <div v-show="$vuetify.breakpoint.lgAndUp">
+            <v-tooltip top v-if="work.subNum - work.rDone > 0">
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip
+                  v-on="on"
+                  v-bind="attrs"
+                  small
+                  class="ma-2"
+                  color="warning"
+                  text-color="white"
+                >
+                  <v-icon x-small>fa fa-bell</v-icon>
+                </v-chip>
+              </template>
+              <span>有未批改的作业</span>
+            </v-tooltip>
 
-          <v-tooltip v-if="loading_subNum" top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip
-                v-on="on"
-                v-bind="attrs"
-                small
-                class="ma-2"
-                color="green"
-                text-color="white"
-              >
-                {{ work.subNum }} / {{ submit_totalNum }}</v-chip
-              >
-            </template>
-            <span>已提交 / 班级人数</span>
-          </v-tooltip>
+            <v-tooltip v-if="loading_subNum" top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip
+                  v-on="on"
+                  v-bind="attrs"
+                  small
+                  class="ma-2"
+                  color="green"
+                  text-color="white"
+                >
+                  {{ work.subNum }} / {{ submit_totalNum }}</v-chip
+                >
+              </template>
+              <span>已提交 / 班级人数</span>
+            </v-tooltip>
 
-          <v-chip
-            small
-            class="ma-2"
-            color="grey"
-            text-color="white"
-            v-if="!loading_subNum"
-          >
-            <v-container>
-              <v-row class="text-center">
-                <v-col cols="12">
-                  <v-progress-circular
-                    indeterminate
-                    :size="20"
-                    color="primary"
-                  ></v-progress-circular>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-chip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip
-                small
-                class="ma-2"
-                color="error"
-                text-color="white"
-                @click="deleteWork(work)"
-                hover
-                v-on="on"
-                v-bind="attrs"
-              >
-                <v-icon x-small class="pr-2">fa fa-trash</v-icon>
-                Delete
-              </v-chip>
-            </template>
-            <span>删除该作业</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip
-                small
-                class="ma-2"
-                color="warning"
-                text-color="white"
-                hover
-                v-on="on"
-                @click="editWork(work)"
-                v-bind="attrs"
-              >
-                <v-icon x-small>fas fa-cog</v-icon>
-              </v-chip>
-            </template>
-            <span>编辑</span>
-          </v-tooltip>
+            <v-chip
+              small
+              class="ma-2"
+              color="grey"
+              text-color="white"
+              v-if="!loading_subNum"
+            >
+              <v-container>
+                <v-row class="text-center">
+                  <v-col cols="12">
+                    <v-progress-circular
+                      indeterminate
+                      :size="20"
+                      color="primary"
+                    ></v-progress-circular>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-chip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip
+                  small
+                  class="ma-2"
+                  color="error"
+                  text-color="white"
+                  @click="deleteWork(work)"
+                  hover
+                  v-on="on"
+                  v-bind="attrs"
+                >
+                  <v-icon x-small class="pr-2">fa fa-trash</v-icon>
+                  Delete
+                </v-chip>
+              </template>
+              <span>删除该作业</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip
+                  small
+                  class="ma-2"
+                  color="warning"
+                  text-color="white"
+                  hover
+                  v-on="on"
+                  @click="editWork(work)"
+                  v-bind="attrs"
+                >
+                  <v-icon x-small>fas fa-cog</v-icon>
+                </v-chip>
+              </template>
+              <span>编辑</span>
+            </v-tooltip>
+          </div>
         </v-card-title>
         <v-card-subtitle
-          >截止时间 | {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
+          >截止时间 |
+          {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
         >
       </v-card>
       <div style="height: 5px"></div>
@@ -137,17 +141,16 @@ export default {
     };
   },
   methods: {
-	  editWork(work) {
-		// TODO 编辑已发布的作业
-		  alert("开发中 ... ");
-		  
-	},
+    editWork(work) {
+      // TODO 编辑已发布的作业
+      alert("开发中 ... ");
+    },
     doWork(work) {
       let cid = this.cid;
       if (this.isDelete == false) {
         this.$router.push({
           name: "WorkContent",
-          params: { wid: work.id, wname: work.workName, cid: cid },
+          params: { wid: work.id, wname: work.wname, cid: cid },
         });
       } else {
         this.isDelete = false;
@@ -182,13 +185,8 @@ export default {
         content: "确定要删除该作业嘛？ 删除后无法直接恢复哦",
         btns: [
           {
-            label: "算了",
-            color: "grey",
-            ghost: true,
-          },
-          {
             label: "确定",
-            color: "red darken-5",
+            color: "brown",
             callback: () => {
               token = window.localStorage.getItem("token");
               // init axios
@@ -212,6 +210,11 @@ export default {
                   _this.snackbar = true;
                 });
             },
+          },
+          {
+            label: "算了",
+            color: "grey",
+            ghost: true,
           },
         ],
       });

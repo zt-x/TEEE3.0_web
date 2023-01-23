@@ -53,13 +53,15 @@
       <v-btn color="orange" text @click="InterCourse(Course.cid)">
         进入课程
       </v-btn>
-
       <v-btn color="orange" text> 查看统计 </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn color="grey" text @click="exitCourse()"> 退出课程 </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import { fun_leave } from "@/api/course";
 export default {
   props: ["Course"],
   data: () => ({
@@ -69,6 +71,7 @@ export default {
     InterCourse(cid) {
       this.$router.push({ name: "CourseContent", params: { cid: cid } });
     },
+    exitCourse(cid) {},
   },
 };
 </script>

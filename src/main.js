@@ -5,9 +5,12 @@ import toasted from "./plugins/toasted";
 import * as apexcharts from "./plugins/apexcharts";
 import router from "./router";
 import "@mdi/font/css/materialdesignicons.css";
-
+import "./plugins/fontawesome";
+import Dialog from "vue-dialog-loading";
 Vue.config.productionTip = false;
-
+Vue.use(Dialog, {
+  dialogBtnColor: "#0f0",
+});
 export default new Vue({
   vuetify,
   apexcharts,

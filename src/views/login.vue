@@ -127,8 +127,7 @@ export default {
         .then((data) => {
           if (data.code > 0) {
             let ret = JSON.parse(data.data);
-            console.log(ret);
-            window.localStorage.setItem("token", ret.token);
+           window.localStorage.setItem("token", ret.token);
             window.localStorage.setItem("role", ret.role);
             this.$router.replace({ path: "/" });
           } else {
@@ -142,8 +141,7 @@ export default {
           this.loading_btn = false;
         })
         .catch((err) => {
-          console.log("l4");
-          console.log(err);
+
           this.$toasted.show(err.msg, {
             theme: "outline",
             position: "top-center",

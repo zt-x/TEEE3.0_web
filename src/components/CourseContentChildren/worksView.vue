@@ -4,16 +4,17 @@
       <v-card style="min-width: 100%" hover ripple="" @click="doWork(work)">
         <v-card-title>
           <v-chip
-            :color="work.status == -1 ? 'error' : 'success'"
+            :color="work.status == -1 ? 'grey' : 'success'"
             label
             small
             class="mr-2"
+            dark
           >
             {{ work.status == -1 ? "已截止" : "进行中" }}
           </v-chip>
-          {{ work.workName }}
+          {{ work.wname }}
           <v-spacer></v-spacer>
-
+		<div v-show="$vuetify.breakpoint.lgAndUp">
           <v-chip
             v-if="finishGetStatus"
             small
@@ -59,9 +60,12 @@
               color="primary"
             ></v-progress-circular>
           </v-chip>
+		</div>
+
         </v-card-title>
         <v-card-subtitle
-          >截止时间 | {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
+          >截止时间 |
+          {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
         >
       </v-card>
       <div style="height: 5px"></div>
@@ -76,7 +80,11 @@
       />
     </v-dialog>
     <v-overlay v-if="loading">
-      <v-progress-circular small indeterminate color="primary"></v-progress-circular>
+      <v-progress-circular
+        small
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
       <div class="mx-auto">{{ loadingText }}</div>
     </v-overlay>
     <v-snackbar
@@ -102,16 +110,25 @@ export default {
   props: ["works", "cid"],
   computed: {},
   methods: {
+    _alert(msg) {
+      this.$toasted.show(msg, {
+        theme: "outline",
+        position: "top-center",
+        duration: 1500,
+      });
+    },
     close(val) {
       this.dialog_stuAnsStu = false;
     },
     doWork(work) {
       let _this = this;
       if (this.status(work.id) == null || this.status(work.id) == undefined) {
+        this._alert("😥作业状态异常!!");
         this.loading = false;
         return;
       } else {
         if (this.status(work.id) == "未提交") {
+          alert("未提交");
           if (work.status == -1) {
             this.$dialog({
               title: "时间已到",
@@ -128,9 +145,12 @@ export default {
           }
           this.$router.push({
             name: "doWork",
-            params: { wid: work.id, wname: work.workName, cid: _this.cid },
+            params: { wid: work.id, wname: work.wname, cid: _this.cid },
           });
-        } else if (this.status(work.id) == "批改中" || this.status(work.id) == "已批改") {
+        } else if (
+          this.status(work.id) == "批改中" ||
+          this.status(work.id) == "已批改"
+        ) {
           this.loading = true;
           this.loadingText = "获取答题卡中 ... ";
           const form = new FormData();
@@ -243,20 +263,14 @@ export default {
       let _this = this;
       const form = new FormData();
       form.append("cid", _this.cid);
-      _axios
-        .post("/api/Work/getWorkFinishStatus", form)
-        .then((res) => {
-          let arr = eval(res.data.data);
-          arr.forEach((val, i) => {
-            _this.finish_status[i] = val;
-          });
-          _this.finish_status;
-          _this.finishGetStatus = true;
-        })
-        .catch((err) => {
-          _this.msg = "发生了错误" + err;
-          _this.snackbar = true;
+      _axios.post("/api/Work/getWorkFinishStatus", form).then((res) => {
+        let arr = eval(res.data.data);
+        arr.forEach((val, i) => {
+          _this.finish_status[i] = val;
         });
+        _this.finish_status;
+        _this.finishGetStatus = true;
+      });
     },
   },
   data() {

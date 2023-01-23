@@ -12,6 +12,10 @@ export const routes = [
     path: "/login",
     component: () => import("@/views/login.vue"),
   },
+  {
+    path: "/doWork",
+    component: () => import("@/views/doWork.vue"),
+  },
 ];
 
 const router = new VueRouter({

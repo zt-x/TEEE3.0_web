@@ -61,21 +61,20 @@
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-speed-dial>
-
+    <v-overlay :value="prepareing_overlay">
+      <v-chip>
+        <v-progress-circular
+          indeterminate
+          size="16"
+          class="mr-3"
+        ></v-progress-circular>
+        <v-spacer></v-spacer>
+        <span>正在准备内容 ...</span>
+      </v-chip>
+    </v-overlay>
     <v-container fluid>
-      <v-overlay :value="prepareing_overlay">
-        <v-chip>
-          <v-progress-circular
-            indeterminate
-            size="16"
-            class="mr-3"
-          ></v-progress-circular>
-          <v-spacer></v-spacer>
-          <span>正在准备内容 ...</span>
-        </v-chip>
-      </v-overlay>
       <v-row>
-        <v-col cols="12" xl="8">
+        <v-col cols="12" lg="8">
           <v-sheet class="py-6 px-10 transparent">
             <div class="text-h3 text--secondary">Courses</div>
             <v-row class="pt-5">
@@ -102,7 +101,7 @@
             </v-row>
           </v-sheet>
         </v-col>
-        <v-col v-show="!$vuetify.breakpoint.mdAndDown" xl="4">
+        <v-col v-show="!$vuetify.breakpoint.mdAndDown" lg="4">
           <v-sheet class="py-6 px-10 transparent">
             <div class="text-h3 text--secondary">
               <span class="text-h6">Course Tools</span>
@@ -234,7 +233,6 @@ export default {
 
       fun_getMyCourse(page)
         .then((res) => {
-          console.log(res);
           if (res.code != 101 && res.code > 0) {
             let coursesData = res.data.courses;
             let coursesData_arr = eval(coursesData);

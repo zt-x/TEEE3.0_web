@@ -82,7 +82,7 @@
     <v-tabs-items v-model="tab">
       <!-- 基础设置 -->
       <v-tab-item>
-        <v-card-text>
+        <v-card-text class="px-7">
           <v-form>
             <v-row>
               <v-col cols="3">
@@ -188,11 +188,11 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-chip
                       class="white--text"
-                      color="green"
+                      color="#875438"
                       v-bind="attrs"
                       v-on="on"
                     >
-                      <v-icon small left>fa fa-plus</v-icon>
+                      <v-icon small left>mdi-plus</v-icon>
                       添加题目
                     </v-chip>
                   </template>
@@ -303,7 +303,7 @@
       </v-tab-item>
       <!-- 考试设置 -->
       <v-tab-item>
-        <v-card-text>
+        <v-card-text class="px-6">
           <v-card>
             <v-card-title>进入考试前的验证</v-card-title>
             <v-card-text>
@@ -560,7 +560,7 @@ export default {
       aWork.cid = this.cid;
       aWork.deadline = this.deadline;
       aWork.totalScore = this.totalScore;
-      aWork.workName = this.workTitle;
+      awork.wname = this.workTitle;
       aWork.autoReadoverChoice = this.autoReadoverChoice ? 1 : 0;
       aWork.autoReadoverFillIn = this.autoReadoverFillIn ? 1 : 0;
       aWork.workId = bkid;
@@ -636,13 +636,13 @@ export default {
       aWork.cid = this.cid;
       aWork.deadline = this.deadline;
       aWork.totalScore = this.totalScore;
-      aWork.workName = this.workTitle;
+      awork.wname = this.workTitle;
       aWork.autoReadoverChoice = this.autoReadoverChoice ? 1 : 0;
       aWork.autoReadoverFillIn = this.autoReadoverFillIn ? 1 : 0;
       aWork.workId = 0;
       aWork.timeLimit = this.timeLimit;
       aWork.isExam = this.releaseWork_isExam ? 1 : 0;
-      work.workName = this.work_name;
+      work.wname = this.work_name;
       work.questions = "[" + this.questions.toString() + "]";
       work.isTemp = isTemp ? 1 : 0;
 

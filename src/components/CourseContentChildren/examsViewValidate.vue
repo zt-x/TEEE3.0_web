@@ -163,7 +163,6 @@ export default {
               that.loading = false;
             })
             .catch(function (err) {
-              console.log(err);
               that.loading = false;
             });
         } else {
@@ -213,7 +212,6 @@ export default {
       this.$emit("close");
     },
     enterWork() {
-      console.log(this.work);
       let _this = this;
       this.$router.push({
         name: "doWork",

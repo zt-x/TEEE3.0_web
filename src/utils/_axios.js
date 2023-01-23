@@ -26,7 +26,6 @@ _axios.interceptors.response.use(
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
     if (response.data.code == -4) {
-      console.log(vue);
       vue.$toasted.show(response.data.msg, {
         type: "error",
         theme: "outline",

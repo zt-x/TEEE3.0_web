@@ -4,64 +4,67 @@
       <v-card style="min-width: 100%" hover ripple="" @click="doWork(work)">
         <v-card-title>
           <v-chip
-            :color="work.status == -1 ? 'error' : 'success'"
+            :color="work.status == -1 ? 'grey' : 'success'"
             label
             small
             class="mr-2"
+            dark
           >
             {{ work.status == -1 ? "已截止" : "进行中" }}
           </v-chip>
-          {{ work.workName }}
+          {{ work.wname }}
           <v-spacer></v-spacer>
-
-          <v-chip
-            v-if="finishGetStatus"
-            small
-            :color="scoreColor(work.id)"
-            text-color="white"
-            class="mr-2"
-          >
-            {{ getScore(work.id) }}
-          </v-chip>
-          <v-chip
-            v-if="!finishGetStatus"
-            small
-            color="grey lighten-1"
-            text-color="white"
-            class="mr-2"
-          >
-            <v-progress-circular
-              :size="15"
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
-          </v-chip>
-          <span style="color: #eeeeee">|</span>
-          <v-chip
-            v-if="finishGetStatus"
-            small
-            class="ma-2"
-            :color="statusColor(work.id)"
-            text-color="white"
-          >
-            {{ status(work.id) }}
-          </v-chip>
-          <v-chip
-            v-if="!finishGetStatus"
-            small
-            color="grey lighten-1"
-            text-color="white"
-            class="mr-2"
-          >
-            <v-progress-circular
-              :size="15"
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
-          </v-chip>
+          <div v-show="$vuetify.breakpoint.lgAndUp">
+            <v-chip
+              v-if="finishGetStatus"
+              small
+              :color="scoreColor(work.id)"
+              text-color="white"
+              class="mr-2"
+            >
+              {{ getScore(work.id) }}
+            </v-chip>
+            <v-chip
+              v-if="!finishGetStatus"
+              small
+              color="grey lighten-1"
+              text-color="white"
+              class="mr-2"
+            >
+              <v-progress-circular
+                :size="15"
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </v-chip>
+            <span style="color: #eeeeee">|</span>
+            <v-chip
+              v-if="finishGetStatus"
+              small
+              class="ma-2"
+              :color="statusColor(work.id)"
+              text-color="white"
+            >
+              {{ status(work.id) }}
+            </v-chip>
+            <v-chip
+              v-if="!finishGetStatus"
+              small
+              color="grey lighten-1"
+              text-color="white"
+              class="mr-2"
+            >
+              <v-progress-circular
+                :size="15"
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </v-chip>
+          </div>
         </v-card-title>
         <v-card-subtitle
-          >截止时间 | {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
+          >截止时间 |
+          {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
         >
       </v-card>
       <div style="height: 5px"></div>
@@ -78,7 +81,11 @@
     </v-dialog>
 
     <!-- 验证 -->
-    <v-dialog v-if="dialog_preValidate" v-model="dialog_preValidate" width="750px">
+    <v-dialog
+      v-if="dialog_preValidate"
+      v-model="dialog_preValidate"
+      width="750px"
+    >
       <ExamsViewValidate
         @close="dialog_preValidate = false"
         v-if="dialog_preValidate"
@@ -87,7 +94,11 @@
     </v-dialog>
 
     <v-overlay v-if="loading">
-      <v-progress-circular small indeterminate color="primary"></v-progress-circular>
+      <v-progress-circular
+        small
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
       <div class="mx-auto">{{ loadingText }}</div>
     </v-overlay>
     <v-snackbar
@@ -124,7 +135,7 @@ export default {
       this.dialog_preValidate = true;
       // this.$router.push({
       //     name: "doWork",
-      //     params: { wid: work.id, wname: work.workName, cid: _this.cid },
+      //     params: { wid: work.id, wname: work.wname, cid: _this.cid },
       //   });
     },
     doWork(work) {
@@ -152,7 +163,10 @@ export default {
           //
           //
           _this.enterPreValidate(work);
-        } else if (this.status(work.id) == "批改中" || this.status(work.id) == "已批改") {
+        } else if (
+          this.status(work.id) == "批改中" ||
+          this.status(work.id) == "已批改"
+        ) {
           this.loading = true;
           this.loadingText = "获取答题卡中 ... ";
           const form = new FormData();
@@ -161,10 +175,7 @@ export default {
             .post("/api/Work/getWork", form)
             .then((res) => {
               if (Number(res.data.code) == 1) {
-                _this.msg = res.data.msg;
                 _this.loading = false;
-                _this.snackbar = true;
-                alert("CANT");
                 return;
               } else {
                 let questions = res.data.data;
@@ -183,10 +194,7 @@ export default {
                   })
                   .catch((err) => {
                     // TODO
-                    _this.msg = "发生了错误" + err;
                     _this.loading = false;
-
-                    _this.snackbar = true;
                   });
               }
             })
@@ -276,20 +284,14 @@ export default {
       });
       const form = new FormData();
       form.append("cid", _this.cid);
-      _axios
-        .post("/api/Work/getWorkFinishStatus", form)
-        .then((res) => {
-          let arr = eval(res.data.data);
-          arr.forEach((val, i) => {
-            _this.finish_status[i] = val;
-          });
-          _this.finish_status;
-          _this.finishGetStatus = true;
-        })
-        .catch((err) => {
-          _this.msg = "发生了错误" + err;
-          _this.snackbar = true;
+      _axios.post("/api/Work/getWorkFinishStatus", form).then((res) => {
+        let arr = eval(res.data.data);
+        arr.forEach((val, i) => {
+          _this.finish_status[i] = val;
         });
+        _this.finish_status;
+        _this.finishGetStatus = true;
+      });
     },
   },
   data() {
