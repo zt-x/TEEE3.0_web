@@ -63,8 +63,7 @@
           </div>
         </v-card-title>
         <v-card-subtitle
-          >截止时间 |
-          {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
+          >截止时间 | {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
         >
       </v-card>
       <div style="height: 5px"></div>
@@ -79,11 +78,7 @@
       />
     </v-dialog>
     <v-overlay v-if="loading">
-      <v-progress-circular
-        small
-        indeterminate
-        color="primary"
-      ></v-progress-circular>
+      <v-progress-circular small indeterminate color="primary"></v-progress-circular>
       <div class="mx-auto">{{ loadingText }}</div>
     </v-overlay>
     <v-snackbar
@@ -136,10 +131,7 @@ export default {
             name: "doWork",
             params: { wid: work.id, wname: work.wname, cid: _this.cid },
           });
-        } else if (
-          this.status(work.id) == "批改中" ||
-          this.status(work.id) == "已批改"
-        ) {
+        } else if (this.status(work.id) == "批改中" || this.status(work.id) == "已批改") {
           this.loading = true;
           this.loadingText = "获取答题卡中 ... ";
           const form = new FormData();
@@ -250,7 +242,6 @@ export default {
       //
       let _this = this;
       fun_getWorkStatus(this.cid).then((res) => {
-        console.log(res.data);
         let arr = eval(res.data);
         arr.forEach((val, i) => {
           _this.finish_status[i] = val;

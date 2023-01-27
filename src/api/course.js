@@ -1,5 +1,6 @@
 import _axios from "../utils/_axios";
 const baseUrl = "/api/courses";
+
 export function fun_getMyCourse(page) {
   return _axios.get(baseUrl, { params: { page: page } });
 }
@@ -20,6 +21,9 @@ export function fun_addCourse(cid) {
 export function fun_getUsers(cid) {
   return _axios.get(baseUrl + "/users", { params: { cid: cid } });
 }
+export function fun_removeUsers(cid, uid) {
+  return _axios.delete(baseUrl + "/teacher/delUser", { cid: cid, uid: uid });
+}
 export function fun_getInfo(cid) {
   return _axios.get(baseUrl + "/info", { params: { cid: cid } });
 }
@@ -30,7 +34,5 @@ export function fun_getAnnouncement(cid) {
   return _axios.get(baseUrl + "/announcements", { params: { cid: cid } });
 }
 export function fun_leave(cid) {
-  return _axios.delete(baseUrl + "/student", {
-    params: { cid: cid },
-  });
+  return _axios.delete(baseUrl + "/student", { cid: cid });
 }

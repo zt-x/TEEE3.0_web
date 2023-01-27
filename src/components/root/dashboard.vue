@@ -199,6 +199,7 @@ export default {
             position: "top-center",
             duration: 2000,
           });
+          this.$router.replace({ path: "/login" });
         }
       })
       .catch((err) => {

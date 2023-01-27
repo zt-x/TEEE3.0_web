@@ -25,9 +25,7 @@
           class="py-6 transparent"
           :class="{
             'pl-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-            'px-10': !(
-              $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
-            ),
+            'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
           }"
         >
           <div class="text-h3 text--secondary mb-5">Works</div>
@@ -45,9 +43,7 @@
                   color="success"
                   class="ml-5"
                 >
-                  <v-icon color="white" small left
-                    >mdi-clipboard-outline</v-icon
-                  >
+                  <v-icon color="white" small left>mdi-clipboard-outline</v-icon>
                   <span style="color: white">发布公告</span>
                 </v-chip>
                 <v-chip
@@ -150,7 +146,54 @@
                   </v-tab-item>
                   <!-- 成员管理模块 -->
                   <v-tab-item v-if="isTeacher">
-                    <v-card
+                    <v-card>
+                      <v-card-title>
+                        学生列表
+                        <v-spacer></v-spacer>
+                        <v-text-field
+                          v-model="search_user"
+                          append-icon="mdi-magnify"
+                          label="Search"
+                          single-line
+                          hide-details
+                        ></v-text-field>
+                      </v-card-title>
+                      <v-data-table
+                        :loading="!finishGetUser"
+                        loading-text="正在努力加载课程学生信息 ..."
+                        :headers="usertable_headers"
+                        :items="userinfos"
+                        :search="search_user"
+                        :items-per-page="10"
+                        :page.sync="pageOfUser"
+                        @page-count="pageCount = $event"
+                        hide-default-footer
+                      >
+                        <template v-slot:item.username="{ item }">
+                          <v-chip outlined>
+                            <v-avatar left size="30">
+                              <v-img :src="item.avatar"></v-img>
+                            </v-avatar>
+                            {{ item.username }}</v-chip
+                          >
+                        </template>
+                        <template v-slot:item.delete="{ item }">
+                          <v-chip small @click="removeStu(item.uid)">
+                            <v-avatar left>
+                              <v-icon small> mdi-exit-to-app </v-icon>
+                            </v-avatar>
+                            Delete
+                          </v-chip>
+                        </template>
+                      </v-data-table>
+                      <div class="text-center pt-2">
+                        <v-pagination
+                          v-model="pageOfUser"
+                          :length="pageCount"
+                        ></v-pagination>
+                      </div>
+                    </v-card>
+                    <!-- <v-card
                       v-if="finishGetUser"
                       class="py-5"
                       color="basil"
@@ -199,11 +242,7 @@
                         class="mx-auto mb-5"
                         width="95%"
                         rounded="false"
-                        style="
-                          padding: 10px;
-                          background: #f6f7f8;
-                          overflow-y: auto;
-                        "
+                        style="padding: 10px; background: #f6f7f8; overflow-y: auto"
                         v-if="finishGetUser"
                         max-height="500px"
                       >
@@ -269,13 +308,11 @@
                               :size="20"
                               color="primary"
                             ></v-progress-circular>
-                            <span class="pl-2"
-                              >正在获取成员信息并统计作业情况 ...</span
-                            >
+                            <span class="pl-2">正在获取成员信息并统计作业情况 ...</span>
                           </v-col>
                         </v-row>
                       </v-container>
-                    </v-card>
+                    </v-card> -->
                   </v-tab-item>
                 </v-tabs-items>
               </v-card>
@@ -289,9 +326,7 @@
           class="py-6 transparent"
           :class="{
             'pr-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-            'px-10': !(
-              $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
-            ),
+            'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
           }"
         >
           <!-- 课程信息 -->
@@ -315,17 +350,13 @@
 
                     <span
                       >作业次数:
-                      {{
-                        CourseInfo.WorksCount == null ? 0 : CourseInfo.WorkCount
-                      }}</span
+                      {{ CourseInfo.WorksCount == null ? 0 : CourseInfo.WorkCount }}</span
                     >
                     <v-divider></v-divider>
                     <span
                       >考试次数:
                       {{
-                        CourseInfo.ExamsCount == null
-                          ? 0
-                          : CourseInfo.ExamsCount
+                        CourseInfo.ExamsCount == null ? 0 : CourseInfo.ExamsCount
                       }}</span
                     >
                     <v-divider></v-divider>
@@ -373,6 +404,7 @@ import {
   fun_getWorks,
   fun_getAnnouncement,
   fun_getInfo,
+  fun_removeUsers,
 } from "@/api/course";
 
 export default {
@@ -391,6 +423,36 @@ export default {
     return {
       tab: null,
       items: ["作业", "考试", "公告", "成员"],
+      usertable_headers: [
+        {
+          text: "学生姓名",
+          align: "start",
+          sortable: false,
+          value: "username",
+        },
+        {
+          text: "学号",
+          align: "start",
+          value: "uid",
+        },
+        {
+          text: "作业平均分",
+          align: "start",
+          value: "workAverageScore",
+        },
+        {
+          text: "完成作业数量",
+          align: "start",
+          value: "finishWorkNum",
+        },
+        {
+          text: "移除该学生",
+          value: "delete",
+        },
+      ],
+      userinfos: [],
+      pageOfUser: 1,
+      pageCount: 0,
       cid: 0,
       loading_workview: false,
       loading_examview: false,
@@ -404,8 +466,6 @@ export default {
       loading: false,
       loadingText: "",
       searchIcon: "fa fa-user",
-      userinfos: [],
-      userinfos_show: [],
       finishGetUser: false,
       finishGetCourseInfo: true,
       CourseInfo: {},
@@ -423,14 +483,6 @@ export default {
         theme: "outline",
         position: "top-center",
         duration: 2000,
-      });
-    },
-    searchUser() {
-      let str = `\S*${this.search_user}\S*`;
-      let reg = new RegExp(str);
-      this.userinfos_show = [];
-      this.userinfos_show = this.userinfos.filter((item) => {
-        return reg.test(item.username) || reg.test(item.uid);
       });
     },
     async close() {
@@ -473,6 +525,7 @@ export default {
       _this.finishGetUser = false;
       _this.loading_examview = false;
       _this.loading_workview = false;
+      //   TODO 刷新时用户列表不会清除
       fun_getUsers(this.cid)
         .then((res) => {
           let arr = eval(res.data);
@@ -481,7 +534,6 @@ export default {
           });
           arr.forEach((element, i) => {
             _this.userinfos[i] = element;
-            _this.userinfos_show[i] = element;
           });
           _this.finishGetUser = true;
           _this.loading = false;
@@ -527,6 +579,29 @@ export default {
           _this._alert("出问题咯，获取公告异常: " + err);
         });
     },
+    removeStu(uid) {
+      let _this = this;
+      this.$dialog({
+        title: "Delete",
+        content: "删除后学生在班级里的作业记录无法恢复哦！请谨慎操作",
+        btns: [
+          {
+            label: "继续删除",
+            background: "red",
+            callback: () => {
+              fun_removeUsers(this.cid, uid).then((res) => {
+                _this._alert(res.code);
+              });
+            },
+          },
+          {
+            label: "算了",
+            color: "grey",
+            ghost: true,
+          },
+        ],
+      });
+    },
   },
   mounted() {
     this.finishGetUser = false;
@@ -543,6 +618,9 @@ export default {
     this.getCourseInfo();
     this.getCourseStatsitics();
     this.isTeacher = window.localStorage.getItem("role") >= 1 ? true : false;
+    this.items = this.isTeacher
+      ? ["作业", "考试", "公告", "成员"]
+      : ["作业", "考试", "公告"];
   },
   created() {
     // this.isTeacher

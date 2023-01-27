@@ -77,7 +77,7 @@
                   v-on="on"
                   v-bind="attrs"
                 >
-                  <v-icon x-small class="pr-2">mdi-trash</v-icon>
+                  <v-icon x-small class="pr-2">mdi-delete</v-icon>
                   Delete
                 </v-chip>
               </template>

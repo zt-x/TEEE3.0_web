@@ -1,5 +1,6 @@
 import _axios from "../utils/_axios";
 const baseUrl = "/api/works";
+
 export function fun_getWorkStatus(cid) {
   return _axios.get(baseUrl + "/student/status", {
     params: { cid: cid },
@@ -16,5 +17,17 @@ export function fun_getWorkTimer(wid) {
   });
 }
 export function fun_submit(wid, ans, files) {
-  return _axios.post("/student", { wid: wid, ans: ans, files: files });
+  return _axios.post(baseUrl + "/student", {
+    wid: wid,
+    ans: ans,
+    files: files,
+  });
+}
+
+// Teacher
+export function fun_releaseWork(aWork) {
+  return _axios.post(baseUrl + "/teacher", aWork);
+}
+export function fun_setRule(wr) {
+  return _axios.post(baseUrl + "/teacher/setRules", wr);
 }

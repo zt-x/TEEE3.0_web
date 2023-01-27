@@ -63,11 +63,7 @@
     </v-speed-dial>
     <v-overlay :value="prepareing_overlay">
       <v-chip>
-        <v-progress-circular
-          indeterminate
-          size="16"
-          class="mr-3"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
         <v-spacer></v-spacer>
         <span>正在准备内容 ...</span>
       </v-chip>
@@ -78,13 +74,7 @@
           <v-sheet class="py-6 px-10 transparent">
             <div class="text-h3 text--secondary">Courses</div>
             <v-row class="pt-5">
-              <v-col
-                cols="12"
-                md="6"
-                lg="4"
-                v-for="(item, i) in courses"
-                :key="i"
-              >
+              <v-col cols="12" md="6" lg="4" v-for="(item, i) in courses" :key="i">
                 <Course :Course="item" />
               </v-col>
             </v-row>
@@ -130,13 +120,7 @@
                   <v-col cols="3">
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          fab
-                          dark
-                          v-bind="attrs"
-                          v-on="on"
-                          color="primary"
-                        >
+                        <v-btn fab dark v-bind="attrs" v-on="on" color="primary">
                           <v-icon>mdi-magnify</v-icon>
                         </v-btn>
                       </template>
@@ -188,32 +172,7 @@ export default {
       addCourse: false,
       role: -1,
     },
-    courses: [
-      {
-        cname: "TestCourse",
-        tname: "许正韬",
-        college: "计科学院",
-        time: "2022/01/11 - 2023/01/25",
-      },
-      {
-        cname: "TestCourse",
-        tname: "许正韬",
-        college: "计科学院",
-        time: "2022/01/11 - 2023/01/25",
-      },
-      {
-        cname: "TestCourse",
-        tname: "许正韬",
-        college: "计科学院",
-        time: "2022/01/11 - 2023/01/25",
-      },
-      {
-        cname: "TestCourse",
-        tname: "许正韬",
-        college: "计科学院",
-        time: "2022/01/11 - 2023/01/25",
-      },
-    ],
+    courses: [],
     prepareing_overlay: true,
     fab: false,
     page: 1,

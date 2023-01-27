@@ -1,9 +1,3 @@
-// Result register(JSONObject jo);
-// Result login(JSONObject jo);
-// Result updateUserInfo(JSONObject jo);
-// Result getUserInfo(Long uid);
-// Result delUser(Long uid);
-
 import _axios from "../utils/_axios";
 
 export function fun_login(uid, pwd) {

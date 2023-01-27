@@ -113,7 +113,10 @@ export default {
         toolbarGroups: [
           { name: "document", groups: ["mode", "document", "doctools"] },
           { name: "clipboard", groups: ["clipboard", "undo"] },
-          { name: "editing", groups: ["find", "selection", "spellchecker", "editing"] },
+          {
+            name: "editing",
+            groups: ["find", "selection", "spellchecker", "editing"],
+          },
           { name: "forms", groups: ["forms"] },
           { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
           "/",
@@ -137,6 +140,13 @@ export default {
     };
   },
   methods: {
+    _alert(msg) {
+      this.$toasted.show(msg, {
+        theme: "outline",
+        position: "top-center",
+        duration: 2000,
+      });
+    },
     sout(val) {
       console.log(val);
     },
@@ -175,17 +185,12 @@ export default {
         axios
           .post("/api/upload/file", param, config)
           .then((res) => {
-            if (res.data.code == 1) {
+            if (res.data.code < 0) {
               // 上传失败
-              _this.snackbar_msg = res.data.msg;
-              _this.snackbar_color = "error";
-              _this.snackbar = true;
+              _this._alert(res.data.msg);
               return;
             } else {
-              _this.snackbar_msg = res.data.msg;
-              _this.snackbar_color = "success";
-              _this.snackbar = true;
-
+              _this._alert(res.data.msg);
               //   解析 获得 FileRealPath
               // 返回JSON
               // {qtype: 30012, qscore: 2.0,
