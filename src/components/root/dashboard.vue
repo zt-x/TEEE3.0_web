@@ -12,7 +12,7 @@
         <v-list-item-content>
           <v-list-item-title class="text-h5 font-weight-black">
             <v-icon v-show="!mini">mdi-account</v-icon>
-            <v-btn icon> </v-btn>
+            <v-btn icon></v-btn>
 
             <v-btn text @click="logout()">
               <div class="d-flex align-center">
@@ -23,7 +23,7 @@
               </div>
             </v-btn>
 
-            <v-btn icon> </v-btn>
+            <v-btn icon></v-btn>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>

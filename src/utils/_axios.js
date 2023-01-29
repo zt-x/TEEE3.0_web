@@ -25,14 +25,18 @@ _axios.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    if (response.data.code == -4) {
+    if (response.data.code < 0) {
       vue.$toasted.show(response.data.msg, {
         type: "error",
         theme: "outline",
         position: "top-center",
         duration: 2500,
       });
-      vue.$router.replace({ path: "/login" });
+      if (response.data.code == -4) {
+        vue.$router.replace({ path: "/login" });
+      } else {
+        return response.data;
+      }
     } else {
       return response.data;
     }

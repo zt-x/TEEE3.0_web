@@ -1,18 +1,15 @@
 <template>
   <v-card>
     <v-card-title
-      >{{ SUBMIT.username }} {{ SUBMIT.score.toFixed(1) }}
+      >{{ SUBMIT.uname }} {{ SUBMIT.score.toFixed(1) }}
       <v-spacer></v-spacer>
       <v-chip small @click="close()">
         <v-icon small>fas fa-close</v-icon>
       </v-chip>
     </v-card-title>
     <v-card-subtitle>
-      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记, 未批改的题目以<v-icon
-        color="warning"
-        small
-        >mdi-border-color</v-icon
-      >
+      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记,
+      未批改的题目以<v-icon color="warning" small>mdi-border-color</v-icon>
       标记。 下列各题得分均为题目的原始分数，总分为经过百分比计算后的得分
     </v-card-subtitle>
     <v-container>
@@ -91,7 +88,11 @@
     </v-card-actions>
     <v-overlay v-if="overlay">
       <v-chip>
-        <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
+        <v-progress-circular
+          indeterminate
+          size="16"
+          class="mr-3"
+        ></v-progress-circular>
         <v-spacer></v-spacer>
         <span>{{ overlay_msg }}</span>
       </v-chip>
@@ -110,10 +111,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import stuAnsSetScore from "./work/stuAnsSetScore.vue";
-const _axios = axios.create();
-let token = window.localStorage.getItem("token");
+import { fun_getSubmitBySId } from "@/api/submit";
+import { _alert } from "@/plugins/myfun";
+import { download } from "@/api/download";
 export default {
   components: { stuAnsSetScore },
   props: ["SUBMIT", "qscores"],
@@ -149,32 +150,34 @@ export default {
       return str2.substr(str2.indexOf("_") + 1);
     },
     downloadFile(file) {
-      this.snackbar_msg = "拉取下载链接😀 ... ";
-      this.snackbar = true;
+      _alert("拉取下载链接😀 ...");
       let form = new FormData();
       form.append("fileName", file);
-      _axios
-        .post("/api/upload/getFile", form, { responseType: "blob" })
-        .then((res) => {
-          const { data, headers } = res;
-          const fileName = headers["content-disposition"].replace(
-            /\w+;filename=(.*)/,
-            "$1"
-          );
-          // 此处当返回json文件时需要先对data进行JSON.stringify处理，其他类型文件不用做处理
-          //const blob = new Blob([JSON.stringify(data)], ...)
-          const blob = new Blob([data], { type: headers["content-type"] });
-          let dom = document.createElement("a");
-          let url = window.URL.createObjectURL(blob);
-          dom.href = url;
-          dom.download = decodeURI(fileName);
-          dom.style.display = "none";
-          document.body.appendChild(dom);
-          dom.click();
-          dom.parentNode.removeChild(dom);
-          window.URL.revokeObjectURL(url);
-        })
-        .catch((err) => {});
+      download("/api/upload/getFile", form);
+      //   axios
+      //     .post("/api/upload/getFile", form, { responseType: "blob" })
+      //     .then((res) => {
+      //       const { data, headers } = res;
+      //       const fileName = headers["content-disposition"].replace(
+      //         /\w+;filename=(.*)/,
+      //         "$1"
+      //       );
+      //       // 此处当返回json文件时需要先对data进行JSON.stringify处理，其他类型文件不用做处理
+      //       //const blob = new Blob([JSON.stringify(data)], ...)
+      //       const blob = new Blob([data], { type: headers["content-type"] });
+      //       let dom = document.createElement("a");
+      //       let url = window.URL.createObjectURL(blob);
+      //       dom.href = url;
+      //       dom.download = decodeURI(fileName);
+      //       dom.style.display = "none";
+      //       document.body.appendChild(dom);
+      //       dom.click();
+      //       dom.parentNode.removeChild(dom);
+      //       window.URL.revokeObjectURL(url);
+      //     })
+      //     .catch((err) => {
+      //       _alert("下载失败了 ..." + err);
+      //     });
     },
     parseContent(val) {
       let _this = this;
@@ -221,21 +224,11 @@ export default {
       this.$emit("closeSubmitCard", false);
     },
     async getSubmitContent() {
-      token = window.localStorage.getItem("token");
       let _this = this;
-      // init axios
-      _axios.interceptors.request.use(function (config) {
-        config.headers = {
-          Authorization: token,
-        };
-        return config;
-      });
-      const form = new FormData();
-      form.append("sid", this.SUBMIT.submitId);
-      _axios
-        .post("/api/submit/getSubmitBySid", form)
+
+      fun_getSubmitBySId(this.SUBMIT.sid)
         .then((res) => {
-          let data = res.data.data;
+          let data = res.data;
           data = JSON.parse(
             data
               .replaceAll("\\r", "&[[换行r]]")
@@ -260,7 +253,7 @@ export default {
           _this.finishGetAns = true;
         })
         .catch((err) => {
-          alert("getSub" + err);
+          _alert("getSub" + err);
         });
     },
   },

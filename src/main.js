@@ -10,6 +10,7 @@ import Dialog from "vue-dialog-loading";
 Vue.config.productionTip = false;
 Vue.use(Dialog, {
   dialogBtnColor: "#0f0",
+  background: "rgba(0, 0, 0, 0.5)",
 });
 export default new Vue({
   vuetify,

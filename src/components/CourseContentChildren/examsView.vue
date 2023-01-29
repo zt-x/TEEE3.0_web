@@ -37,7 +37,7 @@
                 color="primary"
               ></v-progress-circular>
             </v-chip>
-            <span style="color: #eeeeee">|</span>
+            <span>|</span>
             <v-chip
               v-if="finishGetStatus"
               small
@@ -118,7 +118,8 @@
 import axios from "axios";
 import stuAnsStu from "./stuAnsStu.vue";
 import ExamsViewValidate from "./examsViewValidate.vue";
-
+import { fun_getWorkStatus, fun_getWorkContent } from "@/api/work";
+import { fun_getSubmitByWorkId } from "@/api/submit";
 const _axios = axios.create();
 let token = window.localStorage.getItem("token");
 export default {
@@ -169,36 +170,35 @@ export default {
         ) {
           this.loading = true;
           this.loadingText = "获取答题卡中 ... ";
-          const form = new FormData();
-          form.append("wid", work.id);
-          _axios
-            .post("/api/Work/getWork", form)
+          fun_getWorkContent(work.id)
             .then((res) => {
-              if (Number(res.data.code) == 1) {
+              if (Number(res.code) < 0) {
                 _this.loading = false;
                 return;
               } else {
-                let questions = res.data.data;
+                let questions = res.data;
                 _this.qs = eval(questions);
                 _this.qs.forEach((val, i) => {
                   _this.qscores[i] = val.qscore;
                 });
-                const form2 = new FormData();
-                form2.append("wid", work.id);
-                _axios
-                  .post("/api/submit/getSubmitByWorkId", form2)
+                fun_getSubmitByWorkId(work.id)
                   .then((res) => {
-                    _this.submits = JSON.parse(res.data.data);
+                    _this.submits = JSON.parse(res.data);
                     _this.dialog_stuAnsStu = true;
                     _this.loading = false;
                   })
                   .catch((err) => {
                     // TODO
+                    console.log(err);
                     _this.loading = false;
                   });
               }
             })
-            .catch((err) => {});
+            .catch((err) => {
+              console.log(err);
+
+              _this.loading = false;
+            });
         }
       }
     },
@@ -274,18 +274,8 @@ export default {
       // [{wid:, status: ,score:}]
       //
       let _this = this;
-      token = window.localStorage.getItem("token");
-      // init axios
-      _axios.interceptors.request.use(function (config) {
-        config.headers = {
-          Authorization: token,
-        };
-        return config;
-      });
-      const form = new FormData();
-      form.append("cid", _this.cid);
-      _axios.post("/api/Work/getWorkFinishStatus", form).then((res) => {
-        let arr = eval(res.data.data);
+      fun_getWorkStatus(this.cid).then((res) => {
+        let arr = eval(res.data);
         arr.forEach((val, i) => {
           _this.finish_status[i] = val;
         });

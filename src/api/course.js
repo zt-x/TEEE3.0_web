@@ -13,7 +13,8 @@ export function fun_createCourse(cname, college, start_time, end_time) {
   });
 }
 export function fun_delCourse(cid) {
-  return _axios.delete(baseUrl + "/teacher", { cid: cid });
+  console.log(cid);
+  return _axios.delete(baseUrl + "/teacher", { data: { cid: cid } });
 }
 export function fun_addCourse(cid) {
   return _axios.post(baseUrl + "/student", { cid: cid });

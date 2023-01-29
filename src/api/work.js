@@ -31,3 +31,6 @@ export function fun_releaseWork(aWork) {
 export function fun_setRule(wr) {
   return _axios.post(baseUrl + "/teacher/setRules", wr);
 }
+export function fun_getSummary(cid) {
+  return _axios.get(baseUrl + "/teacher/summary", { params: { cid: cid } });
+}

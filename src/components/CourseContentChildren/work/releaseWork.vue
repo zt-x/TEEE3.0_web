@@ -3,7 +3,11 @@
     <v-dialog persistent v-model="dialog_ifSaveAsWorkBank" width="400px">
       <v-overlay v-if="overlay" absolute>
         <v-chip>
-          <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
+          <v-progress-circular
+            indeterminate
+            size="16"
+            class="mr-3"
+          ></v-progress-circular>
           <v-spacer></v-spacer>
           <span>{{ overlay_msg }}</span>
         </v-chip>
@@ -21,7 +25,10 @@
           <v-btn color="green darken-1" text @click="releaseWork(true)"
             >不保存, 直接发布</v-btn
           >
-          <v-btn color="green darken-1" @click="releaseWork(false)" class="white--text"
+          <v-btn
+            color="green darken-1"
+            @click="releaseWork(false)"
+            class="white--text"
             >保存</v-btn
           >
         </v-card-actions>
@@ -98,7 +105,10 @@
                   :rules="[rules.required, rules.mustNum]"
                 ></v-text-field>
               </v-col>
-              <v-col :cols="releaseWork_isExam ? 2 : 0" v-if="releaseWork_isExam">
+              <v-col
+                :cols="releaseWork_isExam ? 2 : 0"
+                v-if="releaseWork_isExam"
+              >
                 <v-text-field
                   required
                   clearable
@@ -137,7 +147,9 @@
                     scrollable
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="TimeMenu = false">OK</v-btn>
+                    <v-btn text color="primary" @click="TimeMenu = false"
+                      >OK</v-btn
+                    >
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -174,7 +186,12 @@
                   v-if="workContentRadio == 'createNewWork'"
                 >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-chip class="white--text" color="#875438" v-bind="attrs" v-on="on">
+                    <v-chip
+                      class="white--text"
+                      color="#875438"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
                       <v-icon small left>mdi-plus</v-icon>
                       添加题目
                     </v-chip>
@@ -220,7 +237,6 @@
                 <v-card
                   v-if="workContentRadio == 'createNewWork'"
                   class="px-5 py-5"
-                  style="background: #eeeeee"
                 >
                   <!-- TODO: 点击后进行二次编辑 -->
                   <v-chip
@@ -249,7 +265,6 @@
                 <!-- 从Bank中获取的 -->
                 <v-card
                   class="px-5 py-5"
-                  style="background: #eeeeee"
                   v-if="workContentRadio == 'searchFromBank'"
                 >
                   <!-- TODO: 点击后进行二次编辑 -->
@@ -301,7 +316,10 @@
                     ></v-checkbox>
                   </v-col>
                   <v-col cols="12">
-                    <v-textarea v-model="rule_pre_TEXT" label="考前提醒信息"></v-textarea>
+                    <v-textarea
+                      v-model="rule_pre_TEXT"
+                      label="考前提醒信息"
+                    ></v-textarea>
                   </v-col>
                 </v-row>
               </v-container>

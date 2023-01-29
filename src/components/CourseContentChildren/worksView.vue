@@ -37,7 +37,7 @@
                 color="primary"
               ></v-progress-circular>
             </v-chip>
-            <span style="color: #eeeeee">|</span>
+            <span>|</span>
             <v-chip
               v-if="finishGetStatus"
               small
@@ -97,7 +97,8 @@
 <script>
 import axios from "axios";
 import stuAnsStu from "./stuAnsStu.vue";
-import { fun_getWorkStatus } from "@/api/work";
+import { fun_getWorkStatus, fun_getWorkContent } from "@/api/work";
+import { fun_getSubmitByWorkId } from "@/api/submit";
 const _axios = axios.create();
 let token = window.localStorage.getItem("token");
 export default {
@@ -134,21 +135,17 @@ export default {
         } else if (this.status(work.id) == "批改中" || this.status(work.id) == "已批改") {
           this.loading = true;
           this.loadingText = "获取答题卡中 ... ";
-          const form = new FormData();
-          form.append("wid", work.id);
           fun_getWorkContent(work.id)
             .then((res) => {
-              let questions = res.data.data;
+              let questions = res.data;
               _this.qs = eval(questions);
               _this.qs.forEach((val, i) => {
                 _this.qscores[i] = val.qscore;
               });
-              const form2 = new FormData();
-              form2.append("wid", work.id);
-              _axios
-                .post("/api/submit/getSubmitByWorkId", form2)
+              fun_getSubmitByWorkId(work.id)
                 .then((res) => {
-                  _this.submits = JSON.parse(res.data.data);
+                  _this.submits = JSON.parse(res.data);
+                  console.log(_this.submits);
                   _this.dialog_stuAnsStu = true;
                   _this.loading = false;
                 })
@@ -160,7 +157,9 @@ export default {
                   _this.snackbar = true;
                 });
             })
-            .catch((err) => {});
+            .catch((err) => {
+              console.log(err);
+            });
         }
       }
     },

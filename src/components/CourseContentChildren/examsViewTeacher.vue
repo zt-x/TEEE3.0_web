@@ -65,6 +65,7 @@
                 </v-row>
               </v-container>
             </v-chip>
+            <!-- TODO Delete可以放在edit里面 -->
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip
@@ -77,7 +78,7 @@
                   v-on="on"
                   v-bind="attrs"
                 >
-                  <v-icon x-small class="pr-2">mdi-delete</v-icon>
+                  <v-icon x-small class="pr-2">fa fa-trash</v-icon>
                   Delete
                 </v-chip>
               </template>
@@ -87,9 +88,7 @@
         </v-card-title>
         <v-card-subtitle
           >截止时间 |
-          {{
-            work.deadline == undefined ? " - " : work.deadline
-          }}</v-card-subtitle
+          {{ work.deadline == undefined ? " - " : work.deadline }}</v-card-subtitle
         >
       </v-card>
       <div style="height: 5px"></div>
@@ -110,9 +109,7 @@
 </template>
 
 <script>
-import axios from "axios";
-const _axios = axios.create();
-let token = window.localStorage.getItem("token");
+import { fun_getSummary } from "@/api/work";
 export default {
   props: ["exams", "cid"],
   computed: {},
@@ -139,11 +136,8 @@ export default {
     },
     getSubStatus() {
       let _this = this;
-      const form = new FormData();
-      form.append("cid", this.cid);
-      // TODO
-      _axios.post("/api/Course/getAllWorkSummary", form).then((res) => {
-        let data = res.data.data;
+      fun_getSummary(this.cid).then((res) => {
+        let data = res.data;
         let arr = eval(data.works);
         _this.submit_totalNum = data.submit_totalNum;
         arr.forEach((item) => {
@@ -167,7 +161,7 @@ export default {
         btns: [
           {
             label: "确定",
-            background: "red",
+            color: "brown",
             callback: () => {
               token = window.localStorage.getItem("token");
               // init axios
@@ -199,13 +193,6 @@ export default {
   created() {},
   mounted() {
     this.loading_SubStatus = false;
-    token = window.localStorage.getItem("token");
-    _axios.interceptors.request.use(function (config) {
-      config.headers = {
-        Authorization: token,
-      };
-      return config;
-    });
     this.getSubStatus();
   },
 };

@@ -1,5 +1,11 @@
 <template>
-  <v-card @click="showSubmitCard()" ripple hover class="my-1 mx-auto" style="width: 95%">
+  <v-card
+    @click="showSubmitCard()"
+    ripple
+    hover
+    class="my-1 mx-auto"
+    style="width: 95%"
+  >
     <v-dialog persistent width="600px" v-model="showCard">
       <StuAns
         @closeSubmitCard="closeSubmitCard($event)"
@@ -14,14 +20,16 @@
           <v-avatar class="mr-1" size="30px">
             <v-img :src="SUBMIT.avatar"></v-img>
           </v-avatar>
-          {{ SUBMIT.username }}
+          {{ SUBMIT.uname }}
         </v-col>
         <v-col cols="2">{{ SUBMIT.uid }}</v-col>
         <v-col cols="6">
           <v-spacer></v-spacer>
         </v-col>
         <v-col cols="2">
-          <v-chip :color="score_color" small>{{ SUBMIT.score.toFixed(1) }}</v-chip>
+          <v-chip :color="score_color" small>{{
+            SUBMIT.score.toFixed(1)
+          }}</v-chip>
         </v-col>
       </v-row>
     </v-container>
@@ -30,9 +38,6 @@
 
 <script>
 import StuAns from "@/components/CourseContentChildren/stuAns.vue";
-import axios from "axios";
-const _axios = axios.create();
-let token = window.localStorage.getItem("token");
 
 export default {
   props: ["SUBMIT", "qscores"],

@@ -583,11 +583,11 @@ export default {
       let _this = this;
       this.$dialog({
         title: "Delete",
-        content: "删除后学生在班级里的作业记录无法恢复哦！请谨慎操作",
+        content: "⚠ 删除后学生在班级里的作业记录无法恢复哦！请谨慎操作",
         btns: [
           {
-            label: "继续删除",
-            background: "red",
+            label: "确定",
+            color: "brown",
             callback: () => {
               fun_removeUsers(this.cid, uid).then((res) => {
                 _this._alert(res.code);

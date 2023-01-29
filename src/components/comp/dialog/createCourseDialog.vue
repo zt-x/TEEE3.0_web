@@ -78,9 +78,7 @@
                     scrollable
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="startMenu = false"
-                      >OK</v-btn
-                    >
+                    <v-btn text color="primary" @click="startMenu = false">OK</v-btn>
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -115,9 +113,7 @@
                     scrollable
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="endMenu = false"
-                      >OK</v-btn
-                    >
+                    <v-btn text color="primary" @click="endMenu = false">OK</v-btn>
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -136,11 +132,7 @@
         >
           创建
         </v-btn>
-        <v-btn
-          color="brown darken-1"
-          text
-          @click="$emit('update:showDialog', false)"
-        >
+        <v-btn color="brown darken-1" text @click="$emit('update:showDialog', false)">
           取消
         </v-btn>
       </v-card-actions>
@@ -150,6 +142,7 @@
 
 <script>
 import { fun_createCourse } from "@/api/course";
+import { _alert } from "@/plugins/myfun";
 export default {
   props: ["showDialog"],
   data() {
@@ -169,6 +162,11 @@ export default {
   },
   methods: {
     createCourse() {
+      // 验证数据合法性
+      if (this.form_courename == "") {
+        _alert("必须课程名输入哦");
+        return;
+      }
       this.btn_create_loading = true;
       fun_createCourse(
         this.form_courename,
@@ -205,5 +203,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

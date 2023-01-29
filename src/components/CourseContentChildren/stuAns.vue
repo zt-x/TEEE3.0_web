@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title
-      >{{ SUBMIT.username }} {{ SUBMIT.score.toFixed(1) }}
+      >{{ SUBMIT.uname }} {{ SUBMIT.score.toFixed(1) }}
       <v-spacer></v-spacer>
       <v-chip small @click="close()">
         <v-icon small>mdi-close</v-icon>
@@ -119,10 +119,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import stuAnsSetScore from "./work/stuAnsSetScore.vue";
-const _axios = axios.create();
-let token = window.localStorage.getItem("token");
+import { fun_getSubmitBySId } from "@/api/submit";
+import { _alert } from "@/plugins/myfun";
 export default {
   components: { stuAnsSetScore },
   props: ["SUBMIT", "qscores"],
@@ -190,7 +189,7 @@ export default {
       this.overlay = true;
       this.overlay_msg = "提交批改中 ...";
       const form = new FormData();
-      form.append("subid", this.SUBMIT.submitId);
+      form.append("subid", this.SUBMIT.sid);
       form.append("score", this.readover_new);
       let _this = this;
       _axios
@@ -211,7 +210,7 @@ export default {
           });
         })
         .catch((err) => {
-          alert("finish" + err);
+          _alert("finish" + err);
         });
     },
     parseContent(val) {
@@ -259,21 +258,10 @@ export default {
       this.$emit("closeSubmitCard", false);
     },
     async getSubmitContent() {
-      token = window.localStorage.getItem("token");
       let _this = this;
-      // init axios
-      _axios.interceptors.request.use(function (config) {
-        config.headers = {
-          Authorization: token,
-        };
-        return config;
-      });
-      const form = new FormData();
-      form.append("sid", this.SUBMIT.submitId);
-      _axios
-        .post("/api/submit/getSubmitBySid", form)
+      fun_getSubmitBySId(this.SUBMIT.sid)
         .then((res) => {
-          let data = res.data.data;
+          let data = res.data;
           data = JSON.parse(
             data
               .replaceAll("\\r", "&[[换行r]]")
@@ -298,7 +286,7 @@ export default {
           _this.finishGetAns = true;
         })
         .catch((err) => {
-          alert("getSub" + err);
+          _alert("getSub" + err);
         });
     },
     showChangeScoreDialog(i) {
@@ -314,7 +302,7 @@ export default {
         this.readover_new[data.i] = data.score;
         this.showChangeScore = false;
       } else {
-        alert("分数不能小于0，也不能大于本题的最大分数哦~");
+        _alert("分数不能小于0，也不能大于本题的最大分数哦~");
         this.readover_new[data.i] = this.readover[data.i];
       }
       this.showChangeScore = false;

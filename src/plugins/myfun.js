@@ -1,6 +1,7 @@
 import vue from "@/main";
+// import {_alert} from "@/plugins/myfun"
 var count = 1;
-function _alert(msg) {
+export function _alert(msg) {
   vue.$toasted.show(msg, {
     theme: "outline",
     position: "top-center",
@@ -74,7 +75,7 @@ export function limit(doc) {
     }
     //屏蔽 Alt+ 方向键 ← ;屏蔽 Alt+ 方向键 → ！验证
     if (e.altKey && (k == 37 || k == 39)) {
-      alert("请不要使用ALT+方向键前进或后退网页！😣");
+      _alert("请不要使用ALT+方向键前进或后退网页！😣");
       e.keyCode = 0;
       e.returnValue = false;
       e.cancelBubble = true;

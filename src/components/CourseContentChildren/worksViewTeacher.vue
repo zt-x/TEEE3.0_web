@@ -104,8 +104,7 @@
           </div>
         </v-card-title>
         <v-card-subtitle
-          >截止时间 |
-          {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
+          >截止时间 | {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
         >
       </v-card>
       <div style="height: 5px"></div>
@@ -125,9 +124,8 @@
 </template>
 
 <script>
-import axios from "axios";
-const _axios = axios.create();
-let token = window.localStorage.getItem("token");
+import { fun_getSummary } from "@/api/work";
+import { _alert } from "@/plugins/myfun";
 export default {
   props: ["works", "cid"],
   computed: {},
@@ -143,7 +141,7 @@ export default {
   methods: {
     editWork(work) {
       // TODO 编辑已发布的作业
-      alert("开发中 ... ");
+      _alert("开发中 ... ");
     },
     doWork(work) {
       let cid = this.cid;
@@ -158,11 +156,8 @@ export default {
     },
     getSubStatus() {
       let _this = this;
-      const form = new FormData();
-      form.append("cid", this.cid);
-      // TODO
-      _axios.post("/api/Course/getAllWorkSummary", form).then((res) => {
-        let data = res.data.data;
+      fun_getSummary(this.cid).then((res) => {
+        let data = res.data;
         let arr = eval(data.works);
         _this.submit_totalNum = data.submit_totalNum;
         arr.forEach((item) => {
@@ -224,13 +219,6 @@ export default {
   created() {},
   mounted() {
     this.loading_SubStatus = false;
-    token = window.localStorage.getItem("token");
-    _axios.interceptors.request.use(function (config) {
-      config.headers = {
-        Authorization: token,
-      };
-      return config;
-    });
     this.getSubStatus();
   },
 };
