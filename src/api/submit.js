@@ -21,3 +21,9 @@ export function fun_getSubmitSummary(wid) {
     params: { wid: wid },
   });
 }
+export function fun_setSubmitScore(subid, score) {
+  return _axios.put(baseUrl + "/teacher/score", {
+    subid: subid,
+    score: score,
+  });
+}

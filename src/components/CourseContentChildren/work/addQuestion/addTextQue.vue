@@ -88,6 +88,8 @@ import axios from "axios";
 import CKEditor from "ckeditor4-vue";
 let token = window.localStorage.getItem("token");
 export default {
+  props: ["defaultData", "qNum"],
+
   components: { ckeditor: CKEditor.component },
 
   data() {
@@ -96,10 +98,10 @@ export default {
       snackbar_color: "success",
       snackbar_msg: "",
       loading_upload: false,
-      files: [],
+      files: this.defaultData.files,
       filesRealPath: [],
-      ans_score: "",
-      ans_text: "",
+      ans_score: this.defaultData.ans_score,
+      ans_text: this.defaultData.ans_text,
       editorConfig: {
         removePlugins: "image,easyimage,cloudservices,exportpdf",
         extraPlugins: "image2,uploadimage",
@@ -169,6 +171,11 @@ export default {
         this.msg = "请输入一个正确的分数!";
         return;
       }
+      if (!this.files) {
+        this.files = [];
+      }
+      //   console.log(this.ans_score, this.ans_text, this.files);
+      //   return;
       if (this.files.length != 0) {
         token = window.localStorage.getItem("token");
         let param = new FormData();
@@ -204,10 +211,20 @@ export default {
               //上传附件
 
               //
+
+              newQue.primaryData = {
+                ans_score: this.ans_score,
+                ans_text: this.ans_text,
+                files: this.files,
+              };
               this.ans_score = "";
               this.ans_text = "";
+              this.files = [];
               this.msg = "";
-              this.$emit("addTextQue", newQue);
+              this.$emit("addTextQue", {
+                newQue: newQue,
+                qNum: this.qNum,
+              });
               _this.loading_upload = false;
             }
           })
@@ -226,10 +243,19 @@ export default {
         //上传附件
 
         //
+
+        newQue.primaryData = {
+          ans_score: this.ans_score,
+          ans_text: this.ans_text,
+          files: this.files,
+        };
         this.ans_score = "";
         this.ans_text = "";
         this.msg = "";
-        this.$emit("addTextQue", newQue);
+        this.$emit("addTextQue", {
+          newQue: newQue,
+          qNum: this.qNum,
+        });
       }
     },
   },

@@ -46,11 +46,12 @@
 
 <script>
 export default {
+  props: ["defaultData", "qNum"],
   data() {
     return {
-      ans_score: "",
-      ans_text: "",
-      cans: "",
+      ans_score: this.defaultData.qscore,
+      ans_text: this.defaultData.qtext,
+      cans: this.defaultData.cans,
       rules: {
         required: (value) => !!value || "不能为空！",
       },
@@ -69,6 +70,8 @@ export default {
       // 返回JSON
       //{qtype: 30011, qscore: 2.0,
       //qtext: "1111", cans: ""}
+      console.log("props:" + this.qNum);
+
       if (this.ans_score == "") {
         this.msg = "分值不能为空";
         return;
@@ -91,7 +94,11 @@ export default {
       this.ans_score = "";
       this.ans_text = "";
       this.msg = "";
-      this.$emit("addFillInQue", newQue);
+
+      this.$emit("addFillInQue", {
+        newQue: newQue,
+        qNum: this.qNum,
+      });
     },
   },
 };

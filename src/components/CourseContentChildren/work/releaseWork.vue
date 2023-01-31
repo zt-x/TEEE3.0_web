@@ -36,18 +36,27 @@
     </v-dialog>
     <v-dialog persistent v-model="dialog_addChoicQue" width="600px">
       <add-choic-que
+        v-if="dialog_addChoicQue"
+        :defaultData="defaultData"
+        :qNum="qNum"
         @closeAddChoicQue="closeAddChoicQue($event)"
         @addChoicQue="returnChoicQue($event)"
       />
     </v-dialog>
     <v-dialog persistent v-model="dialog_addFillInQue" width="600px">
       <add-fill-in-que
+        v-if="dialog_addFillInQue"
+        :defaultData="defaultData"
+        :qNum="qNum"
         @closeAddFillInQue="closeAddFillInQue($event)"
         @addFillInQue="returnFillInQue($event)"
       />
     </v-dialog>
     <v-dialog persistent v-model="dialog_addTextQue" width="900px">
       <add-text-que
+        v-if="dialog_addTextQue"
+        :defaultData="defaultData"
+        :qNum="qNum"
         @closeAddTextQue="closeAddTextQue($event)"
         @addTextQue="returnTextQue($event)"
       />
@@ -234,12 +243,10 @@
               </v-col>
               <v-col cols="12">
                 <!-- 添加新题目 -->
-                <v-card
-                  v-if="workContentRadio == 'createNewWork'"
-                  class="px-5 py-5"
-                >
+                <v-card v-if="workContentRadio == 'createNewWork'">
                   <!-- TODO: 点击后进行二次编辑 -->
-                  <v-chip
+
+                  <!-- <v-chip
                     label
                     dark
                     color="success"
@@ -259,7 +266,60 @@
                     }}
                     】|
                     {{ JSON.parse(ques).qtext.slice(0, 20) }}
-                  </v-chip>
+                  </v-chip> -->
+                  <v-data-table
+                    class="rounded-0"
+                    :headers="que_tab_headers"
+                    :items="questions"
+                    :items-per-page="6"
+                    :page.sync="pageOfQuestions"
+                    @page-count="pageCountOfQuestions = $event"
+                    hide-default-footer
+                  >
+                    <template v-slot:item.qid="{ item }">
+                      {{ questions.indexOf(item) + 1 }}
+                    </template>
+                    <template v-slot:item.qtype="{ item }">
+                      {{
+                        item.qtype == "30010"
+                          ? "选择题"
+                          : item.qtype == "30011"
+                          ? "填空题"
+                          : "简答题"
+                      }}
+                    </template>
+                    <template v-slot:item.qtext="{ item }">
+                      <span v-if="item.qtype == '30012'" style="color: grey">
+                        [简答题]
+                      </span>
+                      <span v-else>
+                        {{ item.qtext.substring(0, 25) }} ...
+                      </span>
+                    </template>
+                    <template v-slot:item.func="{ item }">
+                      <v-chip
+                        small
+                        color="primary"
+                        class="mr-2"
+                        @click="editQue(item)"
+                        >编辑</v-chip
+                      >
+                      <span color="grey">|</span>
+                      <v-chip
+                        small
+                        color="error"
+                        class="ml-2"
+                        @click="deleteQue(item)"
+                        >删除</v-chip
+                      >
+                    </template>
+                  </v-data-table>
+                  <div class="text-center pt-2">
+                    <v-pagination
+                      v-model="pageOfQuestions"
+                      :length="pageCountOfQuestions"
+                    ></v-pagination>
+                  </div>
                 </v-card>
 
                 <!-- 从Bank中获取的 -->
@@ -406,21 +466,24 @@ export default {
   computed: {
     choiceQue() {
       let arr = this.questions.filter((val) => {
-        return JSON.parse(val).qtype == "30010";
+        return val.qtype == "30010";
+        // return JSON.parse(val).qtype == "30010";
       });
       let len = arr.length;
       return len == 0 ? "0" : len;
     },
     FillInQue() {
       let arr = this.questions.filter((val) => {
-        return JSON.parse(val).qtype == "30011";
+        return val.qtype == "30011";
+        // return JSON.parse(val).qtype == "30011";
       });
       let len = arr.length;
       return len == 0 ? "0" : len;
     },
     TextQue() {
       let arr = this.questions.filter((val) => {
-        return JSON.parse(val).qtype == "30012";
+        return val.qtype == "30012";
+        // return JSON.parse(val).qtype == "30012";
       });
       let len = arr.length;
       return len == 0 ? "0" : len;
@@ -462,6 +525,44 @@ export default {
       },
       TimeMenu: "",
       valid: "",
+      que_tab_headers: [
+        {
+          text: "题号",
+          align: "center",
+          value: "qid",
+          width: "12.5%",
+        },
+        {
+          text: "题形",
+          align: "start",
+          value: "qtype",
+          width: "15%",
+        },
+        {
+          text: "分数",
+          align: "start",
+          value: "qscore",
+          width: "15%",
+        },
+        {
+          text: "概览",
+          align: "start",
+          value: "qtext",
+          width: "32.5%",
+        },
+        {
+          text: "操作",
+          align: "center",
+          value: "func",
+          sortable: false,
+          width: "25%",
+        },
+      ],
+      pageOfQuestions: 1,
+      pageCountOfQuestions: null,
+      //   编辑题目
+      defaultData: {},
+      qNum: -1,
     };
   },
   methods: {
@@ -488,12 +589,24 @@ export default {
       this.$emit("close", true);
     },
     addChoicQue() {
+      this.defaultData = {
+        qans: [],
+        a_ans: "",
+        a_err_ans: "",
+        ans_score: "",
+        ans_text: "",
+      };
+      this.qNum = -1;
       this.dialog_addChoicQue = true;
     },
     addFillInQue() {
+      this.defaultData = {};
+      this.qNum = -1;
       this.dialog_addFillInQue = true;
     },
     addTextQue() {
+      this.defaultData = {};
+      this.qNum = -1;
       this.dialog_addTextQue = true;
     },
     addQueFromQBank() {},
@@ -512,22 +625,64 @@ export default {
     closeQueFromBank(val) {
       this.dialog_addQueFromBank = val;
     },
-    returnChoicQue(newQue) {
-      this.questions.push(JSON.stringify(newQue));
+    editQue(item) {
+      //题号
+      this.qNum = this.questions.indexOf(item);
+      //打开面板
+      let qtype = item.qtype;
+      if (qtype == "30010") {
+        // 选择题
+        this.defaultData = item.primaryData;
+        this.dialog_addChoicQue = true;
+      } else if (qtype == "30011") {
+        // 填空题
+        this.defaultData = item;
+        this.dialog_addFillInQue = true;
+      } else {
+        this.defaultData = item.primaryData;
+        this.dialog_addTextQue = true;
+        // 简答题 或其他...
+      }
+    },
+    returnChoicQue(ret) {
+      if (ret.qNum != -1) {
+        this.questions[ret.qNum] = ret.newQue;
+      } else {
+        this.questions.push(ret.newQue);
+      }
+      this.questions.push({});
+      this.questions.pop();
       this.dialog_addChoicQue = false;
     },
-    returnFillInQue(newQue) {
-      this.questions.push(JSON.stringify(newQue));
+    returnFillInQue(ret) {
+      if (ret.qNum != -1) {
+        this.questions[ret.qNum] = ret.newQue;
+      } else {
+        this.questions.push(ret.newQue);
+      }
+      this.questions.push({});
+      this.questions.pop();
       this.dialog_addFillInQue = false;
     },
-    returnTextQue(newQue) {
-      this.questions.push(JSON.stringify(newQue));
+    returnTextQue(ret) {
+      if (ret.qNum != -1) {
+        this.questions[ret.qNum] = ret.newQue;
+      } else {
+        this.questions.push(ret.newQue);
+      }
+      this.questions.push({});
+      this.questions.pop();
       this.dialog_addTextQue = false;
     },
     returnWorkFronBank(wb) {
       this.wb = [];
       this.wb.push(wb);
       this.dialog_addQueFromBank = false;
+    },
+    deleteQue(item) {
+      this.questions = this.questions.filter((val) => {
+        return val != item;
+      });
     },
     beforeReleaseWork() {
       if (this.workTitle == "") {
@@ -556,7 +711,6 @@ export default {
     },
     releaseWorkWithBankID(bkid) {
       let aWork = {};
-      d;
       aWork.cid = this.cid;
       aWork.deadline = this.deadline;
       aWork.totalScore = this.totalScore;
@@ -608,14 +762,12 @@ export default {
             })
             .catch((err) => {
               _this.overlay = false;
-
               this._alert(err);
               console.error(err);
             });
         })
         .catch((err) => {
           _this.overlay = false;
-
           this._alert(err);
           console.error(err);
         });
@@ -641,7 +793,14 @@ export default {
       aWork.timeLimit = this.timeLimit;
       aWork.isExam = this.releaseWork_isExam ? 1 : 0;
       work.wname = this.work_name;
-      work.questions = "[" + this.questions.toString() + "]";
+      let questions_str = [];
+      this.questions.forEach((item) => {
+        delete item.primaryData;
+        questions_str.push(JSON.stringify(item));
+      });
+      // TODO
+      //   return;
+      work.questions = "[" + questions_str + "]";
       work.isTemp = isTemp ? 1 : 0;
 
       let _this = this;

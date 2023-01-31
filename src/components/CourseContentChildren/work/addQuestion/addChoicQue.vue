@@ -1,21 +1,61 @@
 <template>
   <v-card>
-    <v-card-title>添加选择题</v-card-title>
+    <v-card-title class="brown--text">添加选择题</v-card-title>
     <v-container>
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" class="py-0">
           <v-textarea
-            filled
+            outlined
             label="输入题目内容"
             clearable
             no-resize
             rows="10"
             v-model="ans_text"
+            color="brown"
+            style="radius: 0"
           ></v-textarea>
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-col cols="6">
+        <v-col cols="12" class="py-0">
+          <v-text-field
+            label="添加选项"
+            dense
+            append-icon="fas fa-plus"
+            v-model="ans"
+            hint="按下回车键或右侧加号添加"
+            @keypress.enter="addAns()"
+            @click:append="addAns()"
+            color="brown"
+            outlined
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" class="pt-0">
+          <v-data-table
+            v-model="selected"
+            :headers="headers"
+            :items="qans"
+            item-key="key"
+            hide-default-footer
+            show-select
+            class="elevation-1"
+            no-data-text="请添加选项，并勾选正确的选项!"
+          >
+            <template v-slot:item.qtext="{ item }">
+              {{ item.ans }}
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <v-chip small color="primary" class="mr-2" @click="editQue(item)"
+                >编辑</v-chip
+              >
+              <span color="grey">|</span>
+              <v-chip small color="error" class="ml-2" @click="deleteQue(item)"
+                >删除</v-chip
+              >
+            </template>
+          </v-data-table>
+        </v-col>
+        <!-- <v-col cols="6">
           <v-text-field
             label="添加正确答案"
             dense
@@ -38,9 +78,9 @@
             @keypress.enter="addErrAns()"
             color="error"
           ></v-text-field>
-        </v-col>
+        </v-col> -->
       </v-row>
-      <v-row align="center">
+      <!-- <v-row align="center">
         <v-col cols="6" v-for="(ans, i) in qans" :key="i">
           <v-chip
             label
@@ -53,7 +93,7 @@
             </span>
           </v-chip>
         </v-col>
-      </v-row>
+      </v-row> -->
     </v-container>
     <v-card-actions>
       <div style="width: 100px">
@@ -79,17 +119,38 @@
 
 <script>
 export default {
+  props: ["defaultData", "qNum"],
   data() {
     return {
-      qans: [],
-      a_ans: "",
-      a_err_ans: "",
-      ans_score: "",
-      ans_text: "",
+      qans: this.defaultData.qans,
+      //   方式一
+      a_ans: this.defaultData.a_ans,
+      a_err_ans: this.defaultData.a_err_ans,
+      //   方式二（V-data-Table）
+      ans: this.defaultData.ans,
+      selected: [],
+      ans_score: this.defaultData.ans_score,
+      ans_text: this.defaultData.ans_text,
       rules: {
         required: (value) => !!value || "不能为空！",
       },
       msg: "",
+      headers: [
+        {
+          text: "选项内容",
+          align: "center",
+          sortable: false,
+          value: "qtext",
+          width: "70%",
+        },
+        {
+          text: "actions",
+          align: "center",
+          sortable: false,
+          value: "actions",
+          width: "30%",
+        },
+      ],
     };
   },
   computed: {
@@ -98,6 +159,7 @@ export default {
         qans: this.qans,
         a_ans: this.a_ans,
         a_err_ans: this.a_err_ans,
+        ans: this.ans,
         ans_score: this.ans_score,
         ans_text: this.ans_text,
       };
@@ -108,6 +170,7 @@ export default {
       this.qans = [];
       this.a_ans = "";
       this.a_err_ans = "";
+      this.ans = "";
       this.ans_score = "";
       this.ans_text = "";
       this.msg = "";
@@ -117,15 +180,29 @@ export default {
       // 返回JSON
       //{qtype: 30010, qscore: 2.0,
       //qtext: "1111", qans: ["", "", "", ""], cans: [0]}
+      console.log(this.selected);
       let _qans = [];
       let _cans = [];
       let newQue = {};
+      /*   
+	  				方式一
       for (let i = 0; i < this.qans.length; i++) {
         _qans.push(this.qans[i].ans);
         if (this.qans[i].isCorr == true) {
           _cans.push(i);
         }
       }
+	  */
+
+      //   			方式二
+      for (let i = 0; i < this.qans.length; i++) {
+        _qans.push(this.qans[i].ans);
+      }
+      for (let i = 0; i < this.selected.length; i++) {
+        _cans.push(this.selected[i].key);
+      }
+      //   return;
+
       if (this.ans_score == "") {
         this.msg = "分值不能为空";
         return;
@@ -148,13 +225,23 @@ export default {
       newQue.qtext = this.ans_text;
       newQue.qans = _qans;
       newQue.cans = _cans;
+      newQue.primaryData = {
+        qans: this.qans,
+        a_ans: this.a_ans,
+        a_err_ans: this.a_err_ans,
+        ans_score: this.ans_score,
+        ans_text: this.ans_text,
+      };
       this.qans = [];
       this.a_ans = "";
       this.a_err_ans = "";
       this.ans_score = "";
       this.ans_text = "";
       this.msg = "";
-      this.$emit("addChoicQue", newQue);
+      this.$emit("addChoicQue", {
+        newQue: newQue,
+        qNum: this.qNum,
+      });
     },
     addCorrAns() {
       let data = {};
@@ -169,6 +256,15 @@ export default {
       data.isCorr = false;
       this.a_err_ans = "";
       this.qans.push(data);
+    },
+    addAns() {
+      let data = {};
+      data.ans = this.ans;
+      data.key = this.qans.length;
+      data.isCorr = false;
+      this.ans = "";
+      this.qans.push(data);
+      console.log(this.qans);
     },
     removeAns(i) {
       this.qans.splice(i, 1);

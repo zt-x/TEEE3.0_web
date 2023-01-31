@@ -1,20 +1,9 @@
 <template>
   <v-container fluid>
-    <v-dialog
-      transition="dialog-bottom-transition"
-      persistent
-      v-model="releaseWorkDialog"
-      width="800px"
-    >
+    <v-dialog persistent v-model="releaseWorkDialog" width="800px">
       <release-work :cid="cid" @close="close($event)" />
     </v-dialog>
-    <v-dialog
-      transition="dialog-bottom-transition"
-      content-class="trans"
-      persistent
-      v-model="releaseAnnDialog"
-      width="800px"
-    >
+    <v-dialog content-class="trans" persistent v-model="releaseAnnDialog" width="800px">
       <Announcement_release @close="close($event)" />
     </v-dialog>
 
@@ -350,7 +339,9 @@
 
                     <span
                       >作业次数:
-                      {{ CourseInfo.WorksCount == null ? 0 : CourseInfo.WorkCount }}</span
+                      {{
+                        CourseInfo.WorksCount == null ? 0 : CourseInfo.WorksCount
+                      }}</span
                     >
                     <v-divider></v-divider>
                     <span

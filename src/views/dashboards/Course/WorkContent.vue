@@ -1,5 +1,13 @@
 <template>
   <div class="px-4">
+    <v-dialog persistent width="600px" v-model="showCard">
+      <StuAns
+        @closeSubmitCard="closeSubmitCard($event)"
+        v-if="showCard"
+        :SUBMIT="submit_chose"
+        :qscores="qscores"
+      />
+    </v-dialog>
     <v-container fluid>
       <v-row>
         <!-- Submitted WorkPlace -->
@@ -12,11 +20,13 @@
               'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
             }"
           >
+            <!-- Header -->
             <div class="text--secondary">
               <span class="text-h3">LIST </span>
               <span class="text-h5">| 作业提交列表</span>
               <span></span>
             </div>
+            <!-- Body -->
 
             <v-card class="mt-5">
               <v-tabs v-model="tab" background-color="transparent" color="basil">
@@ -33,17 +43,10 @@
                 </v-tab>
               </v-tabs>
               <v-tabs-items v-model="tab">
+                <!-- 未批改的作业 -->
                 <v-tab-item>
                   <v-card color="basil" flat class="pt-3 pb-3">
                     <!-- TODO 尝试Submit换成普通的Table -->
-                    <!-- <SubmitWork
-                      v-for="(submit, index) in submit_unfinish"
-                      :key="index"
-                      :SUBMIT="submit"
-                      :qscores="qscores"
-                      @flushSubmit="flushSubmit"
-                      class="mb-1"
-                    /> -->
                     <v-data-table
                       class="rounded-0"
                       :loading="!finishGetSubmtis"
@@ -52,10 +55,11 @@
                       :items="submit_unfinish"
                       :search="search_submits"
                       :items-per-page="10"
-                      :page.sync="pageOfSubmtis"
-                      @page-count="pageCount = $event"
+                      :page.sync="pageOfSubmtis_fin"
+                      @page-count="pageCountOfSubmit_fin = $event"
                       hide-default-footer
                     >
+                      <!-- 学生姓名 -->
                       <template v-slot:item.uname="{ item }">
                         <v-chip outlined>
                           <v-avatar left size="30">
@@ -64,7 +68,7 @@
                           {{ item.uname }}</v-chip
                         >
                       </template>
-
+                      <!-- 学生分数 -->
                       <template v-slot:item.score="{ item }">
                         <v-chip
                           :color="
@@ -80,17 +84,32 @@
                           >{{ item.score.toFixed(1) }}</v-chip
                         >
                       </template>
-                      <template v-slot:item.func>
-                        <v-chip small color="primary" class="mr-2">批改</v-chip>
+                      <!-- 批改选项 -->
+                      <template v-slot:item.func="{ item }">
+                        <v-chip
+                          small
+                          color="primary"
+                          class="mr-2"
+                          @click="showSubmitCard(item)"
+                          >批改</v-chip
+                        >
                         <span color="grey">|</span>
                         <v-chip small color="error" class="ml-2">打回</v-chip>
                       </template>
                     </v-data-table>
+                    <div class="text-center pt-2">
+                      <v-pagination
+                        v-model="pageOfSubmtis_fin"
+                        :length="pageCountOfSubmit_fin"
+                      ></v-pagination>
+                    </div>
                   </v-card>
                 </v-tab-item>
+                <!-- 已经批改的作业 -->
+
                 <v-tab-item>
                   <v-card color="basil" flat class="pt-3 pb-3">
-                    <SubmitWork
+                    <!-- <SubmitWork
                       transition="scroll-y-transition"
                       v-for="(submit, index) in submit_finish"
                       :key="index"
@@ -98,7 +117,62 @@
                       @flushSubmit="flushSubmit"
                       :qscores="qscores"
                       class="mb-1"
-                    />
+                    /> -->
+                    <v-data-table
+                      class="rounded-0"
+                      :loading="!finishGetSubmtis"
+                      loading-text="正在努力加载课程学生信息 ..."
+                      :headers="submit_tab_headers"
+                      :items="submit_finish"
+                      :items-per-page="10"
+                      :page.sync="pageOfSubmtis"
+                      @page-count="pageCountOfSubmit = $event"
+                      hide-default-footer
+                    >
+                      <!-- 学生姓名 -->
+                      <template v-slot:item.uname="{ item }">
+                        <v-chip outlined>
+                          <v-avatar left size="30">
+                            <v-img :src="item.avatar"></v-img>
+                          </v-avatar>
+                          {{ item.uname }}</v-chip
+                        >
+                      </template>
+                      <!-- 学生分数 -->
+                      <template v-slot:item.score="{ item }">
+                        <v-chip
+                          :color="
+                            item.score > 60
+                              ? item.score > 75
+                                ? item.score > 90
+                                  ? 'success'
+                                  : 'info'
+                                : 'warning'
+                              : 'error'
+                          "
+                          small
+                          >{{ item.score.toFixed(1) }}</v-chip
+                        >
+                      </template>
+                      <!-- 批改选项 -->
+                      <template v-slot:item.func="{ item }">
+                        <v-chip
+                          small
+                          color="primary"
+                          class="mr-2"
+                          @click="showSubmitCard(item)"
+                          >批改</v-chip
+                        >
+                        <span color="grey">|</span>
+                        <v-chip small color="error" class="ml-2">打回</v-chip>
+                      </template>
+                    </v-data-table>
+                    <div class="text-center pt-2">
+                      <v-pagination
+                        v-model="pageOfSubmtis"
+                        :length="pageCountOfSubmit"
+                      ></v-pagination>
+                    </div>
                   </v-card>
                 </v-tab-item>
                 <v-tab-item>
@@ -160,6 +234,7 @@
 
 <script>
 import SubmitWork from "@/components/CourseContentChildren/work/submitWork.vue";
+import StuAns from "@/components/CourseContentChildren/stuAns.vue";
 
 import Chart_score_statistics from "@/components/CourseContentChildren/charts/SubmitStatic/chart_score_statistics.vue";
 import { fun_getWorkContent } from "@/api/work";
@@ -168,7 +243,7 @@ import { fun_getAllSubmitsByWid, fun_getSubmitSummary } from "@/api/submit";
 const streamSaver = require("streamsaver");
 
 export default {
-  components: { SubmitWork, Chart_score_statistics },
+  components: { StuAns, SubmitWork, Chart_score_statistics },
   computed: {
     wid() {
       if (this.$route.params.wid == null) {
@@ -189,11 +264,8 @@ export default {
     return {
       tab: null,
       items: ["未批改", "已批改"],
-      submits: [
-        { name: "xzt", username: "2020", score: 99 },
-        { name: "xzt", username: "2020", score: 99 },
-        { name: "xzt", username: "2020", score: 99 },
-      ],
+      showCard: false,
+      submits: [],
       sta: [
         // { value: 2, name: "不及格" },
       ],
@@ -224,7 +296,13 @@ export default {
           sortable: false,
         },
       ],
-      pageOfSubmtis: 0,
+      submit_chose: null,
+      search_submits: "",
+      pageOfSubmtis: 1,
+      pageCountOfSubmit: 0,
+      pageOfSubmtis_fin: 1,
+      pageCountOfSubmit_fin: 0,
+
       pageCount: 0,
       statistic_content: {},
       sid: 0,
@@ -234,10 +312,17 @@ export default {
       snackbar_msg: "",
       snackbar: false,
       snackbar_color: "success",
-      search_submits: "",
     };
   },
   methods: {
+    showSubmitCard(item) {
+      this.submit_chose = Object.assign({}, item);
+      this.showCard = true;
+    },
+    closeSubmitCard(val) {
+      this.showCard = false;
+      this.flushSubmit();
+    },
     async flushSubmit(val) {
       this.getAllSubmits();
     },

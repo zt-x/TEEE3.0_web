@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import { fun_getSummary } from "@/api/work";
+import { fun_getSummary, fun_delWork } from "@/api/work";
 export default {
   props: ["exams", "cid"],
   computed: {},
@@ -163,21 +163,14 @@ export default {
             label: "确定",
             color: "brown",
             callback: () => {
-              token = window.localStorage.getItem("token");
-              // init axios
-              _axios.interceptors.request.use(function (config) {
-                config.headers = {
-                  Authorization: token,
-                };
-                return config;
-              });
-              const form = new FormData();
-              form.append("wid", work.id);
-              _axios.post("/api/Course/deleteAWork", form).then((res) => {
-                _this.msg = res.data.msg;
-                _this.snackbar = true;
-                _this.$emit("flush", true);
-              });
+              fun_delWork(work.id)
+                .then((res) => {
+                  _this._alert(res.msg);
+                  _this.$emit("flush", true);
+                })
+                .catch(() => {
+                  _this.$emit("flush", true);
+                });
             },
           },
           {

@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import { fun_getSummary } from "@/api/work";
+import { fun_getSummary, fun_delWork } from "@/api/work";
 import { _alert } from "@/plugins/myfun";
 export default {
   props: ["works", "cid"],
@@ -183,26 +183,13 @@ export default {
             label: "确定",
             color: "brown",
             callback: () => {
-              token = window.localStorage.getItem("token");
-              // init axios
-              _axios.interceptors.request.use(function (config) {
-                config.headers = {
-                  Authorization: token,
-                };
-                return config;
-              });
-              const form = new FormData();
-              form.append("wid", work.id);
-              _axios
-                .post("/api/Course/deleteAWork", form)
+              fun_delWork(work.id)
                 .then((res) => {
-                  _this.msg = res.data.msg;
-                  _this.snackbar = true;
+                  _this._alert(res.msg);
                   _this.$emit("flush", true);
                 })
-                .catch((err) => {
-                  _this.msg = "发生了错误" + err;
-                  _this.snackbar = true;
+                .catch(() => {
+                  _this.$emit("flush", true);
                 });
             },
           },
