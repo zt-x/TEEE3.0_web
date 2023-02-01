@@ -9,7 +9,7 @@
       <v-tabs-items v-model="tabs_validate">
         <v-tab-item>
           <p v-if="facecheck">😘人脸识别已开启</p>
-          <p>{{ rules.text }}</p>
+          <p>{{ rules.ruleText }}</p>
         </v-tab-item>
         <!-- 人脸识别 -->
         <v-tab-item v-if="facecheck">
@@ -19,7 +19,9 @@
                 <div class="mx-auto" v-if="!submtiFace">
                   请打开浏览器摄像头权限, 面对摄像头
                 </div>
-                <div class="mx-auto" :color="facecheck_color">{{ facecheck_msg }}</div>
+                <div class="mx-auto" :color="facecheck_color">
+                  {{ facecheck_msg }}
+                </div>
               </v-col>
             </v-row>
             <v-row align="center">
@@ -105,6 +107,8 @@
 import axios from "axios";
 const _axios = axios.create();
 let token = window.localStorage.getItem("token");
+import { fun_getExamRulePre } from "@/api/exam";
+import { _alert } from "@/plugins/myfun";
 export default {
   props: ["work", "cid"],
   watch: {
@@ -294,17 +298,24 @@ export default {
       };
       return config;
     });
-    const form = new FormData();
-    form.append("wid", _this.work.id);
-    _axios
-      .post("/api/Exam/getExamRulePre", form)
+    // const form = new FormData();
+    // form.append("wid", _this.work.id);
+    // _axios
+    // 	.post("/api/Exam/getExamRulePre", form)
+    fun_getExamRulePre(_this.work.id)
       .then((res) => {
-        _this.rules = res.data.data;
-        _this.tab_num = 0;
-        _this.rules.rules = _this.rules.rules.slice(1, -1).split(",");
-        if (_this.rules.rules.includes("FACECHECK")) {
-          _this.facecheck = true;
-          _this.tab_num++;
+        if (res.code > 0) {
+          _this.rules = res.data;
+          console.log(_this.rules);
+          _this.tab_num = 0;
+          _this.rules.rules = _this.rules.rules.slice(1, -1).split(",");
+          if (_this.rules.rules.includes("FACECHECK")) {
+            _this.facecheck = true;
+            _this.tab_num++;
+          }
+        } else {
+          _alert(res.msg);
+          _this.close();
         }
         _this.getValidate = true;
         _this.loading = false;

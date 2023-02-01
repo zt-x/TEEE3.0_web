@@ -5,6 +5,9 @@ const baseUrl = "/api/banks";
 export function fun_addWorkBank(workContent) {
   return _axios.post(baseUrl + "/work", workContent);
 }
+export function fun_getWorkBank() {
+  return _axios.get(baseUrl + "/work");
+}
 
 // 题库
 export function fun_addQuestionBank(workContent) {

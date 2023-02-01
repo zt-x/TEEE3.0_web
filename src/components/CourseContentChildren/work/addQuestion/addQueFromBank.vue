@@ -34,45 +34,18 @@
       <v-btn @click="close()" color="brown" text>取消</v-btn>
       <v-btn @click="add()" color="brown" v-if="selected.length > 0" text>确定</v-btn>
     </v-card-actions>
-    <v-snackbar
-      absolute
-      v-model="snackbar"
-      v-if="snackbar"
-      top
-      :color="snackbar_color"
-      dense="true"
-      timeout="1000"
-    >
-      {{ snackbar_msg }}
-    </v-snackbar>
   </v-card>
 </template>
 
 <script>
-import axios from "axios";
-let token = window.localStorage.getItem("token");
-const _axios = axios.create();
-let _this;
+import { fun_getWorkBank } from "@/api/bank";
+import { _alert } from "@/plugins/myfun";
 export default {
   mounted() {
-    _this = this;
-    this.$store.commit("updatePageName", "库管理");
-    token = window.localStorage.getItem("token");
-    _axios.interceptors.request.use(function (config) {
-      config.headers = {
-        Authorization: token,
-      };
-      return config;
-    });
-    this.snackbar_msg = "正在拉取作业库😀 ..";
-    this.snackbar = true;
     this.getWorkBank();
   },
   data() {
     return {
-      snackbar: false,
-      snackbar_color: "success",
-      snackbar_msg: "",
       selected: [],
       search: "",
       finishGetData: false,
@@ -103,11 +76,11 @@ export default {
       return ret;
     },
     getWorkBank() {
-      _axios
-        .post("/api/Bank/getWorkBankByTid")
+      let _this = this;
+      fun_getWorkBank()
         .then((res) => {
-          if (Number(res.data.code) != 1) {
-            _this.values = eval(res.data.data);
+          if (Number(res.code) > 0) {
+            _this.values = eval(res.data);
             for (let i = 0; i < _this.values.length; i++) {
               _this.values[i].tags = this.parseTags(_this.values[i].tags);
             }
@@ -115,6 +88,7 @@ export default {
           _this.finishGetData = true;
         })
         .catch((err) => {
+          _alert(err);
           console.log(err);
         });
     },

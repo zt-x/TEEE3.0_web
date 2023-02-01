@@ -45,11 +45,7 @@
               {{ item.ans }}
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-chip small color="primary" class="mr-2" @click="editQue(item)"
-                >编辑</v-chip
-              >
-              <span color="grey">|</span>
-              <v-chip small color="error" class="ml-2" @click="deleteQue(item)"
+              <v-chip small color="error" class="ml-2" @click="removeAns(item.key)"
                 >删除</v-chip
               >
             </template>
@@ -264,10 +260,13 @@ export default {
       data.isCorr = false;
       this.ans = "";
       this.qans.push(data);
-      console.log(this.qans);
     },
     removeAns(i) {
+      console.log(this.qans);
       this.qans.splice(i, 1);
+      for (let j = i; j < this.qans.length; j++) {
+        this.qans[j].key = j;
+      }
     },
   },
 };

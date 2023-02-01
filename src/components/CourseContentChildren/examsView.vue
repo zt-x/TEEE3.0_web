@@ -115,13 +115,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import stuAnsStu from "./stuAnsStu.vue";
 import ExamsViewValidate from "./examsViewValidate.vue";
 import { fun_getWorkStatus, fun_getWorkContent } from "@/api/work";
 import { fun_getSubmitByWorkId } from "@/api/submit";
-const _axios = axios.create();
-let token = window.localStorage.getItem("token");
 export default {
   components: { stuAnsStu, ExamsViewValidate },
 
@@ -134,10 +131,6 @@ export default {
     enterPreValidate(work) {
       this.work = work;
       this.dialog_preValidate = true;
-      // this.$router.push({
-      //     name: "doWork",
-      //     params: { wid: work.id, wname: work.wname, cid: _this.cid },
-      //   });
     },
     doWork(work) {
       let _this = this;

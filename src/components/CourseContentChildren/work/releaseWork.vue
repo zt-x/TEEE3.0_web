@@ -3,11 +3,7 @@
     <v-dialog persistent v-model="dialog_ifSaveAsWorkBank" width="400px">
       <v-overlay v-if="overlay" absolute>
         <v-chip>
-          <v-progress-circular
-            indeterminate
-            size="16"
-            class="mr-3"
-          ></v-progress-circular>
+          <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
           <v-spacer></v-spacer>
           <span>{{ overlay_msg }}</span>
         </v-chip>
@@ -25,10 +21,7 @@
           <v-btn color="green darken-1" text @click="releaseWork(true)"
             >不保存, 直接发布</v-btn
           >
-          <v-btn
-            color="green darken-1"
-            @click="releaseWork(false)"
-            class="white--text"
+          <v-btn color="green darken-1" @click="releaseWork(false)" class="white--text"
             >保存</v-btn
           >
         </v-card-actions>
@@ -114,10 +107,7 @@
                   :rules="[rules.required, rules.mustNum]"
                 ></v-text-field>
               </v-col>
-              <v-col
-                :cols="releaseWork_isExam ? 2 : 0"
-                v-if="releaseWork_isExam"
-              >
+              <v-col :cols="releaseWork_isExam ? 2 : 0" v-if="releaseWork_isExam">
                 <v-text-field
                   required
                   clearable
@@ -156,9 +146,7 @@
                     scrollable
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="TimeMenu = false"
-                      >OK</v-btn
-                    >
+                    <v-btn text color="primary" @click="TimeMenu = false">OK</v-btn>
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -195,12 +183,7 @@
                   v-if="workContentRadio == 'createNewWork'"
                 >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-chip
-                      class="white--text"
-                      color="#875438"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
+                    <v-chip class="white--text" color="#875438" v-bind="attrs" v-on="on">
                       <v-icon small left>mdi-plus</v-icon>
                       添加题目
                     </v-chip>
@@ -223,7 +206,7 @@
                 <!-- 选择作业库 -->
                 <v-chip
                   class="white--text"
-                  color="green"
+                  color="brown"
                   v-if="workContentRadio == 'searchFromBank'"
                   @click="openWorkBank()"
                 >
@@ -244,29 +227,6 @@
               <v-col cols="12">
                 <!-- 添加新题目 -->
                 <v-card v-if="workContentRadio == 'createNewWork'">
-                  <!-- TODO: 点击后进行二次编辑 -->
-
-                  <!-- <v-chip
-                    label
-                    dark
-                    color="success"
-                    class="mx-2 my-1"
-                    close
-                    v-for="(ques, i) in questions"
-                    :key="ques.id"
-                    @click:close="questions.splice(i, 1)"
-                  >
-                    {{ i + 1 }}、 【
-                    {{
-                      JSON.parse(ques).qtype == "30010"
-                        ? "选择题"
-                        : JSON.parse(ques).qtype == "30011"
-                        ? "填空题"
-                        : "简答题"
-                    }}
-                    】|
-                    {{ JSON.parse(ques).qtext.slice(0, 20) }}
-                  </v-chip> -->
                   <v-data-table
                     class="rounded-0"
                     :headers="que_tab_headers"
@@ -292,24 +252,14 @@
                       <span v-if="item.qtype == '30012'" style="color: grey">
                         [简答题]
                       </span>
-                      <span v-else>
-                        {{ item.qtext.substring(0, 25) }} ...
-                      </span>
+                      <span v-else> {{ item.qtext.substring(0, 25) }} ... </span>
                     </template>
                     <template v-slot:item.func="{ item }">
-                      <v-chip
-                        small
-                        color="primary"
-                        class="mr-2"
-                        @click="editQue(item)"
+                      <v-chip small color="primary" class="mr-2" @click="editQue(item)"
                         >编辑</v-chip
                       >
                       <span color="grey">|</span>
-                      <v-chip
-                        small
-                        color="error"
-                        class="ml-2"
-                        @click="deleteQue(item)"
+                      <v-chip small color="error" class="ml-2" @click="deleteQue(item)"
                         >删除</v-chip
                       >
                     </template>
@@ -323,10 +273,7 @@
                 </v-card>
 
                 <!-- 从Bank中获取的 -->
-                <v-card
-                  class="px-5 py-5"
-                  v-if="workContentRadio == 'searchFromBank'"
-                >
+                <v-card class="px-5 py-5" v-if="workContentRadio == 'searchFromBank'">
                   <!-- TODO: 点击后进行二次编辑 -->
                   <v-chip
                     label
@@ -376,10 +323,7 @@
                     ></v-checkbox>
                   </v-col>
                   <v-col cols="12">
-                    <v-textarea
-                      v-model="rule_pre_TEXT"
-                      label="考前提醒信息"
-                    ></v-textarea>
+                    <v-textarea v-model="rule_pre_TEXT" label="考前提醒信息"></v-textarea>
                   </v-col>
                 </v-row>
               </v-container>
@@ -792,7 +736,7 @@ export default {
       aWork.bwid = 0;
       aWork.timeLimit = this.timeLimit;
       aWork.isExam = this.releaseWork_isExam ? 1 : 0;
-      work.wname = this.work_name;
+      work.bwname = this.work_name;
       let questions_str = [];
       this.questions.forEach((item) => {
         delete item.primaryData;
