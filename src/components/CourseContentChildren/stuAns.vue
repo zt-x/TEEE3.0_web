@@ -1,5 +1,8 @@
 <template>
   <v-card>
+    <v-dialog width="550px" v-model="show_pri" v-if="show_pri">
+      <PrimaryQue @close="closePrimaryQue()" :wid="SUBMIT.wid" :qid="pri_qid" />
+    </v-dialog>
     <v-card-title
       >{{ SUBMIT.uname }} {{ SUBMIT.score.toFixed(1) }}
       <v-spacer></v-spacer>
@@ -73,6 +76,7 @@
             <div v-else>无附件</div>
             <div class="mt-5" style="float: right">
               <v-spacer></v-spacer>
+              <v-chip small dark color="blue" @click="showPrimaryQue(i)">查看原题</v-chip>
               <v-chip small dark color="blue" @click="showChangeScoreDialog(i)">
                 {{ readover_new[i] == -1 ? "批改" : "修改得分" }}
               </v-chip>
@@ -119,8 +123,9 @@
 import stuAnsSetScore from "./work/stuAnsSetScore.vue";
 import { fun_getSubmitBySId, fun_setSubmitScore } from "@/api/submit";
 import { _alert } from "@/plugins/myfun";
+import PrimaryQue from "./work/primaryQue.vue";
 export default {
-  components: { stuAnsSetScore },
+  components: { stuAnsSetScore, PrimaryQue },
   props: ["SUBMIT", "qscores"],
   data() {
     return {
@@ -137,14 +142,24 @@ export default {
       overlay: false,
       overlay_msg: "",
       finishGetAns: false,
+      pri_qid: -1,
+      show_pri: false,
     };
   },
   mounted() {
     this.getSubmitContent();
   },
   methods: {
+    closePrimaryQue() {
+      this.pri_qid = -1;
+      this.show_pri = false;
+    },
     myEval(data) {
       return eval(data);
+    },
+    showPrimaryQue(i) {
+      this.pri_qid = i + 1;
+      this.show_pri = true;
     },
     parseArr(arrString) {
       // if(arrString.)

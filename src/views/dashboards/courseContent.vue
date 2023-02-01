@@ -65,7 +65,7 @@
                   </v-tab>
                 </v-tabs>
                 <v-tabs-items v-model="tab">
-                  <v-tab-item :key="items[0]">
+                  <v-tab-item :key="items[0]" :loading="!loading_workview">
                     <v-card color="basil" style="background: #f6f7f8" flat>
                       <WorksView
                         :cid="cid"
@@ -78,24 +78,21 @@
                         @flush="flushContent"
                         v-if="loading_workview && isTeacher"
                       />
-                      <v-card v-if="!loading_workview">
-                        <v-container>
-                          <v-row class="text-center">
-                            <v-col cols="12">
-                              <v-progress-circular
-                                indeterminate
-                                :size="20"
-                                color="primary"
-                              ></v-progress-circular>
-                              <span class="pl-2">正在获取作业 ...</span>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
+                      <v-row>
+                        <v-col>
+                          <div class="text-center">
+                            <v-pagination
+                              @input="getWorks(pageOfWorks)"
+                              v-model="pageOfWorks"
+                              :length="page_lenOfWorks"
+                            ></v-pagination>
+                          </div>
+                        </v-col>
+                      </v-row>
                     </v-card>
                   </v-tab-item>
                   <!-- 考试模块 -->
-                  <v-tab-item>
+                  <v-tab-item :loading="!loading_examview">
                     <v-card color="basil" style="background: #f6f7f8" flat>
                       <ExamsView
                         :cid="cid"
@@ -108,20 +105,18 @@
                         @flush="flushContent"
                         v-if="loading_examview && isTeacher"
                       />
-                      <v-card v-if="!loading_examview">
-                        <v-container>
-                          <v-row class="text-center">
-                            <v-col cols="12">
-                              <v-progress-circular
-                                indeterminate
-                                :size="20"
-                                color="primary"
-                              ></v-progress-circular>
-                              <span class="pl-2">正在获取考试 ...</span>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
+
+                      <v-row>
+                        <v-col>
+                          <div class="text-center">
+                            <v-pagination
+                              @input="getExams(pageOfExams)"
+                              v-model="pageOfExams"
+                              :length="page_lenOfExams"
+                            ></v-pagination>
+                          </div>
+                        </v-col>
+                      </v-row>
                     </v-card>
                   </v-tab-item>
                   <!-- 公告模块 -->
@@ -182,126 +177,6 @@
                         ></v-pagination>
                       </div>
                     </v-card>
-                    <!-- <v-card
-                      v-if="finishGetUser"
-                      class="py-5"
-                      color="basil"
-                      style="background: #f6f7f8"
-                      flat
-                    >
-                      <v-card
-                        class="mx-auto"
-                        width="95%"
-                        rounded="true"
-                        style="background: #a36645"
-                      >
-                        <v-container>
-                          <v-row>
-                            <v-col cols="4"> </v-col>
-                            <v-col cols="4">
-                              <div>
-                                <v-text-field
-                                  append-icon="fas fa-search"
-                                  @click:append="searchUser"
-                                  @keypress.enter="searchUser"
-                                  dense
-                                  label="all"
-                                  hide-details="auto"
-                                  v-model="search_user"
-                                  solo
-                                ></v-text-field>
-                              </div>
-                            </v-col>
-                            <v-col cols="4">
-                              <v-btn dark color="#a36645">
-                                <v-icon>fas fa-plus</v-icon>
-                                添加用户
-                              </v-btn>
-
-                              <v-btn class="ml-3" dark color="#a36645">
-                                <v-icon>fas fa-plus</v-icon>
-                                批量添加
-                              </v-btn>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card>
-
-                      <v-card
-                        class="mx-auto mb-5"
-                        width="95%"
-                        rounded="false"
-                        style="padding: 10px; background: #f6f7f8; overflow-y: auto"
-                        v-if="finishGetUser"
-                        max-height="500px"
-                      >
-                        <v-card class="my-1 mx-auto" style="width: 95%">
-                          <v-container>
-                            <v-row justify="center">
-                              <v-col cols="2" class="hideMore"> 姓名 </v-col>
-                              <v-col cols="2">学号</v-col>
-                              <v-col cols="4">
-                                <v-spacer></v-spacer>
-                              </v-col>
-                              <v-col cols="2"> 完成作业数 </v-col>
-
-                              <v-col cols="2"> 作业平均分 </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-card>
-                        <v-card
-                          v-for="user in userinfos_show"
-                          :key="user.uid"
-                          ripple
-                          hover
-                          class="my-1 mx-auto"
-                          style="width: 94%"
-                        >
-                          <v-container>
-                            <v-row>
-                              <v-col cols="2" class="hideMore">
-                                <v-avatar class="mr-1" size="30px">
-                                  <v-img :src="user.avatar"></v-img>
-                                </v-avatar>
-                                {{ user.username }}
-                              </v-col>
-                              <v-col cols="2">{{ user.uid }}</v-col>
-                              <v-col cols="4">
-                                <v-spacer></v-spacer>
-                              </v-col>
-                              <v-col cols="2">
-                                <v-chip small>{{ user.finishWorkNum }}</v-chip>
-                              </v-col>
-                              <v-col cols="2">
-                                <v-chip small>{{
-                                  user.workAverageScore.toFixed(1)
-                                }}</v-chip>
-                              </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-card>
-                      </v-card>
-                    </v-card>
-                    <v-card
-                      v-if="!finishGetUser"
-                      class="py-5"
-                      color="basil"
-                      style="background: #f6f7f8"
-                      flat
-                    >
-                      <v-container>
-                        <v-row class="text-center">
-                          <v-col cols="12">
-                            <v-progress-circular
-                              indeterminate
-                              :size="20"
-                              color="primary"
-                            ></v-progress-circular>
-                            <span class="pl-2">正在获取成员信息并统计作业情况 ...</span>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card> -->
                   </v-tab-item>
                 </v-tabs-items>
               </v-card>
@@ -393,6 +268,7 @@ import Announcement_release from "@/components/CourseContentChildren/announcemen
 import {
   fun_getUsers,
   fun_getWorks,
+  fun_getExams,
   fun_getAnnouncement,
   fun_getInfo,
   fun_removeUsers,
@@ -466,6 +342,10 @@ export default {
       CourseStatsitics: {},
       submit_totalNum: 0,
       loading_summary: false,
+      pageOfWorks: 1,
+      pageOfExams: 1,
+      page_lenOfWorks: 0,
+      page_lenOfExams: 0,
     };
   },
   methods: {
@@ -511,6 +391,49 @@ export default {
       //       _this._alert("获取课程Statistics失败：" + err);
       //     });
     },
+    getWorks(page) {
+      let _this = this;
+      _this.loading_workview = false;
+
+      fun_getWorks(this.cid, page)
+        .then((res) => {
+          let dt = res.data;
+          _this.works = dt;
+          _this.page_lenOfWorks = res.code;
+          _this.works.sort((a, b) => {
+            return b.id - a.id;
+          });
+          _this.loading_workview = true;
+          _this.loading = false;
+          _this.loading_summary = false;
+        })
+        .catch((err) => {
+          _this._alert("出问题咯，获取作业异常: " + err);
+          _this.loading = false;
+        });
+    },
+    getExams(page) {
+      let _this = this;
+      _this.loading_examview = false;
+
+      fun_getExams(this.cid, page)
+        .then((res) => {
+          let dt = res.data;
+          _this.exams = dt;
+          _this.page_lenOfExams = res.code;
+
+          _this.exams.sort((a, b) => {
+            return b.id - a.id;
+          });
+          _this.loading_examview = true;
+          _this.loading = false;
+          _this.loading_summary = false;
+        })
+        .catch((err) => {
+          _this._alert("出问题咯，获取作业异常: " + err);
+          _this.loading = false;
+        });
+    },
     flushContent() {
       let _this = this;
       _this.finishGetUser = false;
@@ -534,33 +457,8 @@ export default {
           _this.loading = false;
           // _this.$router.replace({ path: "/Course" });
         });
-      fun_getWorks(this.cid)
-        .then((res) => {
-          let dt = res.data;
-          _this.works = dt.filter((item) => {
-            return item.isExam == 0;
-          });
-          _this.exams = dt.filter((item) => {
-            return item.isExam == 1;
-          });
-          _this.works.sort((a, b) => {
-            return b.id - a.id;
-          });
-          _this.exams.sort((a, b) => {
-            return b.id - a.id;
-          });
-
-          _this.loading_workview = true;
-          _this.loading_examview = true;
-          _this.loading = false;
-          _this.loading_summary = false;
-        })
-        .catch((err) => {
-          //   _this.$router.replace({ path: "/Course" });
-          _this._alert("出问题咯，获取作业异常: " + err);
-
-          _this.loading = false;
-        });
+      this.getWorks(1);
+      this.getExams(1);
       fun_getAnnouncement(this.cid)
         .then((res) => {
           _this.loading_announcementview = true;

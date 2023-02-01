@@ -1,5 +1,8 @@
 <template>
   <v-card>
+    <v-dialog width="550px" v-model="show_pri" v-if="show_pri">
+      <PrimaryQue @close="closePrimaryQue()" :wid="SUBMIT.wid" :qid="pri_qid" />
+    </v-dialog>
     <v-card-title
       >{{ SUBMIT.uname }} {{ SUBMIT.score.toFixed(1) }}
       <v-spacer></v-spacer>
@@ -8,8 +11,11 @@
       </v-chip>
     </v-card-title>
     <v-card-subtitle>
-      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记,
-      未批改的题目以<v-icon color="warning" small>mdi-border-color</v-icon>
+      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记, 未批改的题目以<v-icon
+        color="warning"
+        small
+        >mdi-border-color</v-icon
+      >
       标记。 下列各题得分均为题目的原始分数，总分为经过百分比计算后的得分
     </v-card-subtitle>
     <v-container>
@@ -78,6 +84,10 @@
               </v-chip>
             </div>
             <div v-else>无附件</div>
+            <div class="mt-5" style="float: right">
+              <v-spacer></v-spacer>
+              <v-chip small dark color="blue" @click="showPrimaryQue(i)">查看原题</v-chip>
+            </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -88,11 +98,7 @@
     </v-card-actions>
     <v-overlay v-if="overlay">
       <v-chip>
-        <v-progress-circular
-          indeterminate
-          size="16"
-          class="mr-3"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
         <v-spacer></v-spacer>
         <span>{{ overlay_msg }}</span>
       </v-chip>
@@ -112,11 +118,12 @@
 
 <script>
 import stuAnsSetScore from "./work/stuAnsSetScore.vue";
+import PrimaryQue from "./work/primaryQue.vue";
 import { fun_getSubmitBySId } from "@/api/submit";
 import { _alert } from "@/plugins/myfun";
 import { download } from "@/api/download";
 export default {
-  components: { stuAnsSetScore },
+  components: { stuAnsSetScore, PrimaryQue },
   props: ["SUBMIT", "qscores"],
   data() {
     return {
@@ -133,12 +140,22 @@ export default {
       snackbar: false,
       snackbar_color: "brown",
       snackbar_msg: "",
+      pri_qid: -1,
+      show_pri: false,
     };
   },
   mounted() {
     this.getSubmitContent();
   },
   methods: {
+    closePrimaryQue() {
+      this.pri_qid = -1;
+      this.show_pri = false;
+    },
+    showPrimaryQue(i) {
+      this.pri_qid = i + 1;
+      this.show_pri = true;
+    },
     myEval(data) {
       return eval(data);
     },

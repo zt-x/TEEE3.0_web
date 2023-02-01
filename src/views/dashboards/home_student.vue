@@ -1,7 +1,5 @@
 <template>
   <div class="px-4">
-    <div>stu</div>
-
     <v-sheet color="transparent">
       <v-row>
         <v-col cols="12" md="6" lg="3" v-for="(item, i) in stats" :key="i">
@@ -148,10 +146,7 @@
                         {{ item.rate }}
                       </div>
 
-                      <v-progress-linear
-                        :color="item.color"
-                        v-model="item.rate"
-                      />
+                      <v-progress-linear :color="item.color" v-model="item.rate" />
                     </td>
                   </tr>
                 </tbody>

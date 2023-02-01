@@ -11,6 +11,11 @@ export function fun_getWorkContent(wid) {
     params: { wid: wid },
   });
 }
+export function fun_getQueContent(wid, qid) {
+  return _axios.get(baseUrl + "/student/qContent", {
+    params: { wid: wid, qid: qid },
+  });
+}
 export function fun_getWorkTimer(wid) {
   return _axios.get(baseUrl + "/student/timer", {
     params: { wid: wid },

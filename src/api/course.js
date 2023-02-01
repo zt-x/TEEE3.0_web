@@ -28,8 +28,11 @@ export function fun_removeUsers(cid, uid) {
 export function fun_getInfo(cid) {
   return _axios.get(baseUrl + "/info", { params: { cid: cid } });
 }
-export function fun_getWorks(cid) {
-  return _axios.get(baseUrl + "/works", { params: { cid: cid } });
+export function fun_getWorks(cid, page) {
+  return _axios.get(baseUrl + "/works", { params: { cid: cid, page: page } });
+}
+export function fun_getExams(cid, page) {
+  return _axios.get(baseUrl + "/exams", { params: { cid: cid, page: page } });
 }
 export function fun_getAnnouncement(cid) {
   return _axios.get(baseUrl + "/announcements", { params: { cid: cid } });
