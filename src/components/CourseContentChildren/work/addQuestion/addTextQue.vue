@@ -13,11 +13,18 @@
     <v-card-title>添加简答题</v-card-title>
     <v-container>
       <v-row>
+        <v-col class="text-center primary--text" cols="12" v-if="loading_ckeditor">
+          首次加载富文本编辑框资源较慢，请耐心等待一会儿哦 ..
+        </v-col>
+        <v-col class="text-center" cols="12" v-if="loading_ckeditor">
+          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+        </v-col>
         <v-col cols="12">
           <ckeditor
             v-model="ans_text"
             :config="editorConfig"
             editor-url="/ckeditor/ckeditor.js"
+            @ready="onEditorReady()"
           ></ckeditor>
         </v-col>
         <!-- 添加附件 -->
@@ -135,6 +142,7 @@ export default {
           { name: "about", groups: ["about"] },
         ],
       },
+      loading_ckeditor: true,
       rules: {
         required: (value) => !!value || "不能为空！",
       },
@@ -142,6 +150,9 @@ export default {
     };
   },
   methods: {
+    onEditorReady() {
+      this.loading_ckeditor = false;
+    },
     _alert(msg) {
       this.$toasted.show(msg, {
         theme: "outline",

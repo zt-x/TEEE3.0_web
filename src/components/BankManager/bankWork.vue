@@ -1,5 +1,8 @@
 <template>
   <v-card>
+    <v-dialog width="650px" v-model="dialog_editWorkBank" v-if="dialog_editWorkBank">
+      <BankEdit :isEdit="isEdit" :bid="bid" @close="closeDialog()" />
+    </v-dialog>
     <v-card-title>
       <v-chip
         small
@@ -37,11 +40,17 @@
       <div class="pl-2 my-3">简答题: {{ numOfQue[2] }}道</div>
     </v-card-text>
     <v-card-actions v-if="finishGetData">
-      <v-btn color="orange" text> 查看作业库内容 </v-btn>
-      <v-btn color="orange" text v-if="Number(content.isMine) == 1">
-        编辑作业库信息
+      <v-btn color="orange" text @click="showBankQuestion()">
+        查看{{ Number(content.isMine) == 1 ? "/编辑" : "" }}作业库内容
       </v-btn>
-      <v-btn color="orange" text> 生成分享码 </v-btn>
+
+      <v-btn
+        color="orange"
+        text
+        v-if="Number(content.isMine) == 1 || Number(content.isPrivate) != 1"
+      >
+        生成分享码
+      </v-btn>
     </v-card-actions>
     <v-skeleton-loader
       v-if="!finishGetData"
@@ -49,73 +58,56 @@
       max-width="100%"
       type="card"
     ></v-skeleton-loader>
-    <!-- Snackbar -->
-    <v-snackbar
-      v-model="snackbar"
-      top
-      :color="snackbar_color"
-      dense="true"
-      timeout="2000"
-      rounded="pill"
-    >
-      {{ snackbar_msg }}
-    </v-snackbar>
   </v-card>
 </template>
 
 <script>
-import axios from "axios";
-let token = window.localStorage.getItem("token");
-const _axios = axios.create();
-let _this;
+import { fun_getWorkBankContent } from "../../api/bank";
+import { _alert } from "@/plugins/myfun";
+import BankEdit from "../../components/BankManager/bankEdit.vue";
 export default {
+  components: { BankEdit },
+
   props: ["bid"],
   data() {
     return {
-      snackbar: false,
-      snackbar_color: "brown",
-      snackbar_msg: "",
       finishGetData: false,
       content: {},
       tags: [],
       numOfQue: [],
+      dialog_editWorkBank: false,
+      isEdit: false,
     };
   },
   mounted() {
-    _this = this;
-    this.$store.commit("updatePageName", "库管理/" + this.bid);
-    token = window.localStorage.getItem("token");
-    _axios.interceptors.request.use(function (config) {
-      config.headers = {
-        Authorization: token,
-      };
-      return config;
-    });
     this.getData();
   },
   methods: {
+    closeDialog() {
+      this.dialog_editWorkBank = false;
+    },
     getData() {
+      let _this = this;
       _this.finishGetData = false;
       _this.content = {};
       _this.tags = [];
       _this.numOfQue = [];
-      let form = new FormData();
-      form.append("wbid", this.bid);
-      _axios
-        .post("/api/Bank/getWorkBankContentByID", form)
-        .then((res) => {
-          if (Number(res.data.code) != 1) {
-            _this.tags = eval(res.data.data.tags);
-            _this.numOfQue = eval(res.data.data.numOfQue);
-            _this.finishGetData = true;
-          } else {
-          }
-          _this.content = res.data.data;
-        })
-        .catch((err) => {
-          this.snackbar_msg = err;
-          this.snackbar = true;
-        });
+      fun_getWorkBankContent(this.bid).then((res) => {
+        if (Number(res.code) > 0) {
+          _this.tags = eval(res.data.tags);
+          _this.numOfQue = eval(res.data.numOfQue);
+          _this.finishGetData = true;
+        } else {
+          _alert(res.msg);
+        }
+        _this.content = res.data;
+      });
+    },
+    showBankQuestion() {
+      if (Number(this.content.isMine) == 1) {
+        this.isEdit = true;
+      }
+      this.dialog_editWorkBank = true;
     },
   },
 };

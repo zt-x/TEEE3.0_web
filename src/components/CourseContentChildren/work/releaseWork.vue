@@ -739,7 +739,8 @@ export default {
       work.bwname = this.work_name;
       let questions_str = [];
       this.questions.forEach((item) => {
-        delete item.primaryData;
+        // 不删除 primaryData 了 .... 太麻烦
+        // delete item.primaryData;
         questions_str.push(JSON.stringify(item));
       });
       // TODO

@@ -51,45 +51,7 @@
             </template>
           </v-data-table>
         </v-col>
-        <!-- <v-col cols="6">
-          <v-text-field
-            label="添加正确答案"
-            dense
-            append-icon="fas fa-plus"
-            v-model="a_ans"
-            hint="按下回车键或右侧加号添加"
-            @keypress.enter="addCorrAns()"
-            @click:append="addCorrAns()"
-            color="success"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6">
-          <v-text-field
-            label="添加错误答案"
-            dense
-            append-icon="fas fa-plus"
-            hint="按下回车键或右侧加号添加"
-            v-model="a_err_ans"
-            @click:append="addErrAns()"
-            @keypress.enter="addErrAns()"
-            color="error"
-          ></v-text-field>
-        </v-col> -->
       </v-row>
-      <!-- <v-row align="center">
-        <v-col cols="6" v-for="(ans, i) in qans" :key="i">
-          <v-chip
-            label
-            close
-            :color="ans.isCorr ? `success` : `error`"
-            @click:close="removeAns(i)"
-          >
-            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
-              {{ ans.ans }}
-            </span>
-          </v-chip>
-        </v-col>
-      </v-row> -->
     </v-container>
     <v-card-actions>
       <div style="width: 100px">
@@ -105,8 +67,13 @@
       <span class="red--text">{{ this.msg }}</span>
       <v-spacer></v-spacer>
 
-      <v-btn color="green darken-1" text @click="close()">算了</v-btn>
-      <v-btn color="green darken-1" min-width="60px" class="white--text" @click="add()"
+      <v-btn color="green darken-1" text @click="close()">返回</v-btn>
+      <v-btn
+        v-if="editAble"
+        color="green darken-1"
+        min-width="60px"
+        class="white--text"
+        @click="add()"
         >添加</v-btn
       >
     </v-card-actions>
@@ -115,7 +82,7 @@
 
 <script>
 export default {
-  props: ["defaultData", "qNum"],
+  props: ["defaultData", "qNum", "isEdit"],
   data() {
     return {
       qans: this.defaultData.qans,
@@ -124,13 +91,14 @@ export default {
       a_err_ans: this.defaultData.a_err_ans,
       //   方式二（V-data-Table）
       ans: this.defaultData.ans,
-      selected: [],
+      selected: this.defaultData.selected,
       ans_score: this.defaultData.ans_score,
       ans_text: this.defaultData.ans_text,
       rules: {
         required: (value) => !!value || "不能为空！",
       },
       msg: "",
+      editAble: false,
       headers: [
         {
           text: "选项内容",
@@ -180,15 +148,6 @@ export default {
       let _qans = [];
       let _cans = [];
       let newQue = {};
-      /*   
-	  				方式一
-      for (let i = 0; i < this.qans.length; i++) {
-        _qans.push(this.qans[i].ans);
-        if (this.qans[i].isCorr == true) {
-          _cans.push(i);
-        }
-      }
-	  */
 
       //   			方式二
       for (let i = 0; i < this.qans.length; i++) {
@@ -223,14 +182,11 @@ export default {
       newQue.cans = _cans;
       newQue.primaryData = {
         qans: this.qans,
-        a_ans: this.a_ans,
-        a_err_ans: this.a_err_ans,
+        selected: this.selected,
         ans_score: this.ans_score,
         ans_text: this.ans_text,
       };
       this.qans = [];
-      this.a_ans = "";
-      this.a_err_ans = "";
       this.ans_score = "";
       this.ans_text = "";
       this.msg = "";
@@ -257,7 +213,6 @@ export default {
       let data = {};
       data.ans = this.ans;
       data.key = this.qans.length;
-      data.isCorr = false;
       this.ans = "";
       this.qans.push(data);
     },
@@ -268,6 +223,14 @@ export default {
         this.qans[j].key = j;
       }
     },
+  },
+  mounted() {
+    if (!this.isEdit) {
+      this.editAble = true;
+    } else {
+      this.editAble = this.isEdit == 1 ? true : false;
+    }
+    console.log("isEdit?" + this.editAble);
   },
 };
 </script>
