@@ -77,7 +77,13 @@
             <div class="mt-5" style="float: right">
               <v-spacer></v-spacer>
               <v-chip small dark color="blue" @click="showPrimaryQue(i)">查看原题</v-chip>
-              <v-chip small dark color="blue" @click="showChangeScoreDialog(i)">
+              <v-chip
+                small
+                dark
+                color="blue"
+                class="ml-2"
+                @click="showChangeScoreDialog(i)"
+              >
                 {{ readover_new[i] == -1 ? "批改" : "修改得分" }}
               </v-chip>
             </div>
