@@ -71,7 +71,7 @@
                 <v-chip
                   small
                   label
-                  :color="isEdit == 1 ? 'purple' : 'grey'"
+                  :color="isEdit == 1 ? 'brown' : 'grey'"
                   dark
                   :key="JSON.stringify(data.item)"
                   v-bind="data.attrs"
@@ -245,7 +245,7 @@ export default {
       bwname: "",
       questions: [],
       owner: "",
-      tags: ["123", "456", "789"],
+      tags: [],
       files: [],
       rules: {
         required: (value) => !!value || "不能为空！",
@@ -413,7 +413,7 @@ export default {
           this.bwname = data.bwname;
           this.isPrivate = data.isPrivate == 1 ? true : false;
           this.questions = JSON.parse(data.questions);
-          this.tags = data.tags ? data.tags : [];
+          this.tags = data.tags ? eval(data.tags) : [];
         } else {
           this._alert(res.msg);
         }
@@ -431,7 +431,15 @@ export default {
       bankWork.questions = "[" + questions_str + "]";
       bankWork.isTemp = 0;
       bankWork.isPrivate = this.isPrivate == true ? 1 : 0;
-      bankWork.tags = this.tags.toString();
+      let tags_str = "[";
+      if (this.tags.length > 0) {
+        for (let i = 0; i < this.tags.length - 1; i++) {
+          tags_str += '"' + this.tags[i] + '",';
+        }
+        tags_str += '"' + this.tags[this.tags.length - 1] + '"';
+      }
+      tags_str += "]";
+      bankWork.tags = tags_str;
       let _this = this;
       this.overlay = true;
       this.overlay_msg = "发布中 ...";

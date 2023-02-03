@@ -330,7 +330,7 @@ export default {
       let _this = this;
       fun_getWorkContent(this.wid)
         .then((res) => {
-          let questions = res.data;
+          let questions = res.data.questions;
           _this.qs = eval(questions);
           _this.qs.forEach((val, i) => {
             _this.qscores[i] = val.qscore;

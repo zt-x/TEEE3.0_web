@@ -169,7 +169,7 @@ export default {
                 _this.loading = false;
                 return;
               } else {
-                let questions = res.data;
+                let questions = res.data.questions;
                 _this.qs = eval(questions);
                 _this.qs.forEach((val, i) => {
                   _this.qscores[i] = val.qscore;

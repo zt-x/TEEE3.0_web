@@ -530,9 +530,10 @@ export default {
       fun_getWorkContent(this.wid)
         .then((res) => {
           let questions = res.data;
-          _this.qs = eval(questions);
+          _this.qs = eval(questions.questions);
           if (_this.qs == null) {
           }
+          console.log(_this.qs);
           _this.myAnss.length = _this.qs.length;
           _this.files.length = _this.qs.length;
           _this.files_realpath.length = _this.qs.length;
@@ -543,7 +544,8 @@ export default {
         .catch((err) => {
           _this._alert("该作业有误！请联系教师确认作业内容");
           _this._alert(err);
-          _this.goBack();
+          console.error(err);
+          //   _this.goBack();
           return Promise.reject(new Error("err"));
         });
     },

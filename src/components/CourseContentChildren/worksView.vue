@@ -138,7 +138,7 @@ export default {
           fun_getWorkContent(work.id)
             .then((res) => {
               let questions = res.data;
-              _this.qs = eval(questions);
+              _this.qs = eval(questions.questions);
               _this.qs.forEach((val, i) => {
                 _this.qscores[i] = val.qscore;
               });

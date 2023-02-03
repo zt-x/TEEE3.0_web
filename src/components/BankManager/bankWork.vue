@@ -25,7 +25,7 @@
         <v-chip
           small
           label
-          color="purple"
+          color="brown"
           dark
           class="mx-1"
           v-for="(item, i) in tags"
@@ -94,6 +94,7 @@ export default {
       _this.numOfQue = [];
       fun_getWorkBankContent(this.bid).then((res) => {
         if (Number(res.code) > 0) {
+          console.log(res.data.tags);
           _this.tags = eval(res.data.tags);
           _this.numOfQue = eval(res.data.numOfQue);
           _this.finishGetData = true;
