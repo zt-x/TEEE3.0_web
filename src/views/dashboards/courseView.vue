@@ -233,7 +233,6 @@ export default {
   },
   mounted() {
     let _this = this;
-    // getCourses
     this.getCourses(1);
   },
   created() {
