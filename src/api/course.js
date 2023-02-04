@@ -13,7 +13,6 @@ export function fun_createCourse(cname, college, start_time, end_time) {
   });
 }
 export function fun_delCourse(cid) {
-  console.log(cid);
   return _axios.delete(baseUrl + "/teacher", { data: { cid: cid } });
 }
 export function fun_addCourse(cid) {
@@ -23,7 +22,12 @@ export function fun_getUsers(cid) {
   return _axios.get(baseUrl + "/users", { params: { cid: cid } });
 }
 export function fun_removeUsers(cid, uid) {
-  return _axios.delete(baseUrl + "/teacher/delUser", { cid: cid, uid: uid });
+  console.log(cid);
+  console.log(uid);
+
+  return _axios.delete(baseUrl + "/teacher/delUser", {
+    data: { cid: cid, uid: uid },
+  });
 }
 export function fun_getInfo(cid) {
   return _axios.get(baseUrl + "/info", { params: { cid: cid } });
@@ -38,5 +42,5 @@ export function fun_getAnnouncement(cid) {
   return _axios.get(baseUrl + "/announcements", { params: { cid: cid } });
 }
 export function fun_leave(cid) {
-  return _axios.delete(baseUrl + "/student", { cid: cid });
+  return _axios.delete(baseUrl + "/student", { data: { cid: cid } });
 }

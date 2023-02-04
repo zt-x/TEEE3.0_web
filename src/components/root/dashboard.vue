@@ -39,7 +39,7 @@
           :href="item.href"
           :target="item.target"
           exact
-          color="primary"
+          color="#b27654"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -50,55 +50,63 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+        <v-list-item exact color="red">
+          <div></div>
+          <v-list-item-content>
+            <v-btn dark color="black">
+              <v-list-item-title>退出登录</v-list-item-title>
+            </v-btn>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
     </v-navigation-drawer>
 
-    <!-- <v-app-bar app flat color="white">
+    <v-app-bar app flat color="white">
       <v-app-bar-nav-icon
         v-if="$vuetify.breakpoint.lgAndDown"
         @click="drawerDisplay = !drawerDisplay"
       />
 
       <v-toolbar-items class="d-flex align-center">
-        <v-text-field
-          hide-details
-          flat
-          dense
-          outlined
-          solo
-          label="Search"
-          prepend-inner-icon="mdi-magnify"
-        />
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              hide-details
+              flat
+              dense
+              outlined
+              solo
+              label="输入码"
+              prepend-inner-icon="mdi-key"
+              v-bind="attrs"
+              v-on="on"
+              v-model="key"
+              @keypress.enter="useKey(key)"
+            />
+          </template>
+          <span
+            >快捷使用码(签到码、课程邀请码、导入库码等), 按下回车键使用</span
+          >
+        </v-tooltip>
       </v-toolbar-items>
 
       <v-spacer />
 
       <v-btn icon>
-        <v-icon>
-          mdi-bell-outline
-        </v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>
-          mdi-apps-box
-        </v-icon>
+        <v-icon> mdi-bell-outline </v-icon>
       </v-btn>
 
       <v-btn text>
         <div class="d-flex align-center">
           <v-avatar size="32">
-            <img
-              src="https://cdn.pixabay.com/photo/2020/11/08/10/25/dog-5723334_1280.jpg"
-              alt="avatar"
-            />
+            <v-img :src="user.avatar" alt="avatar" />
           </v-avatar>
 
-          <div class="ml-1 subtitle-2">
-            Admin
-          </div>
+          <div class="ml-1 subtitle-2">{{ user.uname }}</div>
         </div>
       </v-btn>
-    </v-app-bar> -->
+    </v-app-bar>
 
     <v-main>
       <div style="height: 30px"></div>
@@ -125,6 +133,7 @@
 <script>
 import { resetRouter, setRouter } from "@/router/setRouter.js";
 import { fun_getRoutes } from "@/api/account.js";
+import { fun_useKey } from "@/api/key";
 import { unlimit } from "@/plugins/myfun";
 
 export default {
@@ -160,6 +169,7 @@ export default {
       avatar: "",
       role: -1,
     },
+    key: "",
   }),
   computed: {
     mini() {
@@ -192,6 +202,11 @@ export default {
           _this.user.uname = data.data.uname;
           _this.user.role = data.data.role;
           _this.user.avatar = data.data.avatar;
+          _this.$toasted.success("欢迎回来, " + this.user.uname, {
+            theme: "outline",
+            position: "top-center",
+            duration: 2000,
+          });
           this.$router.replace({ path: "/home" });
         } else {
           _this.$toasted.show(data.msg, {
@@ -221,6 +236,10 @@ export default {
       window.localStorage.setItem("token", "");
       window.localStorage.setItem("role", "");
       this.$router.replace({ path: "/login" });
+    },
+    useKey() {
+      fun_useKey(this.key);
+      this.key = "";
     },
   },
 };

@@ -38,7 +38,7 @@
               <span style="color: white">导入</span>
             </v-chip>
 
-            <v-chip @click="getWorkBank()" label color="pink" class="ml-3">
+            <v-chip @click="getWorkBank()" label color="black" class="ml-3">
               <v-icon color="white" small left>mdi-refresh</v-icon>
               <span style="color: white">刷新</span>
             </v-chip>
@@ -50,7 +50,9 @@
           class="pb-6 transparent"
           :class="{
             'pl-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-            'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
+            'px-10': !(
+              $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
+            ),
           }"
         >
           <v-card max-height="500px" style="overflow: auto" outlined>
@@ -77,12 +79,18 @@
                           small
                           outlined
                           dark
-                          :color="Number(item.isPrivate) == 0 ? 'success' : 'warning'"
+                          :color="
+                            Number(item.isPrivate) == 0 ? 'success' : 'warning'
+                          "
                           class="mr-2"
-                          >{{ Number(item.isPrivate) == 0 ? "公开" : "私有" }}</v-chip
+                          >{{
+                            Number(item.isPrivate) == 0 ? "公开" : "私有"
+                          }}</v-chip
                         >
 
-                        <span style="font-weight: 600">{{ item.bankName }} </span>
+                        <span style="font-weight: 600"
+                          >{{ item.bankName }}
+                        </span>
                       </v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
@@ -97,7 +105,9 @@
           class="pb-6 transparent"
           :class="{
             'pr-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-            'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
+            'px-10': !(
+              $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
+            ),
           }"
         >
           <v-card max-height="500px" style="overflow: auto" outlined>

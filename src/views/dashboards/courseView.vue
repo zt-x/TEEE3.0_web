@@ -49,7 +49,7 @@
             dark
             v-bind="attrs"
             v-on="on"
-            color="pink"
+            color="black"
             @click.stop="getCourses(page)"
           >
             <v-icon>mdi-refresh</v-icon>
@@ -151,7 +151,7 @@
                           dark
                           v-bind="attrs"
                           v-on="on"
-                          color="pink"
+                          color="black"
                           @click.stop="getCourses(page)"
                         >
                           <v-icon>mdi-refresh</v-icon>

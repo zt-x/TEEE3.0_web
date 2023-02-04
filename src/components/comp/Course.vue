@@ -1,16 +1,34 @@
 <template>
-  <v-card max-width="400" min-width="100" max-height="400px" :hover="hover" ripple>
+  <v-card
+    max-width="400"
+    min-width="100"
+    max-height="400px"
+    :hover="hover"
+    ripple
+  >
     <v-card-title class="d-flex justify-space-between align-center">
       {{ Course.cname }}
       <div class="subtitle-2 d-flex align-center">
         <v-icon
           large
-          :color="Course.status == 0 ? 'warn' : Course.status == 1 ? 'success' : 'grey'"
+          :color="
+            Course.status == 0
+              ? 'warn'
+              : Course.status == 1
+              ? 'success'
+              : 'grey'
+          "
           >mdi-circle-small</v-icon
         >
         <div>
           <span class="subtitle-2 text--secondary">
-            {{ Course.status == 0 ? "未开始" : Course.status == 1 ? "进行中" : "已结束" }}
+            {{
+              Course.status == 0
+                ? "未开始"
+                : Course.status == 1
+                ? "进行中"
+                : "已结束"
+            }}
           </span>
         </div>
       </div>
@@ -32,7 +50,9 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-btn color="orange" text @click="InterCourse(Course.cid)"> 进入课程 </v-btn>
+      <v-btn color="orange" text @click="InterCourse(Course.cid)">
+        进入课程
+      </v-btn>
       <v-btn color="orange" text> 查看统计 </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="grey" text @click="exitCourse(Course.cid)">
@@ -59,6 +79,7 @@ export default {
       this.$router.push({ name: "CourseContent", params: { cid: cid } });
     },
     exitCourse(cid) {
+      console.log("cid=" + cid);
       if (this.role < 1) {
         fun_leave(cid).then((res) => {
           _alert(res.msg);

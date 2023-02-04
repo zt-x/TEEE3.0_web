@@ -3,54 +3,25 @@
     <v-dialog persistent v-model="releaseWorkDialog" width="800px">
       <release-work :cid="cid" @close="close($event)" />
     </v-dialog>
-    <v-dialog content-class="trans" persistent v-model="releaseAnnDialog" width="800px">
+    <v-dialog
+      content-class="trans"
+      persistent
+      v-model="releaseAnnDialog"
+      width="800px"
+    >
       <Announcement_release @close="close($event)" />
     </v-dialog>
-    <v-dialog v-model="shareCourseDialog" persistent width="500px">
-      <v-card>
-        <v-card-title
-          >生成课程邀请码
-          <v-spacer></v-spacer>
-          <v-chip small @click="shareCourseDialog = false"></v-chip>
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col cols="5" class="pt-0" justify-end>
-              <v-checkbox
-                v-model="timelimit"
-                label="设置邀请码有效期"
-                color="brown"
-                hide-details
-              ></v-checkbox>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model="keyLimitTime"
-                hide-details
-                placeholder="有效期(单位为小时)"
-                dense
-                outlined
-                :disabled="!timelimit"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-btn dark @click="createKeyForCourse()"> 生成 </v-btn>
-            </v-col>
-            <v-col cols="12" v-if="showKeyArea">
-              <v-progress-circular
-                indeterminate
-                size="16"
-                class="mr-3"
-              ></v-progress-circular
-              >获取中 ...
-            </v-col>
-            <v-col cols="12" v-if="finishGetKey">
-              课程邀请码:
-              {{ NewCourseKey }}
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
+    <v-dialog
+      v-if="shareCourseDialog"
+      v-model="shareCourseDialog"
+      persistent
+      width="500px"
+    >
+      <create-key-dialog
+        action="0"
+        :param="cid"
+        @close="closeShareCourseDialog($event)"
+      />
     </v-dialog>
     <v-row>
       <!-- Course WorkPlace -->
@@ -59,7 +30,9 @@
           class="py-6 transparent"
           :class="{
             'pl-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-            'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
+            'px-10': !(
+              $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
+            ),
           }"
         >
           <div class="text-h3 text--secondary mb-5">Works</div>
@@ -96,7 +69,7 @@
                     getCourseStatsitics();
                   "
                   label
-                  color="pink"
+                  color="black"
                   class="ml-3"
                 >
                   <v-icon color="white" small left>mdi-refresh</v-icon>
@@ -244,7 +217,9 @@
           class="py-6 transparent"
           :class="{
             'pr-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-            'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
+            'px-10': !(
+              $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
+            ),
           }"
         >
           <!-- 课程信息 -->
@@ -269,14 +244,18 @@
                     <span
                       >作业次数:
                       {{
-                        CourseInfo.WorksCount == null ? 0 : CourseInfo.WorksCount
+                        CourseInfo.WorksCount == null
+                          ? 0
+                          : CourseInfo.WorksCount
                       }}</span
                     >
                     <v-divider></v-divider>
                     <span
                       >考试次数:
                       {{
-                        CourseInfo.ExamsCount == null ? 0 : CourseInfo.ExamsCount
+                        CourseInfo.ExamsCount == null
+                          ? 0
+                          : CourseInfo.ExamsCount
                       }}</span
                     >
                     <v-divider></v-divider>
@@ -318,7 +297,7 @@ import Chart_workScroe from "@/components/CourseContentChildren/charts/chart_wor
 import WorksViewTeacher from "@/components/CourseContentChildren/worksViewTeacher.vue";
 import ExamsViewTeacher from "@/components/CourseContentChildren/examsViewTeacher.vue";
 import Announcement_release from "@/components/CourseContentChildren/announcement_release.vue";
-import { fun_createKey } from "@/api/key";
+import createKeyDialog from "../../components/comp/dialog/createKeyDialog.vue";
 import {
   fun_getUsers,
   fun_getWorks,
@@ -339,6 +318,7 @@ export default {
     WorksViewTeacher,
     ExamsViewTeacher,
     Announcement_release,
+    createKeyDialog,
   },
   data() {
     return {
@@ -384,12 +364,7 @@ export default {
       isTeacher: false,
       releaseWorkDialog: false,
       releaseAnnDialog: false,
-      shareCourseDialog: true,
-      showKeyArea: false,
-      finishGetKey: false,
-      keyLimitTime: "无限制",
-      timelimit: false,
-      NewCourseKey: "",
+      shareCourseDialog: false,
       loading: false,
       loadingText: "",
       searchIcon: "fa fa-user",
@@ -422,6 +397,9 @@ export default {
       this.flushContent();
       this.getCourseInfo();
       this.getCourseStatsitics();
+    },
+    closeShareCourseDialog() {
+      this.shareCourseDialog = false;
     },
     getCourseInfo() {
       let _this = this;
@@ -503,6 +481,8 @@ export default {
       fun_getUsers(this.cid)
         .then((res) => {
           let arr = eval(res.data);
+          _this.userinfos = [];
+
           arr = arr.sort((a, b) => {
             return Number(b.finishWorkNum) - Number(a.finishWorkNum);
           });
