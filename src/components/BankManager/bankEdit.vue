@@ -32,7 +32,9 @@
       <v-icon left>fa fa-paper-plane</v-icon>
       <span class="font-weight-black" style="color: #757575">
         作业库
-        <span class="font-weight-thin">| {{ bwname ? bwname : "创建新作业库" }}</span>
+        <span class="font-weight-thin"
+          >| {{ bwname ? bwname : "创建新作业库" }}</span
+        >
       </span>
       <v-spacer></v-spacer>
       <v-chip small color="grey" @click="close('minus')">
@@ -66,7 +68,12 @@
           </v-col>
           <!-- TAGS -->
           <v-col cols="12">
-            <v-combobox v-model="tags" label="给作业库添加几个标签吧~" multiple chips>
+            <v-combobox
+              v-model="tags"
+              label="给作业库添加几个标签吧~"
+              multiple
+              chips
+            >
               <template v-slot:selection="data">
                 <v-chip
                   small
@@ -124,7 +131,9 @@
             <v-chip v-if="FillInQue != 0" class="ml-3">
               填空题 {{ FillInQue }} 题
             </v-chip>
-            <v-chip v-if="TextQue != 0" class="ml-3"> 简答题 {{ TextQue }} 题 </v-chip>
+            <v-chip v-if="TextQue != 0" class="ml-3">
+              简答题 {{ TextQue }} 题
+            </v-chip>
           </v-col>
           <v-col cols="12">
             <!-- 添加新题目 -->
@@ -151,13 +160,19 @@
                   }}
                 </template>
                 <template v-slot:item.qtext="{ item }">
-                  <span v-if="item.qtype == '30012'" style="color: grey"> [简答题] </span>
+                  <span v-if="item.qtype == '30012'" style="color: grey">
+                    [简答题]
+                  </span>
                   <span v-else> {{ item.qtext.substring(0, 25) }} ... </span>
                 </template>
                 <template v-slot:item.func="{ item }">
-                  <v-chip small color="primary" class="mr-2" @click="editQue(item)">{{
-                    isEdit == 1 ? "编辑" : "查看"
-                  }}</v-chip>
+                  <v-chip
+                    small
+                    color="primary"
+                    class="mr-2"
+                    @click="editQue(item)"
+                    >{{ isEdit == 1 ? "编辑" : "查看" }}</v-chip
+                  >
                   <span color="grey">|</span>
                   <v-chip
                     v-if="isEdit == 1"

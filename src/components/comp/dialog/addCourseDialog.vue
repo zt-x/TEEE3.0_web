@@ -3,29 +3,27 @@
     <v-card>
       <v-card-title style="font-size: medium">请输入课程邀请码</v-card-title>
       <v-card-subtitle>
-        <v-text-field
+        <!-- <v-text-field
           v-model="cid"
           style="font-size: small"
           class="mt-5"
           label="课程ID"
           hint="请输入教师提供的课程ID"
+        ></v-text-field> -->
+        <v-text-field
+          v-model="c_key"
+          style="font-size: small"
+          class="mt-5"
+          label="key"
+          hint="请输入课程邀请码"
         ></v-text-field>
       </v-card-subtitle>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
-          :loading="loading"
-          color="brown darken-1"
-          text
-          @click="AddCourse(cid)"
-        >
+        <v-btn :loading="loading" color="brown darken-1" text @click="AddCourseByKey()">
           加入
         </v-btn>
-        <v-btn
-          color="brown darken-1"
-          text
-          @click="$emit('update:dialog_stu', false)"
-        >
+        <v-btn color="brown darken-1" text @click="$emit('update:dialog_stu', false)">
           取消
         </v-btn>
       </v-card-actions>
@@ -35,12 +33,14 @@
 
 <script>
 import { fun_addCourse } from "@/api/course";
+import { fun_useKey } from "@/api/key";
 export default {
   props: ["dialog_stu"],
   data() {
     return {
       loading: false,
       cid: "",
+      c_key: "",
     };
   },
   methods: {
@@ -66,9 +66,30 @@ export default {
           });
         });
     },
+    AddCourseByKey() {
+      let _this = this;
+      this.loading = true;
+      fun_useKey(this.c_key)
+        .then((res) => {
+          this.$emit("update:dialog_stu", false);
+          _this.loading = false;
+          this.$toasted.show(res.msg, {
+            theme: "outline",
+            position: "top-center",
+            duration: 2000,
+          });
+        })
+        .catch((err) => {
+          _this.loading = false;
+          this.$toasted.error(err, {
+            theme: "outline",
+            position: "top-center",
+            duration: 2000,
+          });
+        });
+    },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

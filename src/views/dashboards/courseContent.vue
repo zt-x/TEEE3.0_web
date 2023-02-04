@@ -6,7 +6,52 @@
     <v-dialog content-class="trans" persistent v-model="releaseAnnDialog" width="800px">
       <Announcement_release @close="close($event)" />
     </v-dialog>
-
+    <v-dialog v-model="shareCourseDialog" persistent width="500px">
+      <v-card>
+        <v-card-title
+          >生成课程邀请码
+          <v-spacer></v-spacer>
+          <v-chip small @click="shareCourseDialog = false"></v-chip>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="5" class="pt-0" justify-end>
+              <v-checkbox
+                v-model="timelimit"
+                label="设置邀请码有效期"
+                color="brown"
+                hide-details
+              ></v-checkbox>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model="keyLimitTime"
+                hide-details
+                placeholder="有效期(单位为小时)"
+                dense
+                outlined
+                :disabled="!timelimit"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-btn dark @click="createKeyForCourse()"> 生成 </v-btn>
+            </v-col>
+            <v-col cols="12" v-if="showKeyArea">
+              <v-progress-circular
+                indeterminate
+                size="16"
+                class="mr-3"
+              ></v-progress-circular
+              >获取中 ...
+            </v-col>
+            <v-col cols="12" v-if="finishGetKey">
+              课程邀请码:
+              {{ NewCourseKey }}
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-row>
       <!-- Course WorkPlace -->
       <v-col cols="12" lg="8">
@@ -22,7 +67,7 @@
             <v-col cols="12">
               <v-card rounded="true" style="padding: 10px">
                 <v-chip label @click="releaseWorkDialog = true" color="success">
-                  <v-icon color="white" x-small left>fa fa-paper-plane</v-icon>
+                  <v-icon color="white" small left>mdi-send</v-icon>
                   <span style="color: white">发布新作业 / 考试</span>
                 </v-chip>
 
@@ -30,10 +75,19 @@
                   label
                   @click="releaseAnnDialog = true"
                   color="success"
-                  class="ml-5"
+                  class="ml-3"
                 >
-                  <v-icon color="white" small left>mdi-clipboard-outline</v-icon>
+                  <v-icon color="white" small left>mdi-bullhorn</v-icon>
                   <span style="color: white">发布公告</span>
+                </v-chip>
+                <v-chip
+                  label
+                  @click="shareCourseDialog = true"
+                  color="primary"
+                  class="ml-3"
+                >
+                  <v-icon color="white" small left>mdi-share</v-icon>
+                  <span style="color: white">生成课程邀请码</span>
                 </v-chip>
                 <v-chip
                   @click="
@@ -43,7 +97,7 @@
                   "
                   label
                   color="pink"
-                  class="ml-5"
+                  class="ml-3"
                 >
                   <v-icon color="white" small left>mdi-refresh</v-icon>
                   <span style="color: white">刷新</span>
@@ -264,7 +318,7 @@ import Chart_workScroe from "@/components/CourseContentChildren/charts/chart_wor
 import WorksViewTeacher from "@/components/CourseContentChildren/worksViewTeacher.vue";
 import ExamsViewTeacher from "@/components/CourseContentChildren/examsViewTeacher.vue";
 import Announcement_release from "@/components/CourseContentChildren/announcement_release.vue";
-
+import { fun_createKey } from "@/api/key";
 import {
   fun_getUsers,
   fun_getWorks,
@@ -330,6 +384,12 @@ export default {
       isTeacher: false,
       releaseWorkDialog: false,
       releaseAnnDialog: false,
+      shareCourseDialog: true,
+      showKeyArea: false,
+      finishGetKey: false,
+      keyLimitTime: "无限制",
+      timelimit: false,
+      NewCourseKey: "",
       loading: false,
       loadingText: "",
       searchIcon: "fa fa-user",
@@ -337,7 +397,7 @@ export default {
       finishGetCourseInfo: true,
       CourseInfo: {},
       search_user: "",
-      gotExams: false,
+      goExams: false,
       gotWorkScore: false,
       CourseStatsitics: {},
       submit_totalNum: 0,
@@ -489,6 +549,25 @@ export default {
             ghost: true,
           },
         ],
+      });
+    },
+    createKeyForCourse() {
+      let _this = this;
+      let tim = "-";
+      if (!Number.isNaN(this.keyLimitTime) && this.timelimit) {
+        tim = this.keyLimitTime * 24 * 60 * 60;
+        if (tim <= 0) {
+          this._alert("请输入一个正确的时间!");
+          return;
+        } else {
+        }
+      }
+      this.showKeyArea = true;
+      fun_createKey(0, this.cid, tim).then((res) => {
+        _this._alert(res.msg);
+        _this.NewCourseKey = res.data;
+        _this.finishGetKey = true;
+        _this.showKeyArea = false;
       });
     },
   },
