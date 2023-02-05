@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title
-      >生成 {{ action_str[action] }}
+      >生成{{ action_str[action] }}
       <v-spacer></v-spacer>
       <v-chip small @click="close()"></v-chip>
     </v-card-title>
@@ -19,7 +19,7 @@
           <v-text-field
             v-model="keyLimitTime"
             hide-details
-            :placeholder="'有效期(单位为' + action == 2 ? '分钟' : '小时' + ')'"
+            :placeholder="'有效期(' + (action == 2 ? '分钟' : '小时' + ')')"
             dense
             outlined
             :disabled="!timelimit"

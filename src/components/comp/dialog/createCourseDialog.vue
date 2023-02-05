@@ -78,7 +78,9 @@
                     scrollable
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="startMenu = false">OK</v-btn>
+                    <v-btn text color="primary" @click="startMenu = false"
+                      >OK</v-btn
+                    >
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -113,7 +115,9 @@
                     scrollable
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="endMenu = false">OK</v-btn>
+                    <v-btn text color="primary" @click="endMenu = false"
+                      >OK</v-btn
+                    >
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -132,7 +136,11 @@
         >
           创建
         </v-btn>
-        <v-btn color="brown darken-1" text @click="$emit('update:showDialog', false)">
+        <v-btn
+          color="brown darken-1"
+          text
+          @click="$emit('update:showDialog', false)"
+        >
           取消
         </v-btn>
       </v-card-actions>
@@ -183,12 +191,7 @@ export default {
               duration: 2000,
             });
             this.$emit("update:showDialog", false);
-          } else {
-            this.$toasted.error(res.msg, {
-              theme: "outline",
-              position: "top-center",
-              duration: 2000,
-            });
+            this.$emit("flush");
           }
         })
         .catch((err) => {

@@ -146,7 +146,10 @@
                         {{ item.rate }}
                       </div>
 
-                      <v-progress-linear :color="item.color" v-model="item.rate" />
+                      <v-progress-linear
+                        :color="item.color"
+                        v-model="item.rate"
+                      />
                     </td>
                   </tr>
                 </tbody>

@@ -1,7 +1,13 @@
 <template>
   <div class="px-4">
-    <create-course-dialog :showDialog.sync="dialog.createCourse" />
-    <add-course-dialog :dialog_stu.sync="dialog.addCourse" />
+    <create-course-dialog
+      :showDialog.sync="dialog.createCourse"
+      @flush="getCourses(page)"
+    />
+    <add-course-dialog
+      :dialog_stu.sync="dialog.addCourse"
+      @flush="getCourses(page)"
+    />
     <v-speed-dial
       v-show="$vuetify.breakpoint.mdAndDown"
       v-model="fab"
@@ -75,7 +81,7 @@
     <v-container fluid>
       <v-row>
         <v-col cols="12" lg="8">
-          <v-sheet class="py-6 px-10 transparent">
+          <v-sheet class="pb-6 px-10 transparent">
             <div class="text-h3 text--secondary">Courses</div>
             <v-row class="pt-5">
               <v-col
@@ -85,7 +91,7 @@
                 v-for="(item, i) in courses"
                 :key="i"
               >
-                <Course :Course="item" />
+                <Course :Course="item" @remove="getCourses(1)" />
               </v-col>
             </v-row>
             <v-row class="pt-5">
@@ -102,7 +108,7 @@
           </v-sheet>
         </v-col>
         <v-col v-show="!$vuetify.breakpoint.mdAndDown" lg="4">
-          <v-sheet class="py-6 px-10 transparent">
+          <v-sheet class="pb-6 px-10 transparent">
             <div class="text-h3 text--secondary">
               <span class="text-h6">Course Tools</span>
             </div>
@@ -205,10 +211,10 @@ export default {
     getCourses(page) {
       let _this = this;
       this.prepareing_overlay = true;
-
+      this.courses = [];
       fun_getMyCourse(page)
         .then((res) => {
-          if (res.code != 101 && res.code > 0) {
+          if (res.code > 0) {
             let coursesData = res.data.courses;
             let coursesData_arr = eval(coursesData);
             _this.courses = coursesData_arr;
@@ -223,11 +229,7 @@ export default {
           _this.prepareing_overlay = false;
         })
         .catch((err) => {
-          this.$toasted.error(err, {
-            theme: "outline",
-            position: "top-center",
-            duration: 2000,
-          });
+          _this.prepareing_overlay = false;
         });
     },
   },

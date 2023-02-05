@@ -124,6 +124,7 @@ import BankWork from "@/components/BankManager/bankWork.vue";
 import { fun_getWorkBank } from "@/api/bank";
 import { _alert } from "@/plugins/myfun";
 import BankEdit from "../../components/BankManager/bankEdit.vue";
+
 export default {
   components: { BankWork, BankEdit },
   mounted() {

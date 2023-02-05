@@ -54,7 +54,7 @@
         <v-list-item exact color="red">
           <div></div>
           <v-list-item-content>
-            <v-btn dark color="black">
+            <v-btn dark color="black" @click="logout()">
               <v-list-item-title>退出登录</v-list-item-title>
             </v-btn>
           </v-list-item-content>
@@ -62,13 +62,15 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar app flat color="white">
+    <v-app-bar app flat color="white" class="px-2">
       <v-app-bar-nav-icon
         v-if="$vuetify.breakpoint.lgAndDown"
         @click="drawerDisplay = !drawerDisplay"
       />
-
-      <v-toolbar-items class="d-flex align-center">
+      <v-btn icon @click="$router.back()">
+        <v-icon> mdi-arrow-left </v-icon>
+      </v-btn>
+      <v-toolbar-items class="d-flex align-center ml-2">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
@@ -134,7 +136,7 @@
 import { resetRouter, setRouter } from "@/router/setRouter.js";
 import { fun_getRoutes } from "@/api/account.js";
 import { fun_useKey } from "@/api/key";
-import { unlimit } from "@/plugins/myfun";
+import { unlimit, _alert } from "@/plugins/myfun";
 
 export default {
   data: () => ({
@@ -238,7 +240,11 @@ export default {
       this.$router.replace({ path: "/login" });
     },
     useKey() {
-      fun_useKey(this.key);
+      fun_useKey(this.key).then((res) => {
+        if (res.code > 0) {
+          _alert(res.msg);
+        }
+      });
       this.key = "";
     },
   },

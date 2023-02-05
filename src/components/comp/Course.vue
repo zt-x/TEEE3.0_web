@@ -82,10 +82,14 @@ export default {
       console.log("cid=" + cid);
       if (this.role < 1) {
         fun_leave(cid).then((res) => {
+          this.$emit("remove");
+
           _alert(res.msg);
         });
       } else {
         fun_delCourse(cid).then((res) => {
+          this.$emit("remove");
+
           _alert(res.msg);
         });
       }

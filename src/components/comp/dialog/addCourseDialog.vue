@@ -20,10 +20,19 @@
       </v-card-subtitle>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn :loading="loading" color="brown darken-1" text @click="AddCourseByKey()">
+        <v-btn
+          :loading="loading"
+          color="brown darken-1"
+          text
+          @click="AddCourseByKey()"
+        >
           加入
         </v-btn>
-        <v-btn color="brown darken-1" text @click="$emit('update:dialog_stu', false)">
+        <v-btn
+          color="brown darken-1"
+          text
+          @click="$emit('update:dialog_stu', false)"
+        >
           取消
         </v-btn>
       </v-card-actions>
@@ -59,11 +68,6 @@ export default {
         })
         .catch((err) => {
           _this.loading = false;
-          this.$toasted.error(err, {
-            theme: "outline",
-            position: "top-center",
-            duration: 2000,
-          });
         });
     },
     AddCourseByKey() {
@@ -73,19 +77,17 @@ export default {
         .then((res) => {
           this.$emit("update:dialog_stu", false);
           _this.loading = false;
-          this.$toasted.show(res.msg, {
-            theme: "outline",
-            position: "top-center",
-            duration: 2000,
-          });
+          if (res.code > 0) {
+            this.$emit("flush");
+            this.$toasted.show(res.msg, {
+              theme: "outline",
+              position: "top-center",
+              duration: 2000,
+            });
+          }
         })
         .catch((err) => {
           _this.loading = false;
-          this.$toasted.error(err, {
-            theme: "outline",
-            position: "top-center",
-            duration: 2000,
-          });
         });
     },
   },

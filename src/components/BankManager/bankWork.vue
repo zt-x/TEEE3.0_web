@@ -1,7 +1,23 @@
 <template>
   <v-card>
-    <v-dialog width="650px" v-model="dialog_editWorkBank" v-if="dialog_editWorkBank">
+    <v-dialog
+      width="650px"
+      v-model="dialog_editWorkBank"
+      v-if="dialog_editWorkBank"
+    >
       <BankEdit :isEdit="isEdit" :bid="bid" @close="closeDialog()" />
+    </v-dialog>
+    <v-dialog
+      v-if="shareCourseDialog"
+      v-model="shareCourseDialog"
+      persistent
+      width="500px"
+    >
+      <create-key-dialog
+        action="1"
+        :param="bid"
+        @close="closeShareCourseDialog($event)"
+      />
     </v-dialog>
     <v-card-title>
       <v-chip
@@ -48,6 +64,7 @@
         color="orange"
         text
         v-if="Number(content.isMine) == 1 || Number(content.isPrivate) != 1"
+        @click="shareCourseDialog = true"
       >
         生成分享码
       </v-btn>
@@ -65,8 +82,10 @@
 import { fun_getWorkBankContent } from "../../api/bank";
 import { _alert } from "@/plugins/myfun";
 import BankEdit from "../../components/BankManager/bankEdit.vue";
+import createKeyDialog from "../../components/comp/dialog/createKeyDialog.vue";
+
 export default {
-  components: { BankEdit },
+  components: { BankEdit, createKeyDialog },
 
   props: ["bid"],
   data() {
@@ -77,6 +96,7 @@ export default {
       numOfQue: [],
       dialog_editWorkBank: false,
       isEdit: false,
+      shareCourseDialog: false,
     };
   },
   mounted() {
@@ -85,6 +105,9 @@ export default {
   methods: {
     closeDialog() {
       this.dialog_editWorkBank = false;
+    },
+    closeShareCourseDialog() {
+      this.shareCourseDialog = false;
     },
     getData() {
       let _this = this;
