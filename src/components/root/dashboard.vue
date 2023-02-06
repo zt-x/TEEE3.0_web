@@ -1,5 +1,6 @@
 <template>
   <div>
+    <userInfo :showDialog.sync="dialog_userinfo" />
     <v-navigation-drawer
       app
       :mini-variant="!mini"
@@ -133,13 +134,16 @@
 </template>
 
 <script>
+import userInfo from "../comp/dialog/userInfo.vue";
 import { resetRouter, setRouter } from "@/router/setRouter.js";
 import { fun_getRoutes } from "@/api/account.js";
 import { fun_useKey } from "@/api/key";
 import { unlimit, _alert } from "@/plugins/myfun";
 
 export default {
+  components: { userInfo },
   data: () => ({
+    dialog_userinfo: true,
     temp: false,
     drawerDisplay: null,
     drawer: [

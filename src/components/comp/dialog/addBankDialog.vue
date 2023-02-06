@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog_stu" max-width="290">
+  <v-dialog v-model="dialog_adb" max-width="290">
     <v-card>
       <v-card-title style="font-size: medium">请输入课程邀请码</v-card-title>
       <v-card-subtitle>
@@ -17,14 +17,14 @@
           :loading="loading"
           color="brown darken-1"
           text
-          @click="AddCourseByKey()"
+          @click="AddBankByKey()"
         >
           加入
         </v-btn>
         <v-btn
           color="brown darken-1"
           text
-          @click="$emit('update:dialog_stu', false)"
+          @click="$emit('update:dialog_adb', false)"
         >
           取消
         </v-btn>
@@ -32,12 +32,11 @@
     </v-card>
   </v-dialog>
 </template>
-
-<script>
-import { fun_addCourse } from "@/api/course";
+  
+  <script>
 import { fun_useKey } from "@/api/key";
 export default {
-  props: ["dialog_stu"],
+  props: ["dialog_adb"],
   data() {
     return {
       loading: false,
@@ -46,29 +45,12 @@ export default {
     };
   },
   methods: {
-    AddCourse(CourseKey) {
-      let _this = this;
-      this.loading = true;
-      fun_addCourse(CourseKey)
-        .then((res) => {
-          this.$emit("update:dialog_stu", false);
-          _this.loading = false;
-          this.$toasted.show(res.msg, {
-            theme: "outline",
-            position: "top-center",
-            duration: 2000,
-          });
-        })
-        .catch((err) => {
-          _this.loading = false;
-        });
-    },
-    AddCourseByKey() {
+    AddBankByKey() {
       let _this = this;
       this.loading = true;
       fun_useKey(this.c_key)
         .then((res) => {
-          this.$emit("update:dialog_stu", false);
+          this.$emit("update:dialog_adb", false);
           _this.loading = false;
           if (res.code > 0) {
             this.$emit("flush");
@@ -86,5 +68,6 @@ export default {
   },
 };
 </script>
-
-<style></style>
+  
+  <style></style>
+  
