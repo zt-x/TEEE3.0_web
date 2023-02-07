@@ -15,7 +15,7 @@
             <v-icon v-show="!mini">mdi-account</v-icon>
             <v-btn icon></v-btn>
 
-            <v-btn text @click="logout()">
+            <v-btn text @click="dialog_userinfo = true">
               <div class="d-flex align-center">
                 <v-avatar size="32">
                   <v-img :src="user.avatar" alt="avatar" />
@@ -100,7 +100,7 @@
         <v-icon> mdi-bell-outline </v-icon>
       </v-btn>
 
-      <v-btn text>
+      <v-btn text @click="dialog_userinfo = true">
         <div class="d-flex align-center">
           <v-avatar size="32">
             <v-img :src="user.avatar" alt="avatar" />
