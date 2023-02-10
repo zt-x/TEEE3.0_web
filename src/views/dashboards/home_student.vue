@@ -21,9 +21,9 @@
               </div>
 
               <div class="subtitle-2 d-flex align-center mt-5">
-                <v-icon small color="success">mdi-arrow-up </v-icon>
+                <v-icon small color="primary">mdi-arrow-up </v-icon>
                 <div>
-                  <span class="success--text">{{ item.number }}</span>
+                  <span class="primary--text">{{ item.number }}</span>
 
                   <span class="ml-2 text--secondary">
                     {{ item.desc }}

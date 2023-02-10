@@ -13,11 +13,18 @@
     <v-card-title>添加简答题</v-card-title>
     <v-container>
       <v-row>
-        <v-col class="text-center primary--text" cols="12" v-if="loading_ckeditor">
+        <v-col
+          class="text-center primary--text"
+          cols="12"
+          v-if="loading_ckeditor"
+        >
           首次加载富文本编辑框资源较慢，请耐心等待一会儿哦 ..
         </v-col>
         <v-col class="text-center" cols="12" v-if="loading_ckeditor">
-          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
         </v-col>
         <v-col cols="12">
           <ckeditor
@@ -77,10 +84,10 @@
       <span class="red--text">{{ this.msg }}</span>
       <v-spacer></v-spacer>
 
-      <v-btn color="green darken-1" text @click="close()">算了</v-btn>
+      <v-btn color="#b97a57" text @click="close()">算了</v-btn>
       <v-btn
         :loading="loading_upload"
-        color="green darken-1"
+        color="#b97a57"
         min-width="60px"
         class="white--text"
         @click="add()"
@@ -102,7 +109,7 @@ export default {
   data() {
     return {
       snackbar: false,
-      snackbar_color: "success",
+      snackbar_color: "primary",
       snackbar_msg: "",
       loading_upload: false,
       files: this.defaultData.files,

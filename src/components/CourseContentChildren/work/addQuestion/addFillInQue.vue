@@ -36,8 +36,8 @@
       <span class="red--text">{{ this.msg }}</span>
       <v-spacer></v-spacer>
 
-      <v-btn color="green darken-1" text @click="close()">算了</v-btn>
-      <v-btn color="green darken-1" min-width="60px" class="white--text" @click="add()"
+      <v-btn color="#b97a57" text @click="close()">算了</v-btn>
+      <v-btn color="#b97a57" min-width="60px" class="white--text" @click="add()"
         >添加</v-btn
       >
     </v-card-actions>

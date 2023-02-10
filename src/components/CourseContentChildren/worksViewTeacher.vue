@@ -4,7 +4,7 @@
       <v-card style="min-width: 100%" hover ripple="" @click="doWork(work)">
         <v-card-title>
           <v-chip
-            :color="work.status == -1 ? 'grey' : 'success'"
+            :color="work.status == -1 ? 'grey' : '#b97a57'"
             label
             small
             class="mr-2"
@@ -38,8 +38,8 @@
                   v-bind="attrs"
                   small
                   class="ma-2"
-                  color="green"
-                  text-color="white"
+                  color="grey"
+                  outlined
                 >
                   {{ work.subNum }} / {{ submit_totalNum }}</v-chip
                 >
@@ -66,7 +66,7 @@
                 </v-row>
               </v-container>
             </v-chip>
-            <v-tooltip top>
+            <!-- <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-chip
                   small
@@ -78,33 +78,30 @@
                   v-on="on"
                   v-bind="attrs"
                 >
-                  <v-icon x-small class="pr-2">fa fa-trash</v-icon>
-                  Delete
+                  <v-icon x-small class="pr-2">fa fa-ellipsis-v</v-icon>
                 </v-chip>
               </template>
               <span>删除该作业</span>
-            </v-tooltip>
+            </v-tooltip> -->
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
-                <v-chip
-                  small
+                <v-btn
+                  icon
                   class="ma-2"
-                  color="warning"
-                  text-color="white"
-                  hover
                   v-on="on"
-                  @click="editWork(work)"
                   v-bind="attrs"
+                  @click="editWork(work)"
                 >
-                  <v-icon x-small>fas fa-cog</v-icon>
-                </v-chip>
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
               </template>
               <span>编辑</span>
             </v-tooltip>
           </div>
         </v-card-title>
         <v-card-subtitle
-          >截止时间 | {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
+          >截止时间 |
+          {{ work.deadline == null ? " - " : work.deadline }}</v-card-subtitle
         >
       </v-card>
       <div style="height: 5px"></div>
@@ -114,7 +111,7 @@
       style="margin-top: 64px"
       top
       right
-      color="success"
+      color="primary"
       dense="true"
       timeout="1000"
     >
@@ -142,6 +139,7 @@ export default {
     editWork(work) {
       // TODO 编辑已发布的作业
       _alert("开发中 ... ");
+      return;
     },
     doWork(work) {
       let cid = this.cid;

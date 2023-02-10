@@ -4,7 +4,7 @@
       <v-card style="min-width: 100%" hover ripple="" @click="doWork(work)">
         <v-card-title>
           <v-chip
-            :color="work.status == -1 ? 'grey' : 'success'"
+            :color="work.status == -1 ? 'grey' : '#b97a57'"
             label
             small
             class="mr-2"

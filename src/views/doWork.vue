@@ -333,7 +333,7 @@ export default {
       TestArr: [{ value: "777" }, { value: "" }, { value: "" }, { value: "" }],
       flushButton: true,
       snackbar: false,
-      snackbar_color: "success",
+      snackbar_color: "primary",
       snackbar_msg: "",
       dialog_upload_info: false,
       finishUploadingFile: false,

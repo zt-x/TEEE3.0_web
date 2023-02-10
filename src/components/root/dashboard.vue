@@ -40,7 +40,7 @@
           :href="item.href"
           :target="item.target"
           exact
-          color="#b27654"
+          color="#b97a57"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -95,7 +95,6 @@
       </v-toolbar-items>
 
       <v-spacer />
-
       <v-btn icon>
         <v-icon> mdi-bell-outline </v-icon>
       </v-btn>
@@ -111,7 +110,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="bgc">
       <div style="height: 30px"></div>
       <router-view />
       <v-fab-transition>
@@ -254,3 +253,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.bgc {
+  background-image: linear-gradient(135deg, #fdfcfb 0%, #e9e6e4 100%);
+}
+</style>

@@ -1,12 +1,12 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="px-4">
     <v-dialog width="650px" v-model="dialog_editWorkBank">
       <BankEdit @close="closeDialog()" :isEdit="true" />
     </v-dialog>
     <v-row justify="center">
       <v-col cols="12">
         <v-sheet class="pt-6 transparent px-10">
-          <v-card rounded="true" style="padding: 10px" outlined>
+          <v-card style="padding: 10px" outlined>
             <v-menu
               close-on-click
               close-on-content-click
@@ -14,7 +14,7 @@
               transition="slide-x-transition"
             >
               <template v-slot:activator="{ on, attrs }">
-                <v-chip label color="#b97a57" v-bind="attrs" v-on="on">
+                <v-chip color="#b97a57" v-bind="attrs" v-on="on">
                   <v-icon color="white" x-small left>fa fa-plus</v-icon>
                   <span style="color: white">添加新库</span>
                 </v-chip>
@@ -29,16 +29,16 @@
               </v-list>
             </v-menu>
 
-            <v-chip label class="ml-3" color="#b97a57">
+            <v-chip class="ml-3" color="#b97a57">
               <v-icon color="white" x-small left>fa fa-search</v-icon>
               <span style="color: white">筛选</span>
             </v-chip>
-            <v-chip label class="ml-3" color="#b97a57">
+            <v-chip class="ml-3" color="#b97a57">
               <v-icon color="white" x-small left>fa fa-inbox</v-icon>
               <span style="color: white">导入</span>
             </v-chip>
 
-            <v-chip @click="getWorkBank()" label color="black" class="ml-3">
+            <v-chip class="ml-3" @click="getWorkBank()" color="black">
               <v-icon color="white" small left>mdi-refresh</v-icon>
               <span style="color: white">刷新</span>
             </v-chip>
@@ -66,7 +66,7 @@
             ></v-skeleton-loader>
             <v-card-text v-if="!prepareing_overlay" style="overflow-y: auto">
               <v-list>
-                <v-list-item-group color="orange accent-4" v-model="item">
+                <v-list-item-group color="#b97a57" v-model="item">
                   <v-list-item
                     @click="showBankWork(item.id)"
                     v-for="item in items"
@@ -76,11 +76,12 @@
                     <v-list-item-content>
                       <v-list-item-title>
                         <v-chip
+                          label
+                          style="border-radius: 0"
                           small
-                          outlined
                           dark
                           :color="
-                            Number(item.isPrivate) == 0 ? 'success' : 'warning'
+                            Number(item.isPrivate) == 0 ? '#b97a57' : 'warning'
                           "
                           class="mr-2"
                           >{{

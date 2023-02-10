@@ -11,11 +11,8 @@
       </v-chip>
     </v-card-title>
     <v-card-subtitle>
-      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记, 未批改的题目以<v-icon
-        color="warning"
-        small
-        >mdi-border-color</v-icon
-      >
+      已批改的题目以 <v-icon color="green">mdi-check</v-icon> 标记,
+      未批改的题目以<v-icon color="warning" small>mdi-border-color</v-icon>
       标记。 下列各题得分均为题目的原始分数，总分为经过百分比计算后的得分
     </v-card-subtitle>
     <v-container>
@@ -39,7 +36,9 @@
             :style="{ color: item == readover_new[i] ? 'black' : '#2196f3' }"
           >
             <div style="width: 25px">
-              <v-icon color="green" v-if="readover_new[i] != -1" small>mdi-check</v-icon>
+              <v-icon color="green" v-if="readover_new[i] != -1" small
+                >mdi-check</v-icon
+              >
               <v-icon color="warning" v-if="readover_new[i] == -1" small
                 >mdi-border-color</v-icon
               >
@@ -76,7 +75,9 @@
             <div v-else>无附件</div>
             <div class="mt-5" style="float: right">
               <v-spacer></v-spacer>
-              <v-chip small dark color="blue" @click="showPrimaryQue(i)">查看原题</v-chip>
+              <v-chip small dark color="blue" @click="showPrimaryQue(i)"
+                >查看原题</v-chip
+              >
               <v-chip
                 small
                 dark
@@ -107,7 +108,11 @@
     </v-dialog>
     <v-overlay v-if="overlay">
       <v-chip>
-        <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
+        <v-progress-circular
+          indeterminate
+          size="16"
+          class="mr-3"
+        ></v-progress-circular>
         <v-spacer></v-spacer>
         <span>{{ overlay_msg }}</span>
       </v-chip>
@@ -130,6 +135,8 @@ import stuAnsSetScore from "./work/stuAnsSetScore.vue";
 import { fun_getSubmitBySId, fun_setSubmitScore } from "@/api/submit";
 import { _alert } from "@/plugins/myfun";
 import PrimaryQue from "./work/primaryQue.vue";
+import { download } from "@/api/download";
+
 export default {
   components: { stuAnsSetScore, PrimaryQue },
   props: ["SUBMIT", "qscores"],
@@ -180,28 +187,7 @@ export default {
       this.snackbar = true;
       let form = new FormData();
       form.append("fileName", file);
-      _axios
-        .post("/api/upload/getFile", form, { responseType: "blob" })
-        .then((res) => {
-          const { data, headers } = res;
-          const fileName = headers["content-disposition"].replace(
-            /\w+;filename=(.*)/,
-            "$1"
-          );
-          // 此处当返回json文件时需要先对data进行JSON.stringify处理，其他类型文件不用做处理
-          //const blob = new Blob([JSON.stringify(data)], ...)
-          const blob = new Blob([data], { type: headers["content-type"] });
-          let dom = document.createElement("a");
-          let url = window.URL.createObjectURL(blob);
-          dom.href = url;
-          dom.download = decodeURI(fileName);
-          dom.style.display = "none";
-          document.body.appendChild(dom);
-          dom.click();
-          dom.parentNode.removeChild(dom);
-          window.URL.revokeObjectURL(url);
-        })
-        .catch((err) => {});
+      download("/api/upload/getFile", form);
     },
     finish() {
       this.overlay = true;
@@ -313,7 +299,10 @@ export default {
       this.showChangeScore = true;
     },
     saveScore(data) {
-      if (data.score >= 0 && Number(data.score) <= Number(this.qscores[data.i])) {
+      if (
+        data.score >= 0 &&
+        Number(data.score) <= Number(this.qscores[data.i])
+      ) {
         this.readover_new[data.i] = data.score;
         this.showChangeScore = false;
       } else {

@@ -81,98 +81,122 @@
     <v-container fluid>
       <v-row>
         <v-col cols="12" lg="8">
-          <v-sheet class="pb-6 px-10 transparent">
-            <div class="text-h3 text--secondary">Courses</div>
-            <v-row class="pt-5">
-              <v-col
-                cols="12"
-                md="6"
-                lg="4"
-                v-for="(item, i) in courses"
-                :key="i"
-              >
-                <Course :Course="item" @remove="getCourses(1)" />
-              </v-col>
-            </v-row>
-            <v-row class="pt-5">
-              <v-col>
-                <div class="text-center">
-                  <v-pagination
-                    @input="getCourses(page)"
-                    v-model="page"
-                    :length="page_len"
-                  ></v-pagination>
-                </div>
-              </v-col>
-            </v-row>
-          </v-sheet>
-        </v-col>
-        <v-col v-show="!$vuetify.breakpoint.mdAndDown" lg="4">
-          <v-sheet class="pb-6 px-10 transparent">
-            <div class="text-h3 text--secondary">
-              <span class="text-h6">Course Tools</span>
-            </div>
-            <div class="pt-5">
-              <v-card class="px-5 py-5">
-                <v-row class="text-center px-8">
-                  <v-col cols="3">
+          <v-card>
+            <v-sheet class="px-10 transparent">
+              <div class="pt-5">
+                <v-row>
+                  <v-col cols="12">
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          fab
-                          dark
-                          v-bind="attrs"
-                          v-on="on"
-                          color="green"
-                          @click.stop="openDialog()"
-                        >
-                          <v-icon>mdi-plus</v-icon>
-                        </v-btn>
-                      </template>
-                      <span v-if="role == 0">加入课程</span>
-                      <span v-if="role >= 1">创建课程</span>
-                    </v-tooltip>
-                  </v-col>
-                  <v-col cols="3">
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          fab
+                        <v-chip
                           dark
                           v-bind="attrs"
                           v-on="on"
                           color="primary"
+                          @click.stop="openDialog()"
+                          class="ml-3"
                         >
-                          <v-icon>mdi-magnify</v-icon>
-                        </v-btn>
+                          <v-icon small color="white">mdi-plus</v-icon>
+                          <span v-if="role == 0">加入课程</span>
+                          <span v-if="role >= 1">创建课程</span>
+                        </v-chip>
                       </template>
-                      <span>查找课程</span>
+                      <span v-if="role == 0">加入课程</span>
+                      <span v-if="role >= 1">创建课程</span>
                     </v-tooltip>
-                  </v-col>
-                  <v-col cols="3">
+
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          fab
+                        <v-chip
                           dark
                           v-bind="attrs"
                           v-on="on"
                           color="black"
+                          class="ml-3"
+                          outlined
                           @click.stop="getCourses(page)"
                         >
-                          <v-icon>mdi-refresh</v-icon>
-                        </v-btn>
+                          <v-icon small>mdi-refresh</v-icon>
+                          <span>刷新</span>
+                        </v-chip>
                       </template>
                       <span>刷新</span>
                     </v-tooltip>
-                  </v-col>
-                  <v-col cols="3">
-                    <v-btn fab dark color="brown">3</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }"> </template>
+                      <span>查找课程</span>
+                    </v-tooltip>
                   </v-col>
                 </v-row>
-              </v-card>
-            </div>
-          </v-sheet>
+              </div>
+            </v-sheet>
+            <v-sheet class="pb-6 px-10 transparent">
+              <v-row class="pt-5">
+                <v-col
+                  cols="12"
+                  md="6"
+                  xl="4"
+                  v-for="(item, i) in courses"
+                  :key="i"
+                >
+                  <Course :Course="item" @remove="getCourses(1)" />
+                </v-col>
+              </v-row>
+              <v-row class="pt-5">
+                <v-col>
+                  <div class="text-center">
+                    <v-pagination
+                      @input="getCourses(page)"
+                      v-model="page"
+                      :length="page_len"
+                    ></v-pagination>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-sheet>
+          </v-card>
+        </v-col>
+
+        <v-col v-show="!$vuetify.breakpoint.mdAndDown" lg="4">
+          <v-card>
+            <v-sheet class="pb-6 px-10 transparent">
+              <div class="text-h3 text--secondary">
+                <span class="text-h6">TODAY | 今日课表</span>
+              </div>
+              <v-sheet class="pt-5" height="800">
+                <v-calendar
+                  ref="calendar"
+                  type="day"
+                  locale="cn"
+                  :events="events"
+                  :first-interval="7.5"
+                  :interval-count="17"
+                  @click:event="clickTest"
+                >
+                  <template v-slot:event="{ eventParsed, event }">
+                    <div
+                      class="brown--text px-5 py-1 bgc"
+                      style="height: 100%; border-radius: 8px"
+                    >
+                      <span class="text-button">{{ event.name }}</span>
+                      <span class="pl-5"
+                        >{{ eventParsed.start.time }} -
+                        {{ eventParsed.end.time }}</span
+                      >
+                      <br />
+                      <span>{{ event.myItem }}</span>
+                    </div>
+                  </template>
+                  <template v-slot:day-label-header>
+                    <span class="text-overline brown--text">
+                      Stay hungry, Stay foolish.
+                    </span>
+                  </template>
+                </v-calendar>
+              </v-sheet>
+            </v-sheet>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -199,8 +223,24 @@ export default {
     fab: false,
     page: 1,
     page_len: 0,
+    events: [
+      {
+        name: "软件项目管理",
+        start: "2023-02-11 08:30",
+        end: "2023-02-11 10:05",
+        myItem: "BX-211",
+      },
+      {
+        name: "软件测试",
+        start: "2023-02-11 10:25",
+        end: "2023-02-11 12:00",
+      },
+    ],
   }),
   methods: {
+    clickTest(d) {
+      console.log(d);
+    },
     openDialog() {
       if (this.role >= 1) {
         this.dialog.createCourse = true;
@@ -234,7 +274,6 @@ export default {
     },
   },
   mounted() {
-    let _this = this;
     this.getCourses(1);
   },
   created() {
@@ -249,3 +288,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.bgc {
+  background-image: linear-gradient(135deg, #fdfcfb 0%, #e9e6e4 100%);
+}
+.event_bg {
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+}
+</style>

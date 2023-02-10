@@ -16,8 +16,11 @@
           <v-sheet
             class="py-6 transparent"
             :class="{
-              'pl-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-              'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
+              'pl-10':
+                $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
+              'px-10': !(
+                $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
+              ),
             }"
           >
             <!-- Header -->
@@ -29,7 +32,11 @@
             <!-- Body -->
 
             <v-card class="mt-5">
-              <v-tabs v-model="tab" background-color="transparent" color="basil">
+              <v-tabs
+                v-model="tab"
+                background-color="transparent"
+                color="basil"
+              >
                 <v-tab>
                   <v-chip color="warning" small>{{ numOfUnFihish }}</v-chip>
                   <span class="pl-2">未批改</span>
@@ -178,7 +185,9 @@
                 <v-tab-item>
                   <v-card class="mx-auto">
                     <div class="mx-auto">
-                      <v-btn class="my-5 mx-auto" @click="downloadFiles">打包下载</v-btn>
+                      <v-btn class="my-5 mx-auto" @click="downloadFiles"
+                        >打包下载</v-btn
+                      >
                     </div>
                   </v-card>
                 </v-tab-item>
@@ -192,15 +201,18 @@
           <v-sheet
             class="py-6 transparent"
             :class="{
-              'pr-10': $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-              'px-10': !($vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly),
+              'pr-10':
+                $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
+              'px-10': !(
+                $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
+              ),
             }"
           >
             <div class="text--secondary">
               <!-- <span class="text-h3">_</span> -->
 
               <span class="text-h5 px-5">统计</span>
-              <span class="text-h3" style="color: #f8f9fe"> (*/ω＼*) </span>
+              <span class="text-h3" style="color: #f1efed"> (*/ω＼*) </span>
               <span></span>
             </div>
             <v-card class="mt-5">
@@ -225,7 +237,13 @@
           </v-sheet>
         </v-col>
       </v-row>
-      <v-snackbar v-model="snackbar" top :color="snackbar_color" dense timeout="2000">
+      <v-snackbar
+        v-model="snackbar"
+        top
+        :color="snackbar_color"
+        dense
+        timeout="2000"
+      >
         {{ snackbar_msg }}
       </v-snackbar>
     </v-container>
@@ -239,6 +257,7 @@ import StuAns from "@/components/CourseContentChildren/stuAns.vue";
 import Chart_score_statistics from "@/components/CourseContentChildren/charts/SubmitStatic/chart_score_statistics.vue";
 import { fun_getWorkContent } from "@/api/work";
 import { fun_getAllSubmitsByWid, fun_getSubmitSummary } from "@/api/submit";
+import { download } from "@/api/download";
 
 const streamSaver = require("streamsaver");
 
@@ -311,7 +330,7 @@ export default {
       qscores: [],
       snackbar_msg: "",
       snackbar: false,
-      snackbar_color: "success",
+      snackbar_color: "primary",
     };
   },
   methods: {
@@ -382,44 +401,12 @@ export default {
       this.sta.push({ value: statistic.NOP_fail, name: "不及格(分数<60%)" });
     },
     downloadFiles() {
-      this.snackbar_msg = "后台正在整理文件并进行打包中, 打包完成后会自动唤醒下载😀 ... ";
+      this.snackbar_msg =
+        "后台正在整理文件并进行打包中, 打包完成后会自动唤醒下载😀 ... ";
       this.snackbar = true;
       let form = new FormData();
       form.append("wid", this.wid);
-      fetch("/api/Work/downloadFiles", {
-        method: "POST",
-        cache: "no-cache",
-        headers: {
-          Authorization: token,
-        },
-        body: form,
-      }).then(async (res) => {
-        const fileStream = streamSaver.createWriteStream(
-          decodeURI(res.headers.get("Content-Disposition")),
-          {
-            size: res.headers.get("content-length"),
-          }
-        );
-
-        const readableStream = res.body;
-
-        // more optimized
-        if (window.WritableStream && readableStream.pipeTo) {
-          await readableStream.pipeTo(fileStream);
-          return console.log("done writing");
-        }
-        window.writer = fileStream.getWriter();
-
-        const reader = res.body.getReader();
-        const pump = () =>
-          reader
-            .read()
-            .then((res) =>
-              res.done ? window.writer.close() : window.writer.write(res.value).then(pump)
-            );
-
-        pump();
-      });
+      download("/api/works/teacher/downloadAll", form);
     },
   },
   mounted() {

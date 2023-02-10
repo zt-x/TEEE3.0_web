@@ -27,7 +27,7 @@
     <div v-if="loadingTodoList" class="mx-auto mt-5" style="width: 100%">
       <v-list v-if="role == 'teacher'" rounded>
         <v-subheader>待批改的作业</v-subheader>
-        <v-list-item-group v-model="item" color="primary">
+        <v-list-item-group v-model="item" color="p#b27654">
           <v-list-item
             v-for="item in items"
             :key="item.CourseID"

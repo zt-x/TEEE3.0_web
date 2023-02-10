@@ -3,7 +3,11 @@
     <v-dialog persistent v-model="dialog_ifSaveAsWorkBank" width="400px">
       <v-overlay v-if="overlay" absolute>
         <v-chip>
-          <v-progress-circular indeterminate size="16" class="mr-3"></v-progress-circular>
+          <v-progress-circular
+            indeterminate
+            size="16"
+            class="mr-3"
+          ></v-progress-circular>
           <v-spacer></v-spacer>
           <span>{{ overlay_msg }}</span>
         </v-chip>
@@ -18,10 +22,10 @@
         ></v-text-field>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="releaseWork(true)"
+          <v-btn color="#b97a57" text @click="releaseWork(true)"
             >不保存, 直接发布</v-btn
           >
-          <v-btn color="green darken-1" @click="releaseWork(false)" class="white--text"
+          <v-btn color="#b97a57" @click="releaseWork(false)" class="white--text"
             >保存</v-btn
           >
         </v-card-actions>
@@ -91,7 +95,7 @@
                 <v-text-field
                   required
                   clearable
-                  color="#875438"
+                  color="primary"
                   label="作业标题"
                   :rules="[rules.required]"
                   v-model="workTitle"
@@ -101,17 +105,20 @@
                 <v-text-field
                   required
                   clearable
-                  color="#875438"
+                  color="primary"
                   label="分数"
                   v-model="totalScore"
                   :rules="[rules.required, rules.mustNum]"
                 ></v-text-field>
               </v-col>
-              <v-col :cols="releaseWork_isExam ? 2 : 0" v-if="releaseWork_isExam">
+              <v-col
+                :cols="releaseWork_isExam ? 2 : 0"
+                v-if="releaseWork_isExam"
+              >
                 <v-text-field
                   required
                   clearable
-                  color="#875438"
+                  color="primary"
                   label="作答限时"
                   hint="单位为分钟"
                   v-model="timeLimit"
@@ -130,7 +137,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                       clearable
-                      color="#875438"
+                      color="primary"
                       v-model="deadline"
                       readonly
                       label="作业截止时间"
@@ -146,14 +153,16 @@
                     scrollable
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="TimeMenu = false">OK</v-btn>
+                    <v-btn text color="primary" @click="TimeMenu = false"
+                      >OK</v-btn
+                    >
                   </v-date-picker>
                 </v-menu>
               </v-col>
               <v-col cols="3">
                 <v-checkbox
                   v-model="releaseWork_isExam"
-                  color="#875438"
+                  color="primary"
                   label="设为考试"
                 ></v-checkbox>
               </v-col>
@@ -163,12 +172,12 @@
                 <v-radio-group mandatory dense row v-model="workContentRadio">
                   <v-radio
                     label="创建新作业"
-                    color="#875438"
+                    color="primary"
                     value="createNewWork"
                   ></v-radio>
                   <v-radio
                     label="从作业库中选取"
-                    color="#875438"
+                    color="primary"
                     value="searchFromBank"
                   ></v-radio>
                 </v-radio-group>
@@ -183,7 +192,12 @@
                   v-if="workContentRadio == 'createNewWork'"
                 >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-chip class="white--text" color="#875438" v-bind="attrs" v-on="on">
+                    <v-chip
+                      class="white--text"
+                      color="primary"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
                       <v-icon small left>mdi-plus</v-icon>
                       添加题目
                     </v-chip>
@@ -252,14 +266,24 @@
                       <span v-if="item.qtype == '30012'" style="color: grey">
                         [简答题]
                       </span>
-                      <span v-else> {{ item.qtext.substring(0, 25) }} ... </span>
+                      <span v-else>
+                        {{ item.qtext.substring(0, 25) }} ...
+                      </span>
                     </template>
                     <template v-slot:item.func="{ item }">
-                      <v-chip small color="primary" class="mr-2" @click="editQue(item)"
+                      <v-chip
+                        small
+                        color="primary"
+                        class="mr-2"
+                        @click="editQue(item)"
                         >编辑</v-chip
                       >
                       <span color="grey">|</span>
-                      <v-chip small color="error" class="ml-2" @click="deleteQue(item)"
+                      <v-chip
+                        small
+                        color="error"
+                        class="ml-2"
+                        @click="deleteQue(item)"
                         >删除</v-chip
                       >
                     </template>
@@ -273,12 +297,15 @@
                 </v-card>
 
                 <!-- 从Bank中获取的 -->
-                <v-card class="px-5 py-5" v-if="workContentRadio == 'searchFromBank'">
+                <v-card
+                  class="px-5 py-5"
+                  v-if="workContentRadio == 'searchFromBank'"
+                >
                   <!-- TODO: 点击后进行二次编辑 -->
                   <v-chip
                     label
                     dark
-                    color="success"
+                    color="primary"
                     class="mx-2 my-1"
                     close
                     v-for="(bk, i) in wb"
@@ -291,13 +318,13 @@
                   <v-checkbox
                     row
                     v-model="autoReadoverChoice"
-                    color="#875438"
+                    color="primary"
                     label="自动批改选择题"
                   ></v-checkbox>
                   <v-checkbox
                     class="ml-5"
                     v-model="autoReadoverFillIn"
-                    color="#875438"
+                    color="primary"
                     label="自动批改填空题"
                   ></v-checkbox>
                 </v-row>
@@ -318,12 +345,15 @@
                     <v-checkbox
                       row
                       v-model="rule_pre_FACECHECK"
-                      color="#875438"
+                      color="primary"
                       label="人脸验证"
                     ></v-checkbox>
                   </v-col>
                   <v-col cols="12">
-                    <v-textarea v-model="rule_pre_TEXT" label="考前提醒信息"></v-textarea>
+                    <v-textarea
+                      v-model="rule_pre_TEXT"
+                      label="考前提醒信息"
+                    ></v-textarea>
                   </v-col>
                 </v-row>
               </v-container>
@@ -338,7 +368,7 @@
                     <v-checkbox
                       row
                       v-model="rule_enter_TRACKIP"
-                      color="#875438"
+                      color="primary"
                       label="记录考试IP"
                     ></v-checkbox>
                   </v-col>
@@ -346,7 +376,7 @@
                     <v-checkbox
                       row
                       v-model="rule_enter_TAKEPHOTO"
-                      color="#875438"
+                      color="primary"
                       label="考试中随机拍照"
                     >
                     </v-checkbox>
@@ -363,11 +393,11 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="green darken-1" text @click="close()">算了</v-btn>
+      <v-btn color="primary" text @click="close()">算了</v-btn>
       <v-btn
         v-if="tab == 0 && releaseWork_isExam == true"
         text
-        color="green darken-1"
+        color="primary"
         min-width="60px"
         class="white--text"
         @click="
@@ -379,7 +409,7 @@
       <v-btn
         v-if="tab == 1"
         text
-        color="green darken-1"
+        color="primary"
         min-width="60px"
         class="white--text"
         @click="tab = 0"
@@ -387,7 +417,7 @@
       >
       <v-btn
         v-if="tab == 1 || releaseWork_isExam == false"
-        color="green darken-1"
+        color="primary"
         min-width="60px"
         class="white--text"
         @click="beforeReleaseWork()"

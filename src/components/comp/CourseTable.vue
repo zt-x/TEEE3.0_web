@@ -1,5 +1,4 @@
 <template>
-  <!-- 课表 -->
   <v-card>
     <v-card-title class="overline" style="justify-content: center"
       >Today Courses [施工中...]</v-card-title

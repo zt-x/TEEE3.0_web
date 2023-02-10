@@ -66,9 +66,9 @@
           </v-col>
           <v-col cols="2">
             <v-row justify="end">
-              <v-btn color="green darken-1" text @click="close()">算了</v-btn>
+              <v-btn color="primary" text @click="close()">算了</v-btn>
               <v-btn
-                color="green darken-1"
+                color="primary"
                 min-width="60px"
                 class="white--text"
                 @click="beforeReleaseWork()"

@@ -51,7 +51,7 @@
             <v-text-field
               required
               clearable
-              color="#875438"
+              color="primary"
               label="库标题"
               outlined
               :rules="[rules.required]"
@@ -102,7 +102,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-chip
                   class="white--text"
-                  :color="isEdit == 1 ? '#875438' : 'grey'"
+                  :color="isEdit == 1 ? 'primary' : 'grey'"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -198,10 +198,10 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="green darken-1" text @click="close()">关闭</v-btn>
+      <v-btn color="primary" text @click="close()">关闭</v-btn>
       <v-btn
         v-if="bwname != '' && isEdit == 1"
-        color="green darken-1"
+        color="primary"
         min-width="60px"
         class="white--text"
         @click="releaseWorkBank()"

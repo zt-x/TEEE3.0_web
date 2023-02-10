@@ -22,8 +22,9 @@
     <v-card-title>
       <v-chip
         small
-        outlined
         dark
+        label
+        style="border-radius: 2px"
         :color="Number(content.isPrivate) == 0 ? 'success' : 'warning'"
         class="mr-2"
         >{{ Number(content.isPrivate) == 0 ? "公开" : "私有" }}</v-chip
@@ -56,12 +57,12 @@
       <div class="pl-2 my-3">简答题: {{ numOfQue[2] }}道</div>
     </v-card-text>
     <v-card-actions v-if="finishGetData">
-      <v-btn color="orange" text @click="showBankQuestion()">
+      <v-btn color="#b97a57" text @click="showBankQuestion()">
         查看{{ Number(content.isMine) == 1 ? "/编辑" : "" }}作业库内容
       </v-btn>
 
       <v-btn
-        color="orange"
+        color="#b97a57"
         text
         v-if="Number(content.isMine) == 1 || Number(content.isPrivate) != 1"
         @click="shareCourseDialog = true"

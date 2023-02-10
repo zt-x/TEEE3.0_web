@@ -45,7 +45,11 @@
               {{ item.ans }}
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-chip small color="error" class="ml-2" @click="removeAns(item.key)"
+              <v-chip
+                small
+                color="error"
+                class="ml-2"
+                @click="removeAns(item.key)"
                 >删除</v-chip
               >
             </template>
@@ -67,10 +71,10 @@
       <span class="red--text">{{ this.msg }}</span>
       <v-spacer></v-spacer>
 
-      <v-btn color="green darken-1" text @click="close()">返回</v-btn>
+      <v-btn color="#b97a57" text @click="close()">返回</v-btn>
       <v-btn
         v-if="editAble"
-        color="green darken-1"
+        color="#b97a57"
         min-width="60px"
         class="white--text"
         @click="add()"
@@ -145,6 +149,9 @@ export default {
       //{qtype: 30010, qscore: 2.0,
       //qtext: "1111", qans: ["", "", "", ""], cans: [0]}
       console.log(this.selected);
+      if (!this.selected) {
+        this.selected = [];
+      }
       let _qans = [];
       let _cans = [];
       let newQue = {};
