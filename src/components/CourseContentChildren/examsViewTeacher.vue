@@ -22,13 +22,13 @@
                   v-bind="attrs"
                   small
                   class="ma-2"
-                  color="warning"
+                  color="transparent"
                   text-color="white"
                 >
-                  <v-icon x-small>mdi-bell</v-icon>
+                  <v-icon color="warning" small>fa fa-bell</v-icon>
                 </v-chip>
               </template>
-              <span>有未批改的作业</span>
+              <span>有未批改的考试</span>
             </v-tooltip>
 
             <v-tooltip v-if="loading_subNum" top>
@@ -176,7 +176,7 @@ export default {
         btns: [
           {
             label: "确定",
-            color: "brown",
+            color: "#be8464",
             callback: () => {
               fun_delWork(work.id)
                 .then((res) => {

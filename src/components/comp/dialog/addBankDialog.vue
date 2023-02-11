@@ -15,14 +15,14 @@
         <v-spacer></v-spacer>
         <v-btn
           :loading="loading"
-          color="brown darken-1"
+          color="#be8464"
           text
           @click="AddBankByKey()"
         >
           加入
         </v-btn>
         <v-btn
-          color="brown darken-1"
+          color="#be8464"
           text
           @click="$emit('update:dialog_adb', false)"
         >

@@ -146,7 +146,7 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    color="brown lighten-1"
+                    color="#be8464"
                     locale="zh-cn"
                     :first-day-of-week="0"
                     v-model="deadline"
@@ -220,11 +220,11 @@
                 <!-- 选择作业库 -->
                 <v-chip
                   class="white--text"
-                  color="brown"
+                  color="primary"
                   v-if="workContentRadio == 'searchFromBank'"
                   @click="openWorkBank()"
                 >
-                  <v-icon small left>fa fa-folder-open</v-icon>
+                  <v-icon small left>mdi-folder</v-icon>
                   打开作业库
                 </v-chip>
                 <v-chip class="ml-5"> 总分 {{ totalScore }}分 </v-chip>

@@ -19,7 +19,7 @@
                     <v-col cols="12" md="10">
                       <v-text-field
                         label="请输入学号/教师号"
-                        color="brown"
+                        color="#b97a57"
                         solo
                         flat
                         outlined
@@ -31,7 +31,7 @@
 
                       <v-text-field
                         label="请输入密码"
-                        color="brown"
+                        color="#b97a57"
                         solo
                         flat
                         outlined

@@ -63,7 +63,7 @@
             <v-checkbox
               v-model="isPrivate"
               label="设为私有 (默认)"
-              color="brown"
+              color="#be8464"
             ></v-checkbox>
           </v-col>
           <!-- TAGS -->
@@ -78,8 +78,8 @@
                 <v-chip
                   small
                   label
-                  :color="isEdit == 1 ? 'brown' : 'grey'"
-                  dark
+                  :color="isEdit == 1 ? 'primary' : 'grey'"
+                  outlined
                   :key="JSON.stringify(data.item)"
                   v-bind="data.attrs"
                   :input-value="data.selected"

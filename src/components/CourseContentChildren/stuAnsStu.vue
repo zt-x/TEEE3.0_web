@@ -138,7 +138,7 @@ export default {
       overlay_msg: "",
       finishGetAns: false,
       snackbar: false,
-      snackbar_color: "brown",
+      snackbar_color: "#be8464",
       snackbar_msg: "",
       pri_qid: -1,
       show_pri: false,

@@ -11,7 +11,7 @@
           <v-checkbox
             v-model="timelimit"
             label="设置有效期"
-            color="brown"
+            color="#be8464"
             hide-details
           ></v-checkbox>
         </v-col>

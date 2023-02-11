@@ -39,7 +39,7 @@
           <v-file-input
             dense
             v-model="files"
-            color="brown accent-4"
+            color="#be8464"
             multiple
             placeholder="点击选择添加附件"
             prepend-icon="mdi-paperclip"
@@ -50,7 +50,7 @@
               <v-chip
                 close
                 v-if="index < 3"
-                color="brown accent-4"
+                color="#be8464"
                 dark
                 label
                 small

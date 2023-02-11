@@ -12,7 +12,7 @@
                   style="font-size: small"
                   v-model="form_courename"
                   :rules="form_courename_Rules"
-                  color="brown"
+                  color="#be8464"
                   label="课程名称"
                   hint="例如: 高等数学-2002班"
                 ></v-text-field>
@@ -21,7 +21,7 @@
                 <v-text-field
                   clearable
                   style="font-size: small"
-                  color="brown"
+                  color="#be8464"
                   v-model="form_college"
                   label="专业 / 学院"
                 ></v-text-field>
@@ -33,7 +33,7 @@
                   clearable
                   style="font-size: small"
                   v-model="form_banner"
-                  color="brown"
+                  color="#be8464"
                   label="课程封面图片URL"
                   hint="可留空。例如: http://xxx.xxx.png"
                 ></v-text-field>
@@ -71,7 +71,7 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    color="brown lighten-1"
+                    color="#be8464"
                     locale="zh-cn"
                     :first-day-of-week="0"
                     v-model="form_startTime"
@@ -108,7 +108,7 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    color="brown lighten-1"
+                    color="#be8464"
                     locale="zh-cn"
                     :first-day-of-week="0"
                     v-model="form_endTime"
@@ -129,7 +129,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="brown darken-1"
+          color="#be8464"
           text
           @click="createCourse()"
           :loading="btn_create_loading"
@@ -137,7 +137,7 @@
           创建
         </v-btn>
         <v-btn
-          color="brown darken-1"
+          color="#be8464 darken-1"
           text
           @click="$emit('update:showDialog', false)"
         >

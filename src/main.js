@@ -6,9 +6,10 @@ import * as apexcharts from "./plugins/apexcharts";
 import router from "./router";
 import "@mdi/font/css/materialdesignicons.css";
 import "./plugins/fontawesome";
+import VueTypedJs from 'vue-typed-js'
 import Dialog from "vue-dialog-loading";
 Vue.config.productionTip = false;
-Vue.use(Dialog, {
+Vue.use(VueTypedJs,Dialog, {
   dialogBtnColor: "#0f0",
   background: "rgba(0, 0, 0, 0.5)",
 });

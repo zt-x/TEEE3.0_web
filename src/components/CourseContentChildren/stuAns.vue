@@ -143,7 +143,7 @@ export default {
   data() {
     return {
       snackbar: false,
-      snackbar_color: "brown",
+      snackbar_color: "#be8464",
       snackbar_msg: "",
       submitContent: [],
       readover: [],

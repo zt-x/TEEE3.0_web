@@ -25,7 +25,8 @@
         dark
         label
         style="border-radius: 2px"
-        :color="Number(content.isPrivate) == 0 ? 'success' : 'warning'"
+        :color="Number(content.isPrivate) == 1 ? '#b97a57' : '#b97a57'"
+        :outlined="Number(content.isPrivate) == 1 ? true : false"
         class="mr-2"
         >{{ Number(content.isPrivate) == 0 ? "公开" : "私有" }}</v-chip
       >
@@ -38,11 +39,12 @@
     <v-card-text v-if="finishGetData">
       <!-- TAGS -->
       <div class="my-2" style="width: 90%; overflow: hidden">
-        标签：
+        标签:
         <v-chip
           small
           label
-          color="brown"
+          color="primary"
+          outlined
           dark
           class="mx-1"
           v-for="(item, i) in tags"

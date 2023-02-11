@@ -1,5 +1,6 @@
 <template>
   <div class="px-4">
+    <div style="height: 25px"></div>
     <v-container fluid>
       <v-dialog persistent v-model="releaseWorkDialog" width="800px">
         <release-work :cid="cid" @close="close($event)" />
@@ -31,17 +32,12 @@
             <v-sheet class="py-6 px-10 transparent">
               <v-row v-if="isTeacher">
                 <v-col cols="12">
-                  <v-chip
-                    label
-                    @click="releaseWorkDialog = true"
-                    color="primary"
-                  >
+                  <v-chip @click="releaseWorkDialog = true" color="primary">
                     <v-icon color="white" small left>mdi-send</v-icon>
                     <span style="color: white">发布新作业 / 考试</span>
                   </v-chip>
 
                   <v-chip
-                    label
                     @click="releaseAnnDialog = true"
                     color="primary"
                     class="ml-3"
@@ -50,7 +46,6 @@
                     <span style="color: white">发布公告</span>
                   </v-chip>
                   <v-chip
-                    label
                     @click="shareCourseDialog = true"
                     color="primary"
                     class="ml-3"
@@ -64,7 +59,6 @@
                       getCourseInfo();
                       getCourseStatsitics();
                     "
-                    label
                     color="black"
                     class="ml-3"
                     outlined
@@ -213,28 +207,21 @@
         </v-col>
         <!-- Course Info -->
         <v-col cols="12" lg="4">
-          <v-sheet
-            class="py-6 transparent"
-            :class="{
-              'pr-10':
-                $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly,
-              'px-10': !(
-                $vuetify.breakpoint.lgAndUp || $vuetify.breakpoint.lgOnly
-              ),
-            }"
-          >
-            <!-- 课程信息 -->
-            <v-card :loading="!finishGetCourseInfo" class="mt-5">
-              <v-card-title>{{ CourseInfo.cname }}</v-card-title>
-              <v-card-subtitle
-                >CourseKey:{{ this.cid }} || {{ CourseInfo.startTime }} -
-                {{ CourseInfo.endTime }}</v-card-subtitle
-              >
-              <v-divider class="mb-5"></v-divider>
-              <v-container v-if="finishGetCourseInfo">
-                <v-row>
-                  <v-col cols="12" lg="5">
-                    <v-card class="pl-5 pt-6" style="height: 200px" outlined>
+          <v-card>
+            <v-sheet class="py-6 px-10 transparent">
+              <!-- 课程信息 -->
+              <v-card outlined :loading="!finishGetCourseInfo" class="mt-5">
+                <v-card-title class="brown--text text-h4">{{
+                  CourseInfo.cname
+                }}</v-card-title>
+                <v-card-subtitle class="text-overline"
+                  >{{ CourseInfo.startTime }} -
+                  {{ CourseInfo.endTime }}</v-card-subtitle
+                >
+                <v-divider class="mb-5"></v-divider>
+                <v-container v-if="finishGetCourseInfo">
+                  <v-row>
+                    <v-col cols="12" lg="5" class="text-overline">
                       <span>任课教师：{{ CourseInfo.tname }}</span>
                       <v-divider></v-divider>
 
@@ -259,25 +246,25 @@
                         }}</span
                       >
                       <v-divider></v-divider>
-                    </v-card>
-                  </v-col>
-                  <v-col cols="12" lg="7"> 这里是一个图表 </v-col>
-                </v-row>
-              </v-container>
-            </v-card>
-            <v-card class="mt-5">
-              <v-card-title>学情分析</v-card-title>
-              <v-divider></v-divider>
-              <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <!--  -->
-                    这是一个图表，用来展示作业完成情况
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card>
-          </v-sheet>
+                    </v-col>
+                    <v-col cols="12" lg="7"> 这里是一个图表 </v-col>
+                  </v-row>
+                </v-container>
+              </v-card>
+              <v-card outlined class="mt-5">
+                <v-card-title>学情分析</v-card-title>
+                <v-divider></v-divider>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <!--  -->
+                      这是一个图表，用来展示作业完成情况
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card>
+            </v-sheet>
+          </v-card>
         </v-col>
       </v-row>
       <v-overlay v-if="loading">
@@ -520,7 +507,7 @@ export default {
         btns: [
           {
             label: "确定",
-            color: "brown",
+            color: "#227bd4",
             callback: () => {
               fun_removeUsers(this.cid, uid).then((res) => {
                 _this._alert(res.code);

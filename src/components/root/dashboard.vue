@@ -75,6 +75,7 @@
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
+              ref="ukf"
               hide-details
               flat
               dense
@@ -111,13 +112,13 @@
     </v-app-bar>
 
     <v-main class="bgc">
-      <div style="height: 30px"></div>
+      <!-- <div style="height: 30px"></div> -->
       <router-view />
       <v-fab-transition>
         <v-btn
           x-small
           v-show="$vuetify.breakpoint.mdAndDown"
-          color="brown"
+          color="#be8464"
           dark
           fixed
           top

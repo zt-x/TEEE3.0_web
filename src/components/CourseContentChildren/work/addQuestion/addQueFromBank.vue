@@ -31,8 +31,8 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="close()" color="brown" text>取消</v-btn>
-      <v-btn @click="add()" color="brown" v-if="selected.length > 0" text>确定</v-btn>
+      <v-btn @click="close()" color="#be8464" text>取消</v-btn>
+      <v-btn @click="add()" color="#be8464" v-if="selected.length > 0" text>确定</v-btn>
     </v-card-actions>
   </v-card>
 </template>

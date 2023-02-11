@@ -11,7 +11,7 @@
             no-resize
             rows="10"
             v-model="ans_text"
-            color="brown"
+            color="#be8464"
             style="radius: 0"
           ></v-textarea>
         </v-col>
@@ -26,7 +26,7 @@
             hint="按下回车键或右侧加号添加"
             @keypress.enter="addAns()"
             @click:append="addAns()"
-            color="brown"
+            color="#be8464"
             outlined
           ></v-text-field>
         </v-col>

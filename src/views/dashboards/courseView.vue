@@ -78,6 +78,7 @@
         <span>正在准备内容 ...</span>
       </v-chip>
     </v-overlay>
+    <div style="height: 25px"></div>
     <v-container fluid>
       <v-row>
         <v-col cols="12" lg="8">
@@ -292,8 +293,5 @@ export default {
 <style scoped>
 .bgc {
   background-image: linear-gradient(135deg, #fdfcfb 0%, #e9e6e4 100%);
-}
-.event_bg {
-  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
 }
 </style>

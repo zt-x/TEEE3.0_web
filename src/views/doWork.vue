@@ -1,6 +1,10 @@
 <template>
   <div style="background: #b97a57; min-height: 1080px">
-    <v-dialog width="400px" v-if="dialog_upload_info" v-model="dialog_upload_info">
+    <v-dialog
+      width="400px"
+      v-if="dialog_upload_info"
+      v-model="dialog_upload_info"
+    >
       <v-card :loading="!finishUploadingFile">
         <v-card-title v-if="!finishUploadingFile">正在上传 ...</v-card-title>
         <v-card-title v-if="finishUploadingFile">上传完成!</v-card-title>
@@ -41,7 +45,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" top :color="snackbar_color" dense timeout="2000">
+    <v-snackbar
+      v-model="snackbar"
+      top
+      :color="snackbar_color"
+      dense
+      timeout="2000"
+    >
       {{ snackbar_msg }}
     </v-snackbar>
     <div style="position: fixed; left: 20px; bottom: 20px">
@@ -53,15 +63,26 @@
       ></v-img>
     </div>
     <!-- <v-card fixed dark fab left bottom color="pink"></v-card> -->
-    <v-app-bar color="white" app class="d-flex aligin-center justify-content-center">
-      <v-chip @click="goBack()" small class="ma-2" color="#555555" text-color="white"
+    <v-app-bar
+      color="white"
+      app
+      class="d-flex aligin-center justify-content-center"
+    >
+      <v-chip
+        @click="goBack()"
+        small
+        class="ma-2"
+        color="#555555"
+        text-color="white"
         ><v-icon small left>mdi-arrow-left</v-icon>返回</v-chip
       >
       <v-card-title>
         <div>{{ wname }}</div>
       </v-card-title>
       <v-spacer></v-spacer>
-      <span v-show="!$vuetify.breakpoint.lgAndUp">剩余答题时间:{{ restTimeText }}</span>
+      <span v-show="!$vuetify.breakpoint.lgAndUp"
+        >剩余答题时间:{{ restTimeText }}</span
+      >
     </v-app-bar>
     <v-main>
       <v-card-text>
@@ -98,7 +119,9 @@
                 >
                 <v-divider></v-divider>
                 <div class="text-center py-8" style="background: #f8f9fe">
-                  <span style="font-size: 25px; color: #b97a57">{{ restTimeText }}</span>
+                  <span style="font-size: 25px; color: #b97a57">{{
+                    restTimeText
+                  }}</span>
                 </div>
               </v-card>
             </v-col>
@@ -113,7 +136,7 @@
                       v-model="tab"
                       background-color="transparent"
                       hide-slider
-                      color="brown"
+                      color="#b97a57"
                       height="0px"
                     >
                       <v-tab v-for="(item, i) in qs" :key="i"> </v-tab>
@@ -159,7 +182,11 @@
                             >
                               <div>
                                 <v-btn
-                                  style="min-width: 44px; height: 44px; width: 44px"
+                                  style="
+                                    min-width: 44px;
+                                    height: 44px;
+                                    width: 44px;
+                                  "
                                   class="mr-5"
                                   color="blue"
                                   dark
@@ -173,16 +200,24 @@
                             </div>
                           </div>
                           <!-- 填空题 -->
-                          <div class="pl-8 pt-5" v-else-if="item.qtype == 30011">
+                          <div
+                            class="pl-8 pt-5"
+                            v-else-if="item.qtype == 30011"
+                          >
                             <div>
                               <span>我的答案是: </span>
                               <div style="width: 300px">
-                                <v-text-field v-model="myAnss[i]"></v-text-field>
+                                <v-text-field
+                                  v-model="myAnss[i]"
+                                ></v-text-field>
                               </div>
                             </div>
                           </div>
                           <!-- 简答题 -->
-                          <div class="px-8 py-5" v-else-if="item.qtype == 30012">
+                          <div
+                            class="px-8 py-5"
+                            v-else-if="item.qtype == 30012"
+                          >
                             <div>
                               <ckeditor
                                 v-model="myAnss[i]"
@@ -217,7 +252,12 @@
 
                                   <span
                                     v-else-if="index === 3"
-                                    class="overline grey--text text--darken-3 mx-2"
+                                    class="
+                                      overline
+                                      grey--text
+                                      text--darken-3
+                                      mx-2
+                                    "
                                   >
                                     +{{ files.length - 3 }} File(s)
                                   </span>
@@ -253,7 +293,9 @@
                   <!-- TODO -->
 
                   <v-btn class="mr-1" outlined dark color="blue"> 暂存 </v-btn>
-                  <v-btn class="mr-7" dark color="blue" @click="submit()">提交</v-btn>
+                  <v-btn class="mr-7" dark color="blue" @click="submit()"
+                    >提交</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-col>

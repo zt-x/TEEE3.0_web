@@ -1,6 +1,6 @@
 <template>
   <v-card
-    style="border: thin solid #b97a57"
+    style="border: solid #f4f2f1"
     hover
     max-width="400"
     min-width="200px"

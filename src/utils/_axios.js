@@ -33,7 +33,8 @@ _axios.interceptors.response.use(
         duration: 2500,
       });
       if (response.data.code == -4) {
-        vue.$router.replace({ path: "/login" });
+		  vue.$router.replace({ path: "/login" });
+		  return;
       } else {
         return response.data;
       }
