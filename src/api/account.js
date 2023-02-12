@@ -21,10 +21,10 @@ export function fun_updateUserInfo(uid, pwd) {
   });
 }
 export function fun_getUserInfo(uid) {
-  return _axios.get("/api/accounts", { params: { uid: uid.trim() } });
+  return _axios.get("/api/accounts", { params: { uid: uid } });
 }
 export function fun_delUser(uid) {
-  return _axios.delete("/api/accounts", { data: { uid: uid.trim() } });
+  return _axios.delete("/api/accounts", { data: { uid: uid } });
 }
 
 export function fun_getRoutes() {

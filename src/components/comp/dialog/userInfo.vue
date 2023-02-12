@@ -1,7 +1,7 @@
 <template>
   <v-dialog persistent v-model="showDialog" width="550px">
     <v-card>
-      <v-img src="/img/info_bak.png" class="white--text" height="150px">
+      <v-img class="white--text bgc" height="100px">
         <v-card-title>
           <v-spacer></v-spacer>
           <v-chip
@@ -11,7 +11,7 @@
           ></v-chip>
         </v-card-title>
       </v-img>
-      <v-card height="300px" tile>
+      <v-card height="150px" tile>
         <v-btn
           absolute
           fab
@@ -23,9 +23,24 @@
             <v-img :src="user.avatar"></v-img>
           </v-avatar>
         </v-btn>
-        <v-card-title>{{ user.uname }}</v-card-title>
-        <v-card-text>
-          <v-chip color="primary" style="border-radius: 2px">333</v-chip>
+        <v-card-title class="white--text">.</v-card-title>
+        <v-card-text class="pt-5 text-center">
+          <strong>
+            <v-chip color="grey" outlined style="border-radius: 12px">
+              {{ user.role == 0 ? "学生 |" : "教师 |" }}
+              {{ " " + user.uname }}</v-chip
+            >
+            <v-chip
+              color="success"
+              class="ml-2"
+              outlined
+              style="border-radius: 12px"
+              @click="alert('其实并没有~功能出现BUG, 正在加急修复ing ...')"
+            >
+              <v-icon left>mdi-check-circle</v-icon>
+              已录入人脸信息
+            </v-chip>
+          </strong>
         </v-card-text>
       </v-card>
     </v-card>
@@ -33,16 +48,39 @@
 </template>
 
 <script>
+import { fun_getUserInfo } from "@/api/account";
+import { _alert } from "@/plugins/myfun";
 export default {
   props: ["showDialog"],
   data() {
     return {
       user: {
-        avatar:
-          "https://www.bing.com/th?id=OIP._J04pCmHCUfm4hf-ikRBhAAAAA&w=150&h=150&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2",
-        uname: "王倩",
+        avatar: "",
+        uname: "Nobody",
+        role: -1,
       },
     };
   },
+  methods: {
+    alert(msg) {
+      _alert(msg);
+    },
+    getUserInfo() {
+      let _this = this;
+      fun_getUserInfo(-1).then((res) => {
+        _this.user = res.data;
+      });
+    },
+    editUserInfo() {},
+  },
+  created() {
+    this.getUserInfo();
+  },
 };
 </script>
+
+<style scoped>
+.bgc {
+  background-image: linear-gradient(135deg, #fdfcfb 0%, #e9e6e4 100%);
+}
+</style>>

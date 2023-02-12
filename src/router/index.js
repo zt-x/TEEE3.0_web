@@ -17,10 +17,16 @@ export const routes = [
     name: "doWork",
     component: () => import("@/views/doWork.vue"),
 	},
-	// {
-	// 	path: '*',
-	// 	redirect: 'home'
-	//   }
+	{
+		path: "/404",
+		name: "404",
+		component: () => import("@/views/404.vue"),
+		},
+
+	{
+		path: '*',
+		redirect: '404'
+	  }
 ];
 
 const router = new VueRouter({
