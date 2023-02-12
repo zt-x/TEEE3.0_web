@@ -1,16 +1,10 @@
 <template>
-  <!-- <div class="err404">
-    <h1>啊呜, 您访问的页面不见了！</h1>
-    <h5>
-      <router-link to="home" class="go-home">去首页</router-link>
-    </h5>
-  </div> -->
   <div>
     <img class="background" src="404.png" />
     <h1>
       啊哦, 这个页面走失了！🥴
       <br />
-      <v-btn to="home" class="text-h6"> 点我返回首页 </v-btn>
+      <v-btn @click="back" class="text-h6"> 点我返回首页 </v-btn>
     </h1>
   </div>
 </template>
@@ -19,6 +13,32 @@
 export default {
   data() {
     return {};
+  },
+  methods: {
+    hasRoute(name, routeList) {
+      !routeList &&
+        ((routeList = this.$router.options.routes), console.log("执行"));
+      for (let i = 0; i < routeList.length; i++) {
+        console.log(routeList[i]);
+        if (routeList[i].name === name) {
+          return true;
+        }
+        if (routeList[i].children) {
+          let flag = this.hasRoute(name, routeList[i].children);
+          if (flag) {
+            return flag;
+          }
+        }
+      }
+      return false;
+    },
+    back() {
+      if (this.hasRoute("home")) {
+        this.$router.replace({ path: "/home" });
+      } else {
+        this.$router.replace({ path: "/login" });
+      }
+    },
   },
 };
 </script>
