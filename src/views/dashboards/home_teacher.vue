@@ -4,7 +4,7 @@
       <!-- 左侧栏 -->
       <v-col cols="12" lg="3">
         <v-card style="height: 90vh" class="px-10 py-10">
-          <v-card-title class="text-h4"> Hi, 凯撒·加图索 </v-card-title>
+          <v-card-title class="text-h4"> Hi, ceshi </v-card-title>
           <v-card-subtitle class="text-h5"> 欢迎回来 </v-card-subtitle>
           <v-card-text>
             <vue-typed-js
