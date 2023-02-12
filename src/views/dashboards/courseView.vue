@@ -170,6 +170,7 @@
                   ref="calendar"
                   type="day"
                   locale="cn"
+                  start="2023-02-11 08:30"
                   :events="events"
                   :first-interval="7.5"
                   :interval-count="17"

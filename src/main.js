@@ -9,7 +9,8 @@ import "./plugins/fontawesome";
 import VueTypedJs from 'vue-typed-js'
 import Dialog from "vue-dialog-loading";
 Vue.config.productionTip = false;
-Vue.use(VueTypedJs,Dialog, {
+Vue.use(VueTypedJs);
+Vue.use(Dialog, {
   dialogBtnColor: "#0f0",
   background: "rgba(0, 0, 0, 0.5)",
 });

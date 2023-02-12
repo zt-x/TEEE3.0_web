@@ -143,7 +143,7 @@ import { unlimit, _alert } from "@/plugins/myfun";
 export default {
   components: { userInfo },
   data: () => ({
-    dialog_userinfo: true,
+    dialog_userinfo: false,
     temp: false,
     drawerDisplay: null,
     drawer: [
