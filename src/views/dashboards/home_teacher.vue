@@ -64,6 +64,7 @@
                     <div class="text-h6">新的作业提交</div>
                   </div>
                   <div style="padding-top: 5px; height: 85%; overflow: auto">
+					<v-progress-linear color="cyan" v-if="!finishGet.todolist" indeterminate></v-progress-linear>
                     <v-simple-table>
                       <template v-slot:default>
                         <thead>
@@ -72,7 +73,8 @@
                             <th class="text-left">待批改作业数</th>
                           </tr>
                         </thead>
-                        <tbody>
+
+                        <tbody v-if="finishGet.todolist">
                           <tr
                             v-for="item in todolist"
                             :key="item.cid"
@@ -200,6 +202,7 @@ export default {
         categories: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
       },
     },
+    // BankManager
     optionsBar: {
       theme: {
         mode: "light",
@@ -214,6 +217,9 @@ export default {
       },
       xaxis: {
         categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+        labels: {
+          show: false,
+        },
       },
     },
     series: [],
@@ -318,8 +324,11 @@ export default {
       fun_getTodoList()
         .then((res) => {
           _this.todolist = res.data;
+          _this.finishGet.todolist = true;
         })
-        .catch((err) => {});
+        .catch((err) => {
+          _this.finishGet.todolist = true;
+        });
     },
     getCourseTable() {
       // TODO 待接入API
@@ -383,6 +392,7 @@ export default {
           console.log(arr);
           arr.forEach((item) => {
             _this.optionsBar.xaxis.categories.push(item.bwname);
+            // _this.optionsBar.xaxis.categories.push('');
             arr2.push(item.usageCount);
           });
           _this.series2.push({ name: "1", data: arr2 });
