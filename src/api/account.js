@@ -26,7 +26,12 @@ export function fun_getUserInfo(uid) {
 export function fun_delUser(uid) {
   return _axios.delete("/api/accounts", { data: { uid: uid } });
 }
-
+export function fun_resetPwd(pwd) {
+	return _axios.post("/api/accounts/resetPassword", {
+		pwd: pwd.trim(),
+	  });
+	
+}
 export function fun_getRoutes() {
   return _axios.get("/api/accounts/routes");
 }

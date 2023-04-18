@@ -1,6 +1,7 @@
 <template>
   <div>
     <userInfo :showDialog.sync="dialog_userinfo" />
+    <reset-pwd-dialog :showDialog.sync="dialog_resetpwd" />
     <v-navigation-drawer
       app
       :mini-variant="!mini"
@@ -135,41 +136,21 @@
 
 <script>
 import userInfo from "../comp/dialog/userInfo.vue";
+import ResetPwdDialog from '../comp/dialog/resetPwdDialog.vue';
+
 import { resetRouter, setRouter } from "@/router/setRouter.js";
 import { fun_getRoutes } from "@/api/account.js";
 import { fun_useKey } from "@/api/key";
 import { unlimit, _alert } from "@/plugins/myfun";
 
 export default {
-  components: { userInfo },
+  components: { userInfo, ResetPwdDialog },
   data: () => ({
     dialog_userinfo: false,
+    dialog_resetpwd: false,
     temp: false,
     drawerDisplay: null,
-    drawer: [
-      { title: "Back to front", icon: "mdi-arrow-left", to: "/" },
-      {
-        title: "Free Download",
-        icon: "mdi-download",
-        href: "https://github.com/AGDholo/shock",
-        target: "_black",
-      },
-      {
-        title: "Dashboard",
-        icon: "mdi-home",
-        to: "/dashboard/pages/dashboards/dashboard",
-      },
-      {
-        title: "Profile",
-        icon: "mdi-face-profile",
-        to: "/dashboard/pages/examples/profile",
-      },
-      {
-        title: "Sign-in",
-        icon: "mdi-login",
-        to: "/dashboard/pages/examples/sign-in",
-      },
-    ],
+    drawer: [],
     user: {
       uname: "",
       avatar: "",
@@ -213,13 +194,16 @@ export default {
             position: "top-center",
             duration: 2000,
           });
-          this.$router.replace({ path: "/home" });
+			this.$router.replace({ path: "/home" });
+			if (Number(data.data.loginCount) <= 0) {
+				_this.dialog_resetpwd = true;
+			}
         } else {
-          _this.$toasted.show(data.msg, {
-            theme: "outline",
-            position: "top-center",
-            duration: 2000,
-          });
+        //   _this.$toasted.show(data.msg, {
+        //     theme: "outline",
+        //     position: "top-center",
+        //     duration: 2000,
+        //   });
           this.$router.replace({ path: "/login" });
         }
       })

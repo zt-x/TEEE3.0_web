@@ -50,7 +50,7 @@
                     >Start Your Work Now!</span
                   >
                   <v-alert dense text type="warning">
-                    当前使用版本为<strong>3.0.1 -寒假特供测试版</strong>,
+                    当前使用版本为<strong>3.0.2 -四月特供测试版</strong>,
                     若您在使用过程中发现BUG, emm, 我晚点再修。
                   </v-alert>
                 </div>
@@ -94,6 +94,7 @@
                             <td>{{ item.count }}</td>
                           </tr>
                         </tbody>
+						<div v-if="finishGet.todolist && todolist.length<=0"></div>
                       </template>
                     </v-simple-table>
                   </div>
@@ -224,40 +225,7 @@ export default {
     },
     series: [],
     series2: [],
-    desserts: [
-      {
-        name: "/dashboard/",
-        visitors: "4,660",
-        users: "440",
-        rate: "40%",
-        icon: "mdi-arrow-up",
-        color: "success",
-      },
-      {
-        name: "/dashboard/sign-up",
-        visitors: "3,260",
-        users: "120",
-        rate: "21%",
-        icon: "mdi-arrow-down",
-        color: "error",
-      },
-      {
-        name: "/dashboard/map",
-        visitors: "5,745",
-        users: "321",
-        rate: "63%",
-        icon: "mdi-arrow-up",
-        color: "success",
-      },
-      {
-        name: "/dashboard/table",
-        visitors: "1,564",
-        users: "56",
-        rate: "65%",
-        icon: "mdi-arrow-down",
-        color: "error",
-      },
-    ],
+    desserts: [],
     events: [
       {
         name: "软件项目管理",
