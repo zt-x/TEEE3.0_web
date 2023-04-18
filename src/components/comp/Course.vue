@@ -79,27 +79,32 @@ export default {
   props: ["Course"],
   data: () => ({
     role: -1,
+    block: false,
   }),
   created() {
     this.role = window.localStorage.getItem("role");
   },
   methods: {
     InterCourse(cid) {
-      this.$router.push({ name: "CourseContent", params: { cid: cid } });
+      if (!this.block) {
+        this.$router.push({ name: "CourseContent", params: { cid: cid } });
+      }
     },
     exitCourse(cid) {
       console.log("cid=" + cid);
+      this.block = true;
       if (this.role < 1) {
         fun_leave(cid).then((res) => {
           this.$emit("remove");
 
           _alert(res.msg);
+          this.block = false;
         });
       } else {
         fun_delCourse(cid).then((res) => {
           this.$emit("remove");
-
           _alert(res.msg);
+          this.block = false;
         });
       }
     },

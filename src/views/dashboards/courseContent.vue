@@ -25,6 +25,8 @@
           @close="closeShareCourseDialog($event)"
         />
       </v-dialog>
+	  <import-student-dialog :cid="cid" :showDialog.sync="dialog_importUser"/>
+
       <v-row>
         <!-- Course WorkPlace -->
         <v-col cols="12" lg="8">
@@ -153,6 +155,9 @@
                         <v-card>
                           <v-card-title>
                             学生列表
+							<v-chip @click="dialog_importUser = true" class="ml-4" small>
+								批量导入学生
+							</v-chip>
                             <v-spacer></v-spacer>
                             <v-text-field
                               v-model="search_user"
@@ -289,6 +294,8 @@ import WorksViewTeacher from "@/components/CourseContentChildren/worksViewTeache
 import ExamsViewTeacher from "@/components/CourseContentChildren/examsViewTeacher.vue";
 import Announcement_release from "@/components/CourseContentChildren/announcement_release.vue";
 import createKeyDialog from "../../components/comp/dialog/createKeyDialog.vue";
+import ImportStudentDialog from '../../components/comp/dialog/importStudentDialog.vue';
+
 import {
   fun_getUsers,
   fun_getWorks,
@@ -310,9 +317,11 @@ export default {
     ExamsViewTeacher,
     Announcement_release,
     createKeyDialog,
+    ImportStudentDialog,
   },
   data() {
-    return {
+	  return {
+		dialog_importUser:false,
       tab: null,
       items: ["作业", "考试", "公告", "成员"],
       usertable_headers: [

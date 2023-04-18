@@ -15,6 +15,9 @@ export function fun_createCourse(cname, college, start_time, end_time) {
 export function fun_delCourse(cid) {
   return _axios.delete(baseUrl + "/teacher", { data: { cid: cid } });
 }
+export function fun_addUsersToCourses(users, cid) {
+	return _axios.post(baseUrl + "/teacher/addUsers", {users: users, cid: cid});
+}
 export function fun_addCourse(cid) {
   return _axios.post(baseUrl + "/student", { cid: cid });
 }
@@ -44,3 +47,4 @@ export function fun_getAnnouncement(cid) {
 export function fun_leave(cid) {
   return _axios.delete(baseUrl + "/student", { data: { cid: cid } });
 }
+

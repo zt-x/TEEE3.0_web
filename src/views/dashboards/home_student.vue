@@ -50,7 +50,7 @@
                     >Start Your Work Now!</span
                   >
                   <v-alert dense text type="warning">
-                    当前使用版本为<strong>3.0.1 -寒假特供测试版</strong>,
+                    当前使用版本为<strong>3.0.2 -四月特供测试版</strong>,
                     若您在使用过程中发现BUG, emm, 我晚点再修。
                   </v-alert>
                 </div>
