@@ -34,7 +34,7 @@
                 >上传学生文件</v-btn
               >
               <span style="color: #f6f4f3">|</span>
-              <v-btn class="ml-5">下载模板</v-btn>
+              <v-btn class="ml-5" @click="alert('只要表头存在“学号”和“姓名”即可!')">下载模板</v-btn>
             </v-card>
           </v-tab-item>
           <v-tab-item>
@@ -146,6 +146,9 @@ export default {
 		  this.userDatas = data;
         console.log(data); //这里已经能拿到转换后的json
       }
+	  },
+	  alert(msg) {
+		  _alert(msg);
 	  },
 	  submitNewUsers() {
 		  let users = [];

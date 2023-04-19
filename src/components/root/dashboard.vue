@@ -87,6 +87,7 @@
               v-bind="attrs"
               v-on="on"
               v-model="key"
+			  color="black"
               @keypress.enter="useKey(key)"
             />
           </template>
@@ -186,7 +187,8 @@ export default {
               });
             }
           });
-          _this.user.uname = data.data.uname;
+			_this.user.uname = data.data.uname;
+		  localStorage.setItem("welcome_uname",_this.user.uname )
           _this.user.role = data.data.role;
           _this.user.avatar = data.data.avatar;
           _this.$toasted.success("欢迎回来, " + this.user.uname, {

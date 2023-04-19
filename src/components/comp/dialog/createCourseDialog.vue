@@ -14,7 +14,7 @@
                   :rules="form_courename_Rules"
                   color="#be8464"
                   label="课程名称"
-                  hint="例如: 高等数学-2002班"
+                  hint="例如: 高等数学"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
@@ -22,8 +22,8 @@
                   clearable
                   style="font-size: small"
                   color="#be8464"
-                  v-model="form_college"
-                  label="专业 / 学院"
+                  v-model="form_classname"
+                  label="班级"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -160,7 +160,7 @@ export default {
       // form_createCourse
       form_courename: "",
       form_courename_Rules: [(v) => !!v || "必须课程名输入哦"],
-      form_college: "",
+      form_classname: "",
       form_banner: "",
       form_startTime: "",
       form_endTime: "",
@@ -178,7 +178,7 @@ export default {
       this.btn_create_loading = true;
       fun_createCourse(
         this.form_courename,
-        this.form_college,
+        this.form_classname,
         this.form_startTime,
         this.form_endTime
       )

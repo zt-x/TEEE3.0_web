@@ -9,7 +9,10 @@
     ripple
   >
     <v-card-title class="d-flex justify-space-between align-center">
-      <span class="text-h5">
+      <span
+        class="text-h5 d-inline-block text-truncate"
+        style="max-width: 150px"
+      >
         {{ Course.cname ? Course.cname : "" }}
       </span>
 
@@ -39,7 +42,6 @@
       </div>
       <div></div>
       <div>
-        <!-- <v-icon color="brown" x-large>mdi-star</v-icon> -->
         <v-avatar>
           <v-img :src="Course.banner"></v-img>
         </v-avatar>
@@ -48,14 +50,14 @@
 
     <v-card-subtitle
       class="pb-0 text-overline"
+      v-text="Course.classname ? Course.classname : '公共'"
+    ></v-card-subtitle>
+    <v-card-subtitle
+      class="pb-0 text-overline"
       v-text="Course.tname"
     ></v-card-subtitle>
 
     <v-card-text style="font-size: small" class="text-overline">
-      <div class="text--secondary">
-        {{ Course.college ? Course.college : "公共" }}
-      </div>
-
       <div>{{ Course.time }}</div>
     </v-card-text>
 

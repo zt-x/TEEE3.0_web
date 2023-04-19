@@ -346,13 +346,13 @@
                       row
                       v-model="rule_pre_FACECHECK"
                       color="primary"
-                      label="人脸验证"
+                      label="人脸验证 !!!😣API修复中, 请暂时勿使用!!!"
                     ></v-checkbox>
                   </v-col>
                   <v-col cols="12">
                     <v-textarea
                       v-model="rule_pre_TEXT"
-                      label="考前提醒信息"
+                      label="考前提醒信息 💕本页面目前唯一可用的功能"
                     ></v-textarea>
                   </v-col>
                 </v-row>
@@ -360,7 +360,7 @@
             </v-card-text>
           </v-card>
           <v-card class="mt-2">
-            <v-card-title>监考设置</v-card-title>
+            <v-card-title>监考设置 🚀功能火速修复中...</v-card-title>
             <v-card-text>
               <v-container>
                 <v-row>

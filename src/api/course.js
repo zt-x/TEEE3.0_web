@@ -4,10 +4,13 @@ const baseUrl = "/api/courses";
 export function fun_getMyCourse(page) {
   return _axios.get(baseUrl, { params: { page: page } });
 }
-export function fun_createCourse(cname, college, start_time, end_time) {
+export function fun_getMyCourseWithCriteria(page, criteria) {
+	return _axios.get(baseUrl, { params: { page: page, criteria: criteria } });
+  }
+export function fun_createCourse(cname, classname, start_time, end_time) {
   return _axios.post(baseUrl + "/teacher", {
     cname: cname,
-    college: college,
+    classname: classname,
     startTime: start_time,
     endTime: end_time,
   });

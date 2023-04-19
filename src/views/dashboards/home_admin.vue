@@ -4,7 +4,7 @@
       <!-- 左侧栏 -->
       <v-col cols="12" lg="3">
         <v-card style="height: 90vh" class="px-10 py-10">
-          <v-card-title class="text-h4"> Hi, ceshi </v-card-title>
+			<v-card-title class="text-h4 text-truncate"> Hi, {{ welcome_uname }} </v-card-title>
           <v-card-subtitle class="text-h5"> 欢迎回来 </v-card-subtitle>
           <v-card-text>
             <vue-typed-js
@@ -184,6 +184,11 @@
 import { _alert } from "@/plugins/myfun";
 import { fun_getTodoList, fun_getBankSummary } from "@/api/quickStart";
 export default {
+	computed: {
+    welcome_uname() {
+      return localStorage.getItem("welcome_uname");
+    },
+  },
   data: () => ({
     now: "2023-02-15 15:00:00",
     calendar: false,
@@ -285,7 +290,6 @@ export default {
     this.getTodoList();
     this.getBankSummary();
   },
-  computed: {},
   methods: {
     jump(cid) {
       this.$router.push({ name: "CourseContent", params: { cid: cid } });

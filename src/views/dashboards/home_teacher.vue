@@ -4,7 +4,7 @@
       <!-- 左侧栏 -->
       <v-col cols="12" lg="3">
         <v-card style="height: 90vh" class="px-10 py-10">
-          <v-card-title class="text-h4"> Hi, ceshi </v-card-title>
+          <v-card-title class="text-h4 text-truncate"> Hi, {{ welcome_uname }} </v-card-title>
           <v-card-subtitle class="text-h5"> 欢迎回来 </v-card-subtitle>
           <v-card-text>
             <vue-typed-js
@@ -59,12 +59,16 @@
             <v-row>
               <v-col cols="12" lg="6">
                 <v-card hover style="height: 30vh" class="px-6 py-6">
-                  <div style="height: 15%">
+                  <div style="height: 20%">
                     <div class="subtitle-2">TODO</div>
                     <div class="text-h6">新的作业提交</div>
                   </div>
-                  <div style="padding-top: 5px; height: 85%; overflow: auto">
-					<v-progress-linear color="cyan" v-if="!finishGet.todolist" indeterminate></v-progress-linear>
+                  <div style="padding-top: 5px; height: 80%; overflow: auto">
+                    <v-progress-linear
+                      color="cyan"
+                      v-if="!finishGet.todolist"
+                      indeterminate
+                    ></v-progress-linear>
                     <v-simple-table>
                       <template v-slot:default>
                         <thead>
@@ -94,7 +98,9 @@
                             <td>{{ item.count }}</td>
                           </tr>
                         </tbody>
-						<div v-if="finishGet.todolist && todolist.length<=0"></div>
+                        <div
+                          v-if="finishGet.todolist && todolist.length <= 0"
+                        ></div>
                       </template>
                     </v-simple-table>
                   </div>
@@ -181,6 +187,11 @@
 import { _alert } from "@/plugins/myfun";
 import { fun_getTodoList, fun_getBankSummary } from "@/api/quickStart";
 export default {
+  computed: {
+    welcome_uname() {
+      return localStorage.getItem("welcome_uname");
+    },
+  },
   data: () => ({
     now: "2023-02-15 15:00:00",
     calendar: false,
@@ -282,7 +293,6 @@ export default {
     this.getTodoList();
     this.getBankSummary();
   },
-  computed: {},
   methods: {
     jump(cid) {
       this.$router.push({ name: "CourseContent", params: { cid: cid } });

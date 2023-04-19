@@ -4,7 +4,9 @@
       <!-- 左侧栏 -->
       <v-col cols="12" lg="3">
         <v-card style="height: 90vh" class="px-10 py-10">
-          <v-card-title class="text-h4"> Hi, ceshi </v-card-title>
+          <v-card-title class="text-h4 text-truncate">
+            Hi, {{ welcome_uname }}
+          </v-card-title>
           <v-card-subtitle class="text-h5"> 欢迎回来 </v-card-subtitle>
           <v-card-text>
             <vue-typed-js
@@ -59,47 +61,81 @@
             <v-row>
               <v-col cols="12" lg="6">
                 <v-card hover style="height: 30vh" class="px-6 py-6">
-                  <div style="height: 15%">
+                  <div style="height: 20%">
                     <div class="subtitle-2">TODO</div>
-                    <div class="text-h6">待完成的作业</div>
+                    <div class="text-h6 pb-5">待完成的作业</div>
                   </div>
-                  <div style="padding-top: 5px; height: 85%; overflow: auto">
-                    <v-progress-linear
+                  <div style="padding-top: 10px; height: 80%; overflow: auto">
+                    <!-- <v-progress-linear
                       color="cyan"
                       v-if="!finishGet.todolist"
                       indeterminate
-                    ></v-progress-linear>
-                    <v-simple-table  v-if="finishGet.todolist">
-                      <template v-slot:default>
-                        <thead>
-                          <tr>
-                            <th class="text-left">课程</th>
-                            <th class="text-left">作业标题</th>
-                          </tr>
-                        </thead>
+                    ></v-progress-linear> -->
+                    <v-tabs
+                      height="0px"
+                      v-model="tab"
+                      background-color="primary"
+                      dark
+                    ></v-tabs>
+                    <v-tabs-items v-model="tab">
+                      <v-tab-item>
+                        <v-card
+                          style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                          "
+                          height="150px"
+                          tile
+                        >
+                          <div>
+                            <v-img
+                              width="25px"
+                              height="25px"
+                              src="loading2.gif"
+                            ></v-img>
+                          </div>
+                          <br />
+                          <div>
+                            <span class="pl-4"
+                              >正在为您整理作业中 请稍等哦 ...</span
+                            >
+                          </div>
+                        </v-card>
+                      </v-tab-item>
+                      <v-tab-item>
+                        <v-card></v-card>
+                        <v-simple-table v-if="finishGet.todolist">
+                          <template v-slot:default>
+                            <thead>
+                              <tr>
+                                <th class="text-left">课程</th>
+                                <th class="text-left">作业</th>
+                                <th class="text-left">截止日期</th>
+                              </tr>
+                            </thead>
 
-                        <tbody v-if="finishGet.todolist">
-                          <tr
-                            v-for="item in todolist"
-                            :key="item.cid"
-                            @click="jump(item.cid)"
-                          >
-                            <td>
-                              <div class="d-flex align-center">
-                                <v-avatar size="24">
-                                  <v-img :src="item.avatar" alt="avatar" />
-                                </v-avatar>
-
-                                <div class="ml-1 subtitle-2">
-                                  {{ item.cname }}
-                                </div>
-                              </div>
-                            </td>
-                            <td>{{ item.count }}</td>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
+                            <tbody v-if="finishGet.todolist">
+                              <tr
+                                v-for="item in todolist"
+                                :key="item.wid"
+                                @click="jump(item.cid)"
+                              >
+                                <td>
+                                  <div class="d-flex align-center">
+                                    <div class="ml-1 subtitle-2">
+                                      {{ item.cname }}
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>{{ item.wname }}</td>
+                                <td>{{ item.endTime }}</td>
+                              </tr>
+                            </tbody>
+                          </template>
+                        </v-simple-table>
+                      </v-tab-item>
+                    </v-tabs-items>
                   </div>
                 </v-card>
               </v-col>
@@ -136,8 +172,7 @@
               <v-col cols="12" lg="6">
                 <v-card hover style="height: 30vh" class="px-6 py-6">
                   <div style="height: 15%">
-                    <div class="subtitle-2">PERFORMANCE</div>
-
+                    <div class="subtitle-2">Date</div>
                     <div class="text-h6">日程安排</div>
                   </div>
                   <apexchart
@@ -156,20 +191,14 @@
               <!-- Bank Usage -->
               <v-col cols="12" lg="6">
                 <v-card hover style="height: 30vh" class="px-6 py-6">
-                  <div style="height: 15%">
-                    <div class="subtitle-2">PERFORMANCE</div>
-
-                    <div class="text-h6">作业库被引用次数统计</div>
+                  <div style="height: 20%">
+                    <div class="subtitle-2">ANNOUNCEMENT</div>
+                    <div class="text-h6">我的消息</div>
                   </div>
-                  <apexchart
-                    v-if="finishGet.bankSummary"
-                    width="100%"
-                    height="85%"
-                    class="mt-4"
-                    type="bar"
-                    :options="optionsBar"
-                    :series="series2"
-                  ></apexchart>
+                  <div style="height: 80%;color:white">
+					其实是为了凑四格 ... <br>
+					谁能给我点建议啊, 放些啥在这(*/ω＼*)
+                  </div>
                 </v-card>
               </v-col>
             </v-row>
@@ -179,11 +208,19 @@
     </v-row>
   </v-container>
 </template>
-  
-  <script>
+
+<script>
 import { _alert } from "@/plugins/myfun";
 import { fun_getTodoList, fun_getBankSummary } from "@/api/quickStart";
 export default {
+  computed: {
+    welcome_uname() {
+      return localStorage.getItem("welcome_uname");
+    },
+    tab() {
+      return this.finishGet.todolist ? 1 : 0;
+    },
+  },
   data: () => ({
     now: "2023-02-15 15:00:00",
     calendar: false,
@@ -285,7 +322,6 @@ export default {
     this.getTodoList();
     this.getBankSummary();
   },
-  computed: {},
   methods: {
     jump(cid) {
       this.$router.push({ name: "CourseContent", params: { cid: cid } });
@@ -295,6 +331,10 @@ export default {
       fun_getTodoList()
         .then((res) => {
           _this.todolist = res.data;
+          _this.todolist.sort((a, b) => {
+            return new Date(a.endTime) - new Date(b.endTime) ;
+          });
+          console.log(_this.todolist);
           _this.finishGet.todolist = true;
         })
         .catch((err) => {
@@ -352,27 +392,7 @@ export default {
       this.series.push({ name: "个人安排", data: personalTimeSummary });
       this.finishGet.freeTime = true;
     },
-    getBankSummary() {
-      let _this = this;
-      _this.optionsBar.xaxis.categories = [];
-      _this.series2 = [];
-      fun_getBankSummary()
-        .then((res) => {
-          let arr = res.data;
-          let arr2 = [];
-          console.log(arr);
-          arr.forEach((item) => {
-            _this.optionsBar.xaxis.categories.push(item.bwname);
-            // _this.optionsBar.xaxis.categories.push('');
-            arr2.push(item.usageCount);
-          });
-          _this.series2.push({ name: "1", data: arr2 });
-          _this.finishGet.bankSummary = true;
-        })
-        .catch((err) => {
-          _this.finishGet.bankSummary = true;
-        });
-    },
+    getBankSummary() {},
     editTimeTable() {
       _alert("后续版本将支持添加个人事件哦~敬请期待！");
     },
@@ -382,10 +402,9 @@ export default {
   },
 };
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .left_bg {
   background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
 }
 </style>
-  

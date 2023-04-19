@@ -123,11 +123,33 @@
                       </template>
                       <span>刷新</span>
                     </v-tooltip>
-                    <v-spacer></v-spacer>
                     <v-tooltip bottom>
-                      <template v-slot:activator="{ on, attrs }"> </template>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-chip
+                          v-bind="attrs"
+                          v-on="on"
+                          color="black"
+                          class="ml-3"
+                          outlined
+                          close
+                          close-icon="mdi-magnify"
+                          @click:close="getCoursesWithCriteria"
+                        >
+                          <v-text-field
+                            v-model="search_criteria"
+                            dense
+                            color="brown"
+                            style="border: 0"
+                            class="black--text mt-0"
+                            hide-details
+                            single-line
+                            @keypress.enter="getCoursesWithCriteria()"
+                          ></v-text-field>
+                        </v-chip>
+                      </template>
                       <span>查找课程</span>
                     </v-tooltip>
+                    <v-spacer></v-spacer>
                   </v-col>
                 </v-row>
               </div>
@@ -210,7 +232,7 @@ import Course from "@/components/comp/Course.vue";
 import TodoList from "@/components/comp/TodoList.vue";
 import CourseTable from "@/components/comp/CourseTable.vue";
 import _axios from "../../utils/_axios";
-import { fun_getMyCourse } from "../../api/course";
+import { fun_getMyCourse, fun_getMyCourseWithCriteria } from "../../api/course";
 import CreateCourseDialog from "../../components/comp/dialog/createCourseDialog.vue";
 import AddCourseDialog from "../../components/comp/dialog/addCourseDialog.vue";
 export default {
@@ -220,6 +242,7 @@ export default {
       addCourse: false,
       role: -1,
     },
+    search_criteria: "",
     courses: [],
     prepareing_overlay: true,
     fab: false,
@@ -249,6 +272,34 @@ export default {
       } else {
         this.dialog.addCourse = true;
       }
+    },
+    getCoursesWithCriteria() {
+      let _this = this;
+      this.prepareing_overlay = true;
+      this.courses = [];
+      this.search_criteria = this.search_criteria.trim();
+      if (this.search_criteria == "") {
+        return;
+      }
+      fun_getMyCourseWithCriteria(this.page, this.search_criteria)
+        .then((res) => {
+          if (res.code > 0) {
+            let coursesData = res.data.courses;
+            let coursesData_arr = eval(coursesData);
+            _this.courses = coursesData_arr;
+            _this.page_len = res.data.pages;
+          } else {
+            this.$toasted.show(res.msg, {
+              theme: "outline",
+              position: "top-center",
+              duration: 2000,
+            });
+          }
+          _this.prepareing_overlay = false;
+        })
+        .catch((err) => {
+          _this.prepareing_overlay = false;
+        });
     },
     getCourses(page) {
       let _this = this;
