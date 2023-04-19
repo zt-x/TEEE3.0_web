@@ -25,7 +25,7 @@
           @close="closeShareCourseDialog($event)"
         />
       </v-dialog>
-	  <import-student-dialog :cid="cid" :showDialog.sync="dialog_importUser"/>
+      <import-student-dialog :cid="cid" :showDialog.sync="dialog_importUser" />
 
       <v-row>
         <!-- Course WorkPlace -->
@@ -155,9 +155,13 @@
                         <v-card>
                           <v-card-title>
                             学生列表
-							<v-chip @click="dialog_importUser = true" class="ml-4" small>
-								批量导入学生
-							</v-chip>
+                            <v-chip
+                              @click="dialog_importUser = true"
+                              class="ml-4"
+                              small
+                            >
+                              批量导入学生
+                            </v-chip>
                             <v-spacer></v-spacer>
                             <v-text-field
                               v-model="search_user"
@@ -252,7 +256,19 @@
                       >
                       <v-divider></v-divider>
                     </v-col>
-                    <v-col cols="12" lg="7"> 这里是一个图表 </v-col>
+                    <v-col cols="12" lg="7">
+                      最近一次考试情况
+                      <apexchart
+                        v-if="finishGetStatistic_les"
+                        width="100%"
+                        height="85%"
+                        class="mt-4"
+                        type="pie"
+                        :options="option"
+                        :series="series"
+                      >
+                      </apexchart>
+                    </v-col>
                   </v-row>
                 </v-container>
               </v-card>
@@ -263,7 +279,16 @@
                   <v-row>
                     <v-col cols="12">
                       <!--  -->
-                      这是一个图表，用来展示作业完成情况
+                      <apexchart
+                        v-if="finishGetStatistic_five"
+                        width="100%"
+                        height="100%"
+                        class="mt-4"
+                        type="line"
+                        :options="option_five"
+                        :series="series_five"
+                      >
+                      </apexchart>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -294,7 +319,7 @@ import WorksViewTeacher from "@/components/CourseContentChildren/worksViewTeache
 import ExamsViewTeacher from "@/components/CourseContentChildren/examsViewTeacher.vue";
 import Announcement_release from "@/components/CourseContentChildren/announcement_release.vue";
 import createKeyDialog from "../../components/comp/dialog/createKeyDialog.vue";
-import ImportStudentDialog from '../../components/comp/dialog/importStudentDialog.vue';
+import ImportStudentDialog from "../../components/comp/dialog/importStudentDialog.vue";
 
 import {
   fun_getUsers,
@@ -303,6 +328,8 @@ import {
   fun_getAnnouncement,
   fun_getInfo,
   fun_removeUsers,
+  fun_getLastExamStatistics,
+  fun_getFiveWorksAvg,
 } from "@/api/course";
 
 export default {
@@ -320,8 +347,8 @@ export default {
     ImportStudentDialog,
   },
   data() {
-	  return {
-		dialog_importUser:false,
+    return {
+      dialog_importUser: false,
       tab: null,
       items: ["作业", "考试", "公告", "成员"],
       usertable_headers: [
@@ -351,6 +378,72 @@ export default {
           value: "delete",
         },
       ],
+		series: [44, 55, 13, 33],
+		series_five:[
+            {
+              name: "分数",
+              data: []
+            }
+          ],
+		option_five: {
+			chart: {
+              dropShadow: {
+                enabled: true,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2
+              },
+              toolbar: {
+                show: false
+              }
+            },
+            colors: ['#77B6EA'],
+            dataLabels: {
+              enabled: true,
+            },
+            stroke: {
+              curve: 'smooth'
+            },
+            title: {
+              text: '近五次作业情况',
+              align: 'left'
+            },
+            grid: {
+              borderColor: '#e7e7e7',
+              row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+              },
+            },
+            markers: {
+              size: 1
+            },
+            xaxis: {
+              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            },
+            // yaxis: {
+            //   title: {
+            //     text: 'Temperature'
+            //   },
+            //   min: 5,
+            //   max: 40
+            // },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right',
+              floating: true,
+              offsetY: -25,
+              offsetX: -5
+            }
+		},
+      option: {
+        labels: ["良好", "优秀", "及格", "不及格"],
+        dataLabels: {
+          enabled: false,
+        },
+      },
       userinfos: [],
       pageOfUser: 1,
       pageCount: 0,
@@ -370,6 +463,8 @@ export default {
       searchIcon: "fa fa-user",
       finishGetUser: false,
       finishGetCourseInfo: true,
+      finishGetStatistic_les: false,
+      finishGetStatistic_five: false,
       CourseInfo: {},
       search_user: "",
       goExams: false,
@@ -396,7 +491,7 @@ export default {
       this.releaseAnnDialog = false;
       this.flushContent();
       this.getCourseInfo();
-      this.getCourseStatsitics();
+      
     },
     closeShareCourseDialog() {
       this.shareCourseDialog = false;
@@ -415,19 +510,27 @@ export default {
         });
     },
     getCourseStatsitics() {
-      //   let _this = this;
-      //   const form = new FormData();
-      //   form.append("cid", this.cid);
-      //   _axios
-      //     .post("/api/Course/getCourseStatistic", form)
-      //     .then((res) => {
-      //       _this.CourseStatsitics = eval(res.data.data);
-      //       _this.gotExams = true;
-      //       _this.gotWorkScore = true;
-      //     })
-      //     .catch((err) => {
-      //       _this._alert("获取课程Statistics失败：" + err);
-      //     });
+      let _this = this;
+		fun_getLastExamStatistics(this.cid).then((res) => {
+			console.log(res.data);
+			this.series.length=0;
+			this.series.push(res.data.A);
+			this.series.push(res.data.B);
+			this.series.push(res.data.C);
+			this.series.push(res.data.D);
+        _this.finishGetStatistic_les = true;
+      });
+		fun_getFiveWorksAvg(this.cid).then((res) => {
+			console.log(res.data);
+			let arr = res.data;
+			this.option_five.xaxis.categories.length = 0;
+			this.series_five[0].data.length = 0;
+			arr.forEach((item) => {
+				this.option_five.xaxis.categories.push(item.wname);
+				this.series_five[0].data.push(item.score);
+			})
+        _this.finishGetStatistic_five = true;
+      });
     },
     getWorks(page) {
       let _this = this;
@@ -506,7 +609,8 @@ export default {
         .catch((err) => {
           _this.loading_announcementview = false;
           _this._alert("出问题咯，获取公告异常: " + err);
-        });
+		});
+		this.getCourseStatsitics();
     },
     removeStu(uid) {
       let _this = this;
@@ -562,9 +666,7 @@ export default {
       sessionStorage.setItem("temp_cid", this.cid);
     }
     this.loadingText = "正在准备权限信息 .. ";
-    this.flushContent();
-    this.getCourseInfo();
-    this.getCourseStatsitics();
+    this.close();
     this.isTeacher = window.localStorage.getItem("role") >= 1 ? true : false;
     this.items = this.isTeacher
       ? ["作业", "考试", "公告", "成员"]

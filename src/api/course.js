@@ -50,4 +50,10 @@ export function fun_getAnnouncement(cid) {
 export function fun_leave(cid) {
   return _axios.delete(baseUrl + "/student", { data: { cid: cid } });
 }
+export function fun_getLastExamStatistics(cid) {
+	return _axios.get(baseUrl + "/teacher/LEStatistic", { params: { cid: cid } });
+}
+export function fun_getFiveWorksAvg(cid) {
+	return _axios.get(baseUrl + "/getFiveWorksAvg", { params: { cid: cid } });
+}
 
