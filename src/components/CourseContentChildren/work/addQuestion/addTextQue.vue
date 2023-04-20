@@ -119,11 +119,9 @@ export default {
       editorConfig: {
         removePlugins: "image,easyimage,cloudservices,exportpdf",
         extraPlugins: "image2,uploadimage",
-        uploadUrl: "/api/upload/img",
-        // filebrowserBrowseUrl: "/api/upload/img",
-        filebrowserImageBrowseUrl: "/api/upload/img",
-        // filebrowserUploadUrl: "/api/upload/img",
-        filebrowserImageUploadUrl: "/api/upload/img",
+        uploadUrl: "/api/upload/works",
+        filebrowserImageBrowseUrl: "/api/upload/works",
+        filebrowserImageUploadUrl: "/api/upload/works",
         removeButtons:
           "Save,NewPage,ExportPdf,Preview,Print,Templates,Cut,Copy,Paste,PasteText,PasteFromWord,Scayt,SelectAll,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,Outdent,Indent,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Table,PageBreak,Iframe,ShowBlocks,About,Source",
         toolbarGroups: [

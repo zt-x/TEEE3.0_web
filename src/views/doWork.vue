@@ -596,7 +596,7 @@ export default {
       ret.id = i;
       ret.removePlugins = "image,easyimage,cloudservices,exportpdf";
       ret.extraPlugins = "image2,uploadimage,uploadfile";
-      ret.uploadUrl = "/api/upload/img";
+      ret.uploadUrl = "/api/upload/works";
       ret.filebrowserBrowseUrl = "/api/upload/files";
       ret.filebrowserImageBrowseUrl = "/api/upload/works";
       ret.filebrowserUploadUrl = "/api/upload/files";

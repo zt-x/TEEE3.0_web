@@ -12,11 +12,20 @@
         </v-card-title>
       </v-img>
       <v-card height="150px" tile>
+        <input
+          id="fileuploadChangeAvatar"
+          style="display: none"
+          ref="input_changeAvatar"
+          @change="uploadAvatar"
+          type="file"
+          v-show="false"
+        />
         <v-btn
           absolute
           fab
           top
           right
+		  @click="$refs.input_changeAvatar.click()"
           style="height: 125px; width: 125px; left: 38.9%; top: -62.5px"
         >
           <v-avatar size="115">
@@ -49,6 +58,7 @@
 
 <script>
 import { fun_getUserInfo } from "@/api/account";
+import { fun_upload } from "@/api/upload";
 import { _alert } from "@/plugins/myfun";
 export default {
   props: ["showDialog"],
@@ -67,11 +77,20 @@ export default {
     },
     getUserInfo() {
       let _this = this;
-      fun_getUserInfo(-1).then((res) => {
+		fun_getUserInfo(-1).then((res) => {
+			console.log(res.data);
         _this.user = res.data;
       });
     },
     editUserInfo() {},
+    uploadAvatar() {
+      let file = this.$refs["input_changeAvatar"].files[0];
+		fun_upload("/accounts/updateAvatar", file).then((res) => {
+			_alert(res);
+			this.getUserInfo();
+		
+      });
+    },
   },
   created() {
     this.getUserInfo();
