@@ -101,7 +101,13 @@
                           >批改</v-chip
                         >
                         <span color="grey">|</span>
-                        <v-chip small color="error" class="ml-2">打回</v-chip>
+                        <v-chip
+                          small
+                          color="error"
+                          class="ml-2"
+                          @click="rejectSubmit(item)"
+                          >打回</v-chip
+                        >
                       </template>
                     </v-data-table>
                     <div class="text-center pt-2">
@@ -171,7 +177,13 @@
                           >批改</v-chip
                         >
                         <span color="grey">|</span>
-                        <v-chip small color="error" class="ml-2">打回</v-chip>
+                        <v-chip
+                          small
+                          color="error"
+                          class="ml-2"
+                          @click="rejectSubmit(item)"
+                          >打回</v-chip
+                        >
                       </template>
                     </v-data-table>
                     <div class="text-center pt-2">
@@ -253,10 +265,11 @@
 <script>
 import SubmitWork from "@/components/CourseContentChildren/work/submitWork.vue";
 import StuAns from "@/components/CourseContentChildren/stuAns.vue";
+import { _alert } from "@/plugins/myfun";
 
 import Chart_score_statistics from "@/components/CourseContentChildren/charts/SubmitStatic/chart_score_statistics.vue";
 import { fun_getWorkContent } from "@/api/work";
-import { fun_getAllSubmitsByWid, fun_getSubmitSummary } from "@/api/submit";
+import { fun_getAllSubmitsByWid, fun_getSubmitSummary, fun_rejectSubmit } from "@/api/submit";
 import { download } from "@/api/download";
 
 const streamSaver = require("streamsaver");
@@ -321,7 +334,6 @@ export default {
       pageCountOfSubmit: 0,
       pageOfSubmtis_fin: 1,
       pageCountOfSubmit_fin: 0,
-
       pageCount: 0,
       statistic_content: {},
       sid: 0,
@@ -334,6 +346,29 @@ export default {
     };
   },
   methods: {
+    rejectSubmit(item) {
+      this.$dialog({
+        title: "打回作业",
+        content: "🚨作业打回后, 该学生本次提交内容将被删除哦!",
+        btns: [
+          {
+            label: "确定打回",
+            color: "#be8464",
+            callback: () => {
+				fun_rejectSubmit(item.sid).then((res) => {
+					this.flushSubmit();
+					_alert(res.msg);
+				})
+            },
+          },
+          {
+            label: "算了",
+            color: "grey",
+            ghost: true,
+          },
+        ],
+      });
+    },
     showSubmitCard(item) {
       this.submit_chose = Object.assign({}, item);
       this.showCard = true;

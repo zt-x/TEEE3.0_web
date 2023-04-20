@@ -27,3 +27,6 @@ export function fun_setSubmitScore(subid, score) {
     score: score,
   });
 }
+export function fun_rejectSubmit(sid) {
+  return _axios.post(baseUrl + "/teacher/rejectSubmit", { sid: sid });
+}

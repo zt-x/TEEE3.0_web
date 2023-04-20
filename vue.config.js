@@ -3,16 +3,23 @@ module.exports = {
   productionSourceMap: false,
   publicPath: "./",
   transpileDependencies: ["vuetify"],
-	devServer: {
-		port: 443,
-		proxy: {
-		"/api": {
-			target: "http://localhost:8080",
-			changeOrigin: true,
-			pathRewrite: {
-			"^/api": "/",
-			},
-		},
-		},
+  devServer: {
+    port: 443,
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/api": "/",
+        },
+      },
+      "/resources": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/resources": "/",
+        },
+      },
+    },
   },
 };
