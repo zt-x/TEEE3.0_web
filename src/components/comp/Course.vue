@@ -67,7 +67,7 @@
       </v-btn>
       <v-btn color="#b27654" text> 查看统计 </v-btn>
       <v-spacer></v-spacer>
-      <v-btn color="grey" text @click="exitCourse(Course.cid)">
+      <v-btn color="grey" text @click="before_exitCourse(Course.cid)">
         {{ role < 1 ? "退出课程" : "删除课程" }}
       </v-btn>
     </v-card-actions>
@@ -89,12 +89,11 @@ export default {
   methods: {
     InterCourse(cid) {
       if (!this.block) {
-        this.$router.push({ name: "CourseContent", params: { cid: cid } });
+		  this.$router.push({ name: "CourseContent", params: { cid: cid } });
+		  this.block = !this.block;
       }
     },
     exitCourse(cid) {
-      console.log("cid=" + cid);
-      this.block = true;
       if (this.role < 1) {
         fun_leave(cid).then((res) => {
           this.$emit("remove");
@@ -109,7 +108,29 @@ export default {
           this.block = false;
         });
       }
-    },
+	  },
+	  before_exitCourse(cid) {
+		this.block = true;
+		this.$dialog({
+        title:  this.role < 1 ? "退出课程" : "删除课程",
+        content: "🚨确定要继续嘛？ 该操作无法直接恢复哦",
+        btns: [
+          {
+            label: "确定",
+            color: "#be8464",
+            callback: () => {
+				this.exitCourse(cid);
+            },
+          },
+          {
+            label: "算了",
+            color: "grey",
+            ghost: true,
+          },
+        ],
+      });
+    
+	}
   },
 };
 </script>
