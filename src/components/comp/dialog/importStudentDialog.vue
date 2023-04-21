@@ -50,6 +50,7 @@
                 item-key="学号"
                 show-select
 				hide-default-footer
+				disable-pagination
                 class="elevation-1"
                 no-data-text="请添加选项，并勾选正确的选项!"
               ></v-data-table>
@@ -144,7 +145,7 @@ export default {
         let workSheet = workBook.Sheets[workBook.SheetNames[0]];
 		  const data = xlsx.utils.sheet_to_json(workSheet);
 		  this.userDatas = data;
-        console.log(data); //这里已经能拿到转换后的json
+        console.log(this.userDatas); //这里已经能拿到转换后的json
       }
 	  },
 	  alert(msg) {

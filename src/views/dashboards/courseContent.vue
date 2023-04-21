@@ -162,6 +162,13 @@
                             >
                               批量导入学生
                             </v-chip>
+							<v-chip
+                              @click="dialog_importUser = true"
+                              class="ml-4"
+                              small
+                            >
+                              导出信息
+                            </v-chip>
                             <v-spacer></v-spacer>
                             <v-text-field
                               v-model="search_user"
