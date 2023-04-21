@@ -187,6 +187,7 @@ export default {
       this.snackbar = true;
       let form = new FormData();
       form.append("fileName", file);
+      form.append("fileType", 1);
       download("/api/upload/getFile", form);
     },
     finish() {

@@ -159,13 +159,15 @@
                               @click="dialog_importUser = true"
                               class="ml-4"
                               small
+							  dark
                             >
                               批量导入学生
                             </v-chip>
-							<v-chip
+                            <v-chip
                               @click="downloadExportUser()"
                               class="ml-4"
                               small
+							  dark
                             >
                               导出信息
                             </v-chip>
@@ -337,7 +339,11 @@ import {
   fun_removeUsers,
   fun_getLastExamStatistics,
   fun_getFiveWorksAvg,
+  fun_downloadExportUser,
 } from "@/api/course";
+import { _alert } from "@/plugins/myfun";
+const streamSaver = require("streamsaver");
+streamSaver.mitm = "mitm.html";
 
 export default {
   components: {
@@ -379,8 +385,8 @@ export default {
           text: "完成作业数量",
           align: "start",
           value: "finishWorkNum",
-		  },
-		  {
+        },
+        {
           text: "最近一次考试成绩",
           align: "start",
           value: "lastExamScore",
@@ -388,69 +394,68 @@ export default {
         {
           text: "移除该学生",
           value: "delete",
-		  },
-		  
+        },
       ],
-		series: [44, 55, 13, 33],
-		series_five:[
-            {
-              name: "分数",
-              data: []
-            }
-          ],
-		option_five: {
-			chart: {
-              dropShadow: {
-                enabled: true,
-                color: '#000',
-                top: 18,
-                left: 7,
-                blur: 10,
-                opacity: 0.2
-              },
-              toolbar: {
-                show: false
-              }
-            },
-            colors: ['#77B6EA'],
-            dataLabels: {
-              enabled: true,
-            },
-            stroke: {
-              curve: 'smooth'
-            },
-            title: {
-              text: '近五次作业情况',
-              align: 'left'
-            },
-            grid: {
-              borderColor: '#e7e7e7',
-              row: {
-                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                opacity: 0.5
-              },
-            },
-            markers: {
-              size: 1
-            },
-            xaxis: {
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-            },
-            // yaxis: {
-            //   title: {
-            //     text: 'Temperature'
-            //   },
-            //   min: 5,
-            //   max: 40
-            // },
-            legend: {
-              position: 'top',
-              horizontalAlign: 'right',
-              floating: true,
-              offsetY: -25,
-              offsetX: -5
-            }
-		},
+      series: [44, 55, 13, 33],
+      series_five: [
+        {
+          name: "分数",
+          data: [],
+        },
+      ],
+      option_five: {
+        chart: {
+          dropShadow: {
+            enabled: true,
+            color: "#000",
+            top: 18,
+            left: 7,
+            blur: 10,
+            opacity: 0.2,
+          },
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#77B6EA"],
+        dataLabels: {
+          enabled: true,
+        },
+        stroke: {
+          curve: "smooth",
+        },
+        title: {
+          text: "近五次作业情况",
+          align: "left",
+        },
+        grid: {
+          borderColor: "#e7e7e7",
+          row: {
+            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+            opacity: 0.5,
+          },
+        },
+        markers: {
+          size: 1,
+        },
+        xaxis: {
+          categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        },
+        // yaxis: {
+        //   title: {
+        //     text: 'Temperature'
+        //   },
+        //   min: 5,
+        //   max: 40
+        // },
+        legend: {
+          position: "top",
+          horizontalAlign: "right",
+          floating: true,
+          offsetY: -25,
+          offsetX: -5,
+        },
+      },
       option: {
         labels: ["良好", "优秀", "及格", "不及格"],
         dataLabels: {
@@ -504,7 +509,6 @@ export default {
       this.releaseAnnDialog = false;
       this.flushContent();
       this.getCourseInfo();
-      
     },
     closeShareCourseDialog() {
       this.shareCourseDialog = false;
@@ -524,24 +528,24 @@ export default {
     },
     getCourseStatsitics() {
       let _this = this;
-		fun_getLastExamStatistics(this.cid).then((res) => {
-			console.log(res.data);
-			this.series.length=0;
-			this.series.push(res.data.A);
-			this.series.push(res.data.B);
-			this.series.push(res.data.C);
-			this.series.push(res.data.D);
+      fun_getLastExamStatistics(this.cid).then((res) => {
+        console.log(res.data);
+        this.series.length = 0;
+        this.series.push(res.data.A);
+        this.series.push(res.data.B);
+        this.series.push(res.data.C);
+        this.series.push(res.data.D);
         _this.finishGetStatistic_les = true;
       });
-		fun_getFiveWorksAvg(this.cid).then((res) => {
-			console.log(res.data);
-			let arr = res.data;
-			this.option_five.xaxis.categories.length = 0;
-			this.series_five[0].data.length = 0;
-			arr.forEach((item) => {
-				this.option_five.xaxis.categories.push(item.wname);
-				this.series_five[0].data.push(item.score);
-			})
+      fun_getFiveWorksAvg(this.cid).then((res) => {
+        console.log(res.data);
+        let arr = res.data;
+        this.option_five.xaxis.categories.length = 0;
+        this.series_five[0].data.length = 0;
+        arr.forEach((item) => {
+          this.option_five.xaxis.categories.push(item.wname);
+          this.series_five[0].data.push(item.score);
+        });
         _this.finishGetStatistic_five = true;
       });
     },
@@ -622,8 +626,8 @@ export default {
         .catch((err) => {
           _this.loading_announcementview = false;
           _this._alert("出问题咯，获取公告异常: " + err);
-		});
-		this.getCourseStatsitics();
+        });
+      this.getCourseStatsitics();
     },
     removeStu(uid) {
       let _this = this;
@@ -666,11 +670,47 @@ export default {
         _this.finishGetKey = true;
         _this.showKeyArea = false;
       });
-	  },
-	  downloadExportUser() {
-      let _this = this;
-		
-	}
+    },
+    downloadExportUser() {
+		let _this = this;
+		_alert("后台正在生成excel文件中 ...");
+	  
+      fun_downloadExportUser(this.cid)
+		  .then(async (res) => {
+          const fileStream = streamSaver.createWriteStream(
+            decodeURI(res.headers.get("Content-Disposition")),
+            {
+              size: res.headers.get("content-length"),
+            }
+          );
+		  _alert("生成完成! 浏览器将于一分钟内自动开始下载文件");
+
+          const readableStream = res.body;
+
+          // more optimized
+          if (window.WritableStream && readableStream.pipeTo) {
+            await readableStream.pipeTo(fileStream);
+            return console.log("done writing");
+          }
+          window.writer = fileStream.getWriter();
+
+          const reader = res.body.getReader();
+          const pump = () =>
+            reader
+              .read()
+              .then((res) =>
+                res.done
+                  ? window.writer.close()
+                  : window.writer.write(res.value).then(pump)
+              );
+
+          pump();
+        })
+		  .catch((err) => {
+			  console.log(err);
+          _alert(err);
+        });
+    },
   },
   mounted() {
     this.finishGetUser = false;

@@ -3,7 +3,6 @@ streamSaver.mitm = "mitm.html";
 const token = localStorage.getItem("token");
 import { _alert } from "@/plugins/myfun";
 export function download(downLoadUrl, form) {
-  // downLoadUrl = "/api/Work/downloadFiles"
   fetch(downLoadUrl, {
     method: "POST",
     cache: "no-cache",

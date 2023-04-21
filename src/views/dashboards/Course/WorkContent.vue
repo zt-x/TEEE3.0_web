@@ -440,7 +440,9 @@ export default {
         "后台正在整理文件并进行打包中, 打包完成后会自动唤醒下载😀 ... ";
       this.snackbar = true;
       let form = new FormData();
-      form.append("wid", this.wid);
+		form.append("wid", this.wid);
+		form.append("fileType", 1);
+	  
       download("/api/works/teacher/downloadAll", form);
     },
   },
