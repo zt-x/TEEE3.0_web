@@ -211,7 +211,7 @@
 
 <script>
 import { _alert } from "@/plugins/myfun";
-import { fun_getTodoList, fun_getBankSummary } from "@/api/quickStart";
+import { fun_getTodoList} from "@/api/quickStart";
 export default {
   computed: {
     welcome_uname() {
@@ -244,25 +244,6 @@ export default {
       },
     },
     // BankManager
-    optionsBar: {
-      theme: {
-        mode: "light",
-        palette: "palette2",
-      },
-
-      stroke: {
-        curve: "smooth",
-      },
-      chart: {
-        id: "vuechart-bar",
-      },
-      xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
-        labels: {
-          show: false,
-        },
-      },
-    },
     series: [],
     series2: [],
     desserts: [],

@@ -64,12 +64,47 @@
                     <div class="text-h6">新的作业提交</div>
                   </div>
                   <div style="padding-top: 5px; height: 80%; overflow: auto">
-                    <v-progress-linear
+                    <!-- <v-progress-linear
                       color="cyan"
                       v-if="!finishGet.todolist"
                       indeterminate
-                    ></v-progress-linear>
-                    <v-simple-table>
+                    ></v-progress-linear> -->
+					<v-tabs
+                      height="0px"
+                      v-model="tab"
+                      background-color="primary"
+                      dark
+                    ></v-tabs>
+
+					<v-tabs-items v-model="tab">
+                      <v-tab-item>
+                        <v-card
+                          style="
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                          "
+                          height="150px"
+                          tile
+                        >
+                          <div>
+                            <v-img
+                              width="25px"
+                              height="25px"
+                              src="loading2.gif"
+                            ></v-img>
+                          </div>
+                          <br />
+                          <div>
+                            <span class="pl-4"
+                              >正在为您整理新提交的作业中 请稍等哦 ...</span
+                            >
+                          </div>
+                        </v-card>
+                      </v-tab-item>
+                      <v-tab-item>
+                        <v-card></v-card>
+						<v-simple-table>
                       <template v-slot:default>
                         <thead>
                           <tr>
@@ -103,6 +138,8 @@
                         ></div>
                       </template>
                     </v-simple-table>
+                      </v-tab-item>
+                    </v-tabs-items>
                   </div>
                 </v-card>
               </v-col>
@@ -190,6 +227,9 @@ export default {
   computed: {
     welcome_uname() {
       return localStorage.getItem("welcome_uname");
+		},
+	    tab() {
+      return this.finishGet.todolist ? 1 : 0;
     },
   },
   data: () => ({

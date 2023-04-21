@@ -163,7 +163,7 @@
                               批量导入学生
                             </v-chip>
 							<v-chip
-                              @click="dialog_importUser = true"
+                              @click="downloadExportUser()"
                               class="ml-4"
                               small
                             >
@@ -379,11 +379,17 @@ export default {
           text: "完成作业数量",
           align: "start",
           value: "finishWorkNum",
+		  },
+		  {
+          text: "最近一次考试成绩",
+          align: "start",
+          value: "lastExamScore",
         },
         {
           text: "移除该学生",
           value: "delete",
-        },
+		  },
+		  
       ],
 		series: [44, 55, 13, 33],
 		series_five:[
@@ -660,7 +666,11 @@ export default {
         _this.finishGetKey = true;
         _this.showKeyArea = false;
       });
-    },
+	  },
+	  downloadExportUser() {
+      let _this = this;
+		
+	}
   },
   mounted() {
     this.finishGetUser = false;
