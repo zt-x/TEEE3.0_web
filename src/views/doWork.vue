@@ -544,6 +544,7 @@ export default {
       this.snackbar = true;
       let form = new FormData();
       form.append("fileName", file);
+      form.append("fileType", 1);
       _axios
         .post("/api/upload/getFile", form, { responseType: "blob" })
         .then((res) => {
