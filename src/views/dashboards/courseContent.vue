@@ -107,6 +107,7 @@
                                   @input="getWorks(pageOfWorks)"
                                   v-model="pageOfWorks"
                                   :length="page_lenOfWorks"
+								  :total-visible="7"
                                 ></v-pagination>
                               </div>
                             </v-col>
@@ -182,7 +183,7 @@
                           </v-card-title>
                           <v-data-table
                             :loading="!finishGetUser"
-                            loading-text="正在努力加载课程学生信息 ..."
+                            loading-text="正在努力统计课程学生信息中 ..."
                             :headers="usertable_headers"
                             :items="userinfos"
                             :search="search_user"
@@ -232,8 +233,9 @@
                 <v-card-title class="brown--text text-h4">{{
                   CourseInfo.cname
                 }}</v-card-title>
+				
                 <v-card-subtitle class="text-overline"
-                  >{{ CourseInfo.startTime }} -
+                  >{{ CourseInfo.classname }}   |   {{ CourseInfo.startTime }} -
                   {{ CourseInfo.endTime }}</v-card-subtitle
                 >
                 <v-divider class="mb-5"></v-divider>
@@ -445,13 +447,7 @@ export default {
         xaxis: {
           categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
         },
-        // yaxis: {
-        //   title: {
-        //     text: 'Temperature'
-        //   },
-        //   min: 5,
-        //   max: 40
-        // },
+
         legend: {
           position: "top",
           horizontalAlign: "right",
@@ -461,7 +457,7 @@ export default {
         },
       },
       option: {
-        labels: ["良好", "优秀", "及格", "不及格"],
+        labels: [ "≥90","75~90", "60~75", "<60"],
         dataLabels: {
           enabled: false,
         },
@@ -535,10 +531,10 @@ export default {
       fun_getLastExamStatistics(this.cid).then((res) => {
         console.log(res.data);
         this.series.length = 0;
-        this.series.push(res.data.A != undefined || null ? res.data.A : 0);
-        this.series.push(res.data.B != undefined || null ? res.data.B : 0);
-        this.series.push(res.data.C != undefined || null ? res.data.C : 0);
-        this.series.push(res.data.D != undefined || null ? res.data.D : 0);
+        this.series.push(res.data.A != undefined && res.data.A != null ? res.data.A : 0);
+        this.series.push(res.data.B != undefined && res.data.B != null ? res.data.B : 0);
+        this.series.push(res.data.C != undefined && res.data.C != null ? res.data.C : 0);
+        this.series.push(res.data.D != undefined && res.data.D != null ? res.data.D : 0);
         _this.finishGetStatistic_les = true;
       });
       fun_getFiveWorksAvg(this.cid).then((res) => {

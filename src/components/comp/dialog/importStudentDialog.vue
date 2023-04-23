@@ -26,7 +26,11 @@
         <v-tabs-items v-model="tab">
           <v-tab-item>
             <v-card
-              style="display: flex;justify-content: center;align-items: center;"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
               height="150px"
               tile
             >
@@ -34,42 +38,63 @@
                 >上传学生文件</v-btn
               >
               <span style="color: #f6f4f3">|</span>
-              <v-btn class="ml-5" @click="alert('只要表头存在“学号”和“姓名”即可!')">下载模板</v-btn>
+              <v-btn
+                class="ml-5"
+                @click="alert('只要表头存在“学号”和“姓名”即可!')"
+                >下载模板</v-btn
+              >
             </v-card>
           </v-tab-item>
           <v-tab-item>
             <v-card height="550px">
               <v-card-title>请选择学生</v-card-title>
-              <v-card-subtitle>未注册的学生将同时被注册,初始密码为123456</v-card-subtitle>
+              <v-card-subtitle
+                >未注册的学生将同时被注册,初始密码为123456</v-card-subtitle
+              >
               <v-card-text>
-				<v-data-table
-				height="400px"
-                v-model="selected"
-                :headers="headers"
-                :items="userDatas"
-                item-key="学号"
-                show-select
-				hide-default-footer
-				disable-pagination
-                class="elevation-1"
-                no-data-text="请添加选项，并勾选正确的选项!"
-              ></v-data-table>
-			  </v-card-text>
-			  <v-card-actions>
-				<v-spacer></v-spacer>
-				<v-btn v-if="selected.length>0" color="primary" text @click="submitNewUsers">添加选中的学生</v-btn>
-			  </v-card-actions>
+                <v-data-table
+                  height="400px"
+                  v-model="selected"
+                  :headers="headers"
+                  :items="userDatas"
+                  item-key="学号"
+                  show-select
+                  hide-default-footer
+                  disable-pagination
+                  class="elevation-1"
+                  no-data-text="请添加选项，并勾选正确的选项!"
+                ></v-data-table>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  v-if="selected.length > 0"
+                  color="primary"
+                  text
+                  @click="submitNewUsers"
+                  >添加选中的学生</v-btn
+                >
+              </v-card-actions>
             </v-card>
           </v-tab-item>
-		  <v-tab-item>
-            <v-card height="250px" style="display: flex;justify-content: center;align-items: center;">
-				<div>
-					<v-img width="25px" height="25px" src="loading2.gif"></v-img>
-				</div>
-				<br>
-				<div>
-					<span class="pl-4">正在全速导入中 请稍等哦 ...</span>
-				</div>
+          <v-tab-item>
+            <v-card
+              height="250px"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <div>
+                <v-img width="25px" height="25px" src="loading2.gif"></v-img>
+              </div>
+              <br />
+              <div>
+                <span class="pl-4"
+                  >  正在全速导入中 请稍等哦 {{Math.trunc(time_now/time_prediction *100 )==100?'99':Math.trunc(time_now/time_prediction *100 ) }} % </span
+                >
+              </div>
             </v-card>
           </v-tab-item>
         </v-tabs-items>
@@ -88,15 +113,17 @@ export default {
   props: ["showDialog", "cid"],
   computed: {
     tab() {
-      return this.file == null || undefined ? 0 : (this.loading?2:1);
+      return this.file == null || undefined ? 0 : this.loading ? 2 : 1;
     },
   },
   data() {
     return {
+      time_now: -1,
+      time_prediction: -1,
       userDatas: [],
       file: null,
-		selected: [],
-		loading:false,
+      selected: [],
+      loading: false,
       headers: [
         {
           text: "学号",
@@ -114,10 +141,12 @@ export default {
   methods: {
     leave() {
       var obj = document.getElementById("fileuploadUploadExcelImportStudent");
-		  this.tab = 0;
-		  this.selected = [];
-		  this.userDatas = [];
-		  this.file = null;
+      this.tab = 0;
+      this.selected = [];
+      this.userDatas = [];
+      this.file = null;
+      this.time_prediction = -1;
+      this.time_now = -1;
       obj.value = "";
       this.$emit("update:showDialog", false);
     },
@@ -143,33 +172,47 @@ export default {
           cellDates: true,
         });
         let workSheet = workBook.Sheets[workBook.SheetNames[0]];
-		  const data = xlsx.utils.sheet_to_json(workSheet);
-		  this.userDatas = data;
+        const data = xlsx.utils.sheet_to_json(workSheet);
+        this.userDatas = data;
         console.log(this.userDatas); //这里已经能拿到转换后的json
       }
-	  },
-	  alert(msg) {
-		  _alert(msg);
-	  },
-	  submitNewUsers() {
-		  let users = [];
-		  this.loading = true;
-		  this.selected.forEach((item) => {
-			  users.push({ uid: item.学号, uname: item.姓名 });
-		  })
-		  console.log(users);
-		  fun_addUsersToCourses(users, this.cid).then((res) => {
-			  _alert(res.msg);
-		  this.loading = false;
-			  this.leave();
-		  }).catch((err) => {
-			  _alert(err.msg);
-			  this.loading = false;
-			  this.leave();
-			
-		  });
-	}
-	}
+    },
+    alert(msg) {
+      _alert(msg);
+    },
+    timeAdd() {
+		this.time_now++;
+		if (this.time_now >= this.time_prediction) {
+			this.time_now = this.time_prediction;
+	  }
+    },
+    submitNewUsers() {
+      let timer = "";
+      let users = [];
+      this.loading = true;
+      this.time_prediction = 0;
+      this.time_now = 0;
+      this.selected.forEach((item) => {
+        users.push({ uid: item.学号, uname: item.姓名 });
+        this.time_prediction++;
+      });
+      timer = setInterval(this.timeAdd, 400);
+      fun_addUsersToCourses(users, this.cid)
+        .then((res) => {
+          _alert(res.msg);
+          this.loading = false;
+          clearInterval(timer);
+          this.leave();
+        })
+        .catch((err) => {
+          _alert(err.msg);
+          this.loading = false;
+          clearInterval(timer);
+
+          this.leave();
+        });
+    },
+  },
 };
 </script>
 
