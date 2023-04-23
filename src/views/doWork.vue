@@ -540,7 +540,7 @@ export default {
       return str2.substr(str2.indexOf("_") + 1);
     },
     downloadFile(file) {
-      this.snackbar_msg = "🥵 正在努力拉取下载链接 ... ";
+      this.snackbar_msg = "🚀 正在努力拉取下载链接 ... ";
       this.snackbar = true;
       let form = new FormData();
       form.append("fileName", file);

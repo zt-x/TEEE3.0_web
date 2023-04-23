@@ -159,7 +159,7 @@
                               @click="dialog_importUser = true"
                               class="ml-4"
                               small
-							  dark
+                              dark
                             >
                               批量导入学生
                             </v-chip>
@@ -167,7 +167,7 @@
                               @click="downloadExportUser()"
                               class="ml-4"
                               small
-							  dark
+                              dark
                             >
                               导出信息
                             </v-chip>
@@ -266,7 +266,11 @@
                       <v-divider></v-divider>
                     </v-col>
                     <v-col cols="12" lg="7">
-                      最近一次考试情况
+                      {{
+                        series.length == 0
+                          ? "还没有考过试哦"
+                          : "最近一次考试情况"
+                      }}
                       <apexchart
                         v-if="finishGetStatistic_les"
                         width="100%"
@@ -531,10 +535,10 @@ export default {
       fun_getLastExamStatistics(this.cid).then((res) => {
         console.log(res.data);
         this.series.length = 0;
-        this.series.push(res.data.A);
-        this.series.push(res.data.B);
-        this.series.push(res.data.C);
-        this.series.push(res.data.D);
+        this.series.push(res.data.A != undefined || null ? res.data.A : 0);
+        this.series.push(res.data.B != undefined || null ? res.data.B : 0);
+        this.series.push(res.data.C != undefined || null ? res.data.C : 0);
+        this.series.push(res.data.D != undefined || null ? res.data.D : 0);
         _this.finishGetStatistic_les = true;
       });
       fun_getFiveWorksAvg(this.cid).then((res) => {
@@ -672,18 +676,18 @@ export default {
       });
     },
     downloadExportUser() {
-		let _this = this;
-		_alert("后台正在生成excel文件中 ...");
-	  
+      let _this = this;
+      _alert("后台正在生成excel文件中 ...");
+
       fun_downloadExportUser(this.cid)
-		  .then(async (res) => {
+        .then(async (res) => {
           const fileStream = streamSaver.createWriteStream(
             decodeURI(res.headers.get("Content-Disposition")),
             {
               size: res.headers.get("content-length"),
             }
           );
-		  _alert("生成完成! 浏览器将于一分钟内自动开始下载文件");
+          _alert("生成完成! 浏览器将于一分钟内自动开始下载文件");
 
           const readableStream = res.body;
 
@@ -706,8 +710,8 @@ export default {
 
           pump();
         })
-		  .catch((err) => {
-			  console.log(err);
+        .catch((err) => {
+          console.log(err);
           _alert(err);
         });
     },
