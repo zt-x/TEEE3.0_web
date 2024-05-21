@@ -59,7 +59,7 @@
         style="background-position: right center"
         width="150px"
         height="150px"
-        src="cj2.gif"
+        src="cat.gif"
       ></v-img>
     </div>
     <!-- <v-card fixed dark fab left bottom color="pink"></v-card> -->
